@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from .helpers import count_work_days
 from user_app.models import Designation
+from django.dispatch import receiver
 # Create your models here.
 
 class Constants:
@@ -51,8 +52,38 @@ class LeaveRequest(models.Model):
                                        on_delete=models.SET_NULL, null=True)
     position = models.ForeignKey(Designation, on_delete=models.CASCADE)
     leave = models.ForeignKey(Leave, related_name='requests', on_delete=models.CASCADE)
-    remark = models.CharField(max_length=200, blank=False)
+    remark = models.CharField(max_length=200, blank=False, default='')
     processed = models.BooleanField(default=False)
 
 class CurrentLeaveRequest(LeaveRequest):
     pass
+
+
+@receiver(models.signals.post_save, sender=Leave)
+def add_current_leave_request(instance, sender, created, **kwargs):
+    if created:
+        acad_rep = instance.academic_replacement
+        admin_rep = instance.administrative_replacement
+        if acad_rep is not None or admin_rep is not None:
+            if acad_rep is not None:
+                CurrentLeaveRequest.objects.create(
+                    applicant = instance.applicant,
+                    requested_from = acad_rep,
+                    position = acad_rep.designation,
+                    leave = instance,
+                )
+            if admin_rep is not None:
+                CurrentLeaveRequest.objects.create(
+                    applicant = instance.applicant,
+                    requested_from = admin_rep,
+                    position = admin_rep.designation,
+                    leave = instance,
+                )
+        else:
+            sanc_auth = instance.department.sanctioning_athaurity
+            CurrentLeaveRequest.objects.create(
+                applicant = instance.applicant,
+                requested_from = sanc_auth,
+                position = sanc_auth.designation,
+                leave = instance,
+            )

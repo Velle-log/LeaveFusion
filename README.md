@@ -2,7 +2,7 @@
   A module which is going to be incorporated in larger Software Product. This mainly deals with the leave applications and the relavant processes. Requires `python3.5+` and `django==1.11.4+`
 
 ## Using it  
-  * Install virtualenv. pip install virtualenv  
+  * Install virtualenv `pip install virtualenv`  
   * Clone the repository `git clone https://github.com/3Peers/LeaveFusion.git`  
   * Change directory and move to `LeaveFusion` ==> `cd LeaveFusion`  
   * Create a virtualenv `virtualenv env`  
