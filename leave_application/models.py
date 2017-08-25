@@ -8,7 +8,7 @@ from django.dispatch import receiver
 class Constants:
     LEAVE_TYPE = (
         ('casual', 'Casual Leave'),
-        ('restricted', 'Restricted Leave'),
+        ('restricted', 'Restricted Holidays'),
         ('station', 'Station Leave'),
         ('vacation', 'Vacation Leave'),
         ('earned', 'Earned Leave'),
@@ -42,6 +42,7 @@ class Leave(models.Model):
     end_date = models.DateField()
     purpose = models.CharField(max_length=1000, blank=False, default='No Purpose')
     leave_address = models.CharField(max_length=100, blank=True, default='')
+    status = models.CharField(max_length=10, blank=False, default='processing')
 
     @property
     def count_leave_days(self):
