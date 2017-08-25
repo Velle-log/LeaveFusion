@@ -4,6 +4,8 @@ from django.conf import settings
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^accounts/', include('user_app.urls', namespace = 'user_app')),
+    url(r'^leave/', include('leave_application.urls', namespace='leave_application')),
 ]
 
 if settings.DEBUG:

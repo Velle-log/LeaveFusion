@@ -21,7 +21,9 @@ class Designation(models.Model):
 
 class DepartmentInfo(models.Model):
     name = models.CharField(max_length=30, unique=True)
-    sanctioning_athaurity = models.ForeignKey(Designation, related_name='sanctioning_leave_to', on_delete=models.CASCADE)
+    sanctioning_authority = models.ForeignKey(Designation,
+                                              related_name='sanctioning_leave_to',
+                                              on_delete=models.CASCADE)
     sanctioning_officer = models.ForeignKey(Designation, on_delete=models.CASCADE)
 
 class ExtraInfo(models.Model):
@@ -29,16 +31,20 @@ class ExtraInfo(models.Model):
     designation = models.ForeignKey(Designation, on_delete=models.CASCADE, null=True)
     user_type = models.CharField(max_length=20, default='student')
     sex = models.CharField(max_length=2, choices=Constants.SEX_CHOICES, default='M')
-    relationship_status = models.CharField(max_length=10, choices=Constants.RELATIONSHIP, default='single')
+    relationship_status = models.CharField(max_length=10,
+                                           choices=Constants.RELATIONSHIP, default='single')
     department = models.ForeignKey(DepartmentInfo, on_delete=models.CASCADE, null=True)
+    is_onleave = models.BooleanField(default=False)
 
 @receiver(models.signals.post_save, sender=User)
 def add_extra_info(sender, instance, created, **kwargs):
     if created:
         ExtraInfo.objects.create(user=instance)
+        #TODO: Add automatic creation of LeavesCount if user_type is not student
 
 class Administration(models.Model):
-    administrator = models.ForeignKey(User, related_name='administration_duty', on_delete=models.CASCADE)
+    administrator = models.ForeignKey(User, related_name='administration_duty',
+                                            on_delete=models.CASCADE)
     position = models.ForeignKey(Designation, on_delete=models.CASCADE)
 
 

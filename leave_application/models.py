@@ -15,6 +15,15 @@ class Constants:
         ('special_casual', 'Special Casual Leave'),
     )
 
+class LeavesCount(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    casual = models.IntegerField(default=8)
+    special_casual = models.IntegerField(default=10)
+    restricted = models.IntegerField(default=2)
+    station = models.IntegerField(default=2)
+    earned = models.IntegerField(default=30)
+    vacation_leaves = models.IntegerField(default=60)
+
 class Leave(models.Model):
     # TODO: Add required fields
     applicant = models.ForeignKey(User,
@@ -42,8 +51,8 @@ class Leave(models.Model):
         """
         return count_work_days(self.start_date, self.end_date)
 
-class LeaveRequest(models.Model):
-    # TODO: Add required fields
+
+class CurrentLeaveRequest(models.Model):
     applicant = models.ForeignKey(User,
                                   related_name='leave_requests',
                                   on_delete=models.CASCADE)
@@ -53,11 +62,10 @@ class LeaveRequest(models.Model):
     position = models.ForeignKey(Designation, on_delete=models.CASCADE)
     leave = models.ForeignKey(Leave, related_name='requests', on_delete=models.CASCADE)
     remark = models.CharField(max_length=200, blank=False, default='')
-    processed = models.BooleanField(default=False)
 
-class CurrentLeaveRequest(LeaveRequest):
-    pass
-
+class LeaveRequest(CurrentLeaveRequest):
+    # TODO: Add required fields
+    status = models.BooleanField(default=False)
 
 @receiver(models.signals.post_save, sender=Leave)
 def add_current_leave_request(instance, sender, created, **kwargs):
@@ -80,7 +88,7 @@ def add_current_leave_request(instance, sender, created, **kwargs):
                     leave = instance,
                 )
         else:
-            sanc_auth = instance.department.sanctioning_athaurity
+            sanc_auth = instance.department.sanctioning_authority
             CurrentLeaveRequest.objects.create(
                 applicant = instance.applicant,
                 requested_from = sanc_auth,
