@@ -5,6 +5,8 @@ from leave_application.forms import (FacultyLeaveForm,
                                      StaffLeaveForm,
                                      StudentLeaveForm,)
 
+from leave_application.helpers import FormData
+
 class ApplyLeave(View):
     """
         A Class Based View which handles user applying for leave
@@ -166,4 +168,7 @@ class ProcessRequest(View):
 class GetApplications(View):
 
     def get(self, request):
-        pass
+
+        request_list = map(lambda x: FormData(request, x),
+                           CurrentLeaveRequest.objects.get(requested_from=request.user))
+        return render(request, 'leave_application/get_requests.html', {'data': request_list})

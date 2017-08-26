@@ -9,6 +9,7 @@ class LeaveForm(forms.Form):
     end_date = forms.DateField(widget=forms.SelectDateWidget(), label='Upto')
     leave_address = forms.CharField(label='Leave Address', max_length=100)
 
+
 class FacultyLeaveForm(LeaveForm):
     USER_CHOICES = tuple((user, user) for user in User.objects.all() if user.extrainfo.user_type == 'faculty')
     from leave_application.models import Constants as cts
@@ -20,6 +21,9 @@ class FacultyLeaveForm(LeaveForm):
                                widget=forms.Select(choices=USER_CHOICES))
 
     def clean(self):
+
+        admin_rep = self.cleaned_data['admin_rep']
+        acad_rep = self.cleaned_data['acad_rep']        
         pass
         #TODO: add validation of forms
 
