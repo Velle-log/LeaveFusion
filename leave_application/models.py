@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from .helpers import count_work_days
-from user_app.models import Designation
+
 from django.dispatch import receiver
 # Create your models here.
 
@@ -38,6 +38,8 @@ class Leave(models.Model):
     administrative_replacement = models.ForeignKey(User,
                                                    related_name='admin_rep_for',
                                                    null=True, on_delete=models.CASCADE)
+    acad_done = models.BooleanField(default=True)
+    admin_done = models.BooleanField(default=True)
     start_date = models.DateField()
     end_date = models.DateField()
     purpose = models.CharField(max_length=1000, blank=False, default='No Purpose')
@@ -54,6 +56,21 @@ class Leave(models.Model):
 
 
 class CurrentLeaveRequest(models.Model):
+
+    from user_app.models import Designation
+
+    applicant = models.ForeignKey(User,
+                                  related_name='cur_leave_requests',
+                                  on_delete=models.CASCADE)
+    requested_from = models.ForeignKey(User,
+                                       related_name='cur_received_requests',
+                                       on_delete=models.SET_NULL, null=True)
+    position = models.ForeignKey(Designation, on_delete=models.CASCADE)
+    leave = models.ForeignKey(Leave, related_name='cur_requests', on_delete=models.CASCADE)
+
+class LeaveRequest(models.Model):
+    from user_app.models import Designation
+
     applicant = models.ForeignKey(User,
                                   related_name='leave_requests',
                                   on_delete=models.CASCADE)
@@ -62,10 +79,8 @@ class CurrentLeaveRequest(models.Model):
                                        on_delete=models.SET_NULL, null=True)
     position = models.ForeignKey(Designation, on_delete=models.CASCADE)
     leave = models.ForeignKey(Leave, related_name='requests', on_delete=models.CASCADE)
+    both = models.BooleanField(default=False)
     remark = models.CharField(max_length=200, blank=False, default='')
-
-class LeaveRequest(CurrentLeaveRequest):
-    # TODO: Add required fields
     status = models.BooleanField(default=False)
 
 @receiver(models.signals.post_save, sender=Leave)

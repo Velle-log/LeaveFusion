@@ -1,5 +1,12 @@
+import datetime
+
 def count_work_days(start_date, end_date):
-    pass
+    days = (end_date - start_date).days + 1
+    weekends = 0
+    for _ in range(days):
+        if (start_date + datetime.timedelta(days = _)).weekday in [5, 6]:
+            weekends += 1
+    return days - weekends
 
 class FormData:
 

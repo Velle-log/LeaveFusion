@@ -24,7 +24,8 @@ class ApplyLeave(View):
         """
         form = self.get_form(request, request.POST)
         if form.is_valid():
-
+            acad_done = False if form.cleaned_data.get('acad_rep', False) else True
+            admin_done = False if form.cleaned_data.get('admin_rep', False) else True
             try:
                 leave_obj = Leave.objects.create(
                     applicant = request.user,
@@ -32,6 +33,8 @@ class ApplyLeave(View):
                     academic_replacement = form.cleaned_data.get('acad_rep', None),
                     administrative_replacement = form.cleaned_data.get('admin_rep', None),
                     purpose = form.cleaned_data.get('purpose', ''),
+                    acad_done = acad_done,
+                    admin_done = admin_done,
                     leave_address = form.cleaned_data.get('leave_address', ''),
                     start_date = form.cleaned_data['start_date'],
                     end_date = form.cleaned_data['end_date'],
@@ -93,14 +96,24 @@ class ProcessRequest(View):
                 self.create_leave_request(leave_request, True, accept=True, remark=remark)
 
             elif designation == leave_request.position:
-
                 leave_request = self.create_leave_request(leave_request, False, accept=True, remark=remark)
-                CurrentLeaveRequest.objects.create(
-                    leave = leave_request.leave,
-                    requested_from = sanc_auth,
-                    applicant = leave_request.applicant,
-                    position = sanc_auth,
-                )
+                if leave_request.leave.academic_replacement == leave_request.requested_from:
+                    leave_request.leave.acad_done = True
+
+                elif leave_request.leave.administrative_replacement == leave_request.requested_from:
+                    leave_request.leave.admin_done = True
+
+                leave_request.leave.save()
+                condition = leave_request.leave.admin_done and leave_request.leave.acad_done
+
+                if condition:
+                    CurrentLeaveRequest.objects.get_or_create(
+                        leave = leave_request.leave,
+                        requested_from = sanc_auth,
+                        applicant = leave_request.applicant,
+                        position = sanc_auth,
+                    )
+
 
             else:
                 raise Http404
@@ -138,7 +151,7 @@ class ProcessRequest(View):
                                                           False, accept=False,
                                                           remark=remark)
             else:
-                leaves_data = leave_request.leave.requests
+                leaves_data = leave_request.leave.cur_requests
                 for leave in leaves_data:
                     self.create_leave_request(leave, False, accept=False, remark=remark)
 
