@@ -170,5 +170,5 @@ class GetApplications(View):
     def get(self, request):
 
         request_list = map(lambda x: FormData(request, x),
-                           CurrentLeaveRequest.objects.get(requested_from=request.user))
+                           CurrentLeaveRequest.objects.filter(requested_from=request.user))
         return render(request, 'leave_application/get_requests.html', {'data': request_list})
