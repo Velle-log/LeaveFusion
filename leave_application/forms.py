@@ -11,9 +11,12 @@ class LeaveForm(forms.Form):
 
 
 class FacultyLeaveForm(LeaveForm):
-    USER_CHOICES = tuple((user, user) \
-                         for user in User.objects.all() \
-                         if user.extrainfo.user_type == 'faculty')
+    try:
+        USER_CHOICES = tuple((user, user) \
+                             for user in User.objects.all() \
+                             if user.extrainfo.user_type == 'faculty')
+    except:
+        USER_CHOICES = []
     from leave_application.models import Constants as cts
     LEAVE_CHOICES = cts.LEAVE_TYPE
     type_of_leave = forms.CharField(widget=forms.Select(choices=LEAVE_CHOICES))
@@ -30,9 +33,12 @@ class FacultyLeaveForm(LeaveForm):
         #TODO: add validation of forms
 
 class StaffLeaveForm(LeaveForm):
-    USER_CHOICES = tuple((user, user) \
-                          for user in User.objects.all() \
-                          if user.extrainfo.user_type == 'staff')
+    try:
+        USER_CHOICES = tuple((user, user) \
+                              for user in User.objects.all() \
+                              if user.extrainfo.user_type == 'staff')
+    except:
+        USER_CHOICES = []
     from leave_application.models import Constants as cts
     LEAVE_CHOICE = cts.LEAVE_TYPE
     type_of_leave = forms.CharField(widget=forms.Select(choices=LEAVE_CHOICE))
