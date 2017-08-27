@@ -42,11 +42,11 @@
   <!-- Google Font -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
   <style type="text/css">
-    input, textarea {
+    input[type="text"], textarea, input[type="password"] {
       border:1px solid #ccc;
       border-radius: 5px;
       padding: 0.3em;
-     width: 100%;
+     width: 70%;
      background-color: rgba(70,70,70,0.1);
      box-shadow: 0 1px 1px rgba(black, 0.1);
      resize: none;
@@ -60,6 +60,23 @@
      box-shadow: 0 1px 1px rgba(black, 0.1);
     }
 
+    input[type="checkbox"]{
+        display:inline-block;
+        width:19px;
+        height:19px;
+        margin:-2px 10px 0 0;
+        vertical-align:middle;
+        background:#581845 -19px top no-repeat;
+        cursor:pointer;
+    }
+
+    input[type="checkbox"]:checked{
+        background:url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/210284/check_radio_sheet.png) -19px top no-repeat;
+    }
+
+    .btn-primary{
+      width:30%;
+    }
   </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
