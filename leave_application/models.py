@@ -24,6 +24,9 @@ class LeavesCount(models.Model):
     earned = models.IntegerField(default=30)
     vacation_leaves = models.IntegerField(default=60)
 
+    def __str__(self):
+        return 'user: {}'.format(self.user.username)
+
 class Leave(models.Model):
     # TODO: Add required fields
     applicant = models.ForeignKey(User,
@@ -54,6 +57,8 @@ class Leave(models.Model):
         """
         return count_work_days(self.start_date, self.end_date)
 
+    def __str__(self):
+        return 'By: {}, type: {}'.format(self.applicant.username, self.type_of_leave)
 
 class CurrentLeaveRequest(models.Model):
 
@@ -67,6 +72,9 @@ class CurrentLeaveRequest(models.Model):
                                        on_delete=models.SET_NULL, null=True)
     position = models.ForeignKey(Designation, on_delete=models.CASCADE)
     leave = models.ForeignKey(Leave, related_name='cur_requests', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '{} requested from {}'.format(self.applicant.username, self.requested_from.username)
 
 class LeaveRequest(models.Model):
     from user_app.models import Designation
@@ -82,6 +90,11 @@ class LeaveRequest(models.Model):
     both = models.BooleanField(default=False)
     remark = models.CharField(max_length=200, blank=False, default='')
     status = models.BooleanField(default=False)
+
+    def __str__(self):
+        return '{} requested from {}, status: {}'.format(self.applicant.username,
+                                                         self.requested_from.username,
+                                                         self.status)
 
 @receiver(models.signals.post_save, sender=Leave)
 def add_current_leave_request(instance, sender, created, **kwargs):

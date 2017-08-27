@@ -21,6 +21,8 @@ class Constants:
 class Designation(models.Model):
     name = models.CharField(max_length=20, unique=True, blank=False)
 
+    def __str__(self):
+        return self.name
 
 class DepartmentInfo(models.Model):
     name = models.CharField(max_length=30, unique=True)
@@ -29,6 +31,8 @@ class DepartmentInfo(models.Model):
                                               on_delete=models.CASCADE)
     sanctioning_officer = models.ForeignKey(Designation, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return 'name is {}'.format(self.name)
 
 class ExtraInfo(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -49,6 +53,8 @@ class ExtraInfo(models.Model):
 
         return True if leave else False
 
+    def __str__(self):
+        return '{} type is {}'.format(self.user.username, self.user_type)
 
 @receiver(models.signals.post_save, sender=User)
 def add_extra_info(sender, instance, created, **kwargs):
@@ -62,6 +68,8 @@ class Administration(models.Model):
                                             on_delete=models.CASCADE)
     position = models.ForeignKey(Designation, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return '{} at position {}'.format(self.administrator.username, self.position)
 
 """
 from django.contrib.auth.models import User; User.objects.all()[0].delete();
