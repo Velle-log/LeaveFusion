@@ -5,8 +5,8 @@ body{
 .message{
   align-self: center;
   float: right;
-  bottom: 0;
-  left:4px;
+  bottom: 1em;
+  left:1em;
   text-align: center;
   position: absolute;
   z-index: 999;

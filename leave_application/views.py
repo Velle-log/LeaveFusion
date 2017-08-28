@@ -16,7 +16,7 @@ class ApplyLeave(View):
             view to handle get request to /leave/apply
         """
         form = self.get_form(request)
-        return render(request, 'leave_application/apply_for_leave.html', {'form': form, 'title': 'Leave'})
+        return render(request, 'leave_application/apply_for_leave.html', {'form': form, 'title': 'Leave', 'action':'Apply'})
 
     def post(self, request):
         """
@@ -44,10 +44,10 @@ class ApplyLeave(View):
                 return render(request,
                               'leave_application/apply_for_leave.html',
                               {'form': form, 'message': 'Failed'})
-            return render(request, 'leave_application/apply_for_leave', {'message': 'success', 'title': 'Leave'})
+            return render(request, 'leave_application/apply_for_leave', {'message': 'success', 'title': 'Leave', 'action':'Apply'})
 
         else:
-            return render(request, 'leave_application/apply_for_leave.html', {'form': form, 'title': 'Leave'})
+            return render(request, 'leave_application/apply_for_leave.html', {'form': form, 'title': 'Leave', 'action':'Apply'})
 
     def get_user_type(self, request):
         return request.user.extrainfo.user_type

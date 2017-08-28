@@ -30,7 +30,6 @@
   <link rel="stylesheet" href="{% static 'plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css'%}">
   <!-- custom css -->
   <link rel="stylesheet" type="text/css" href="{% static 'my_css/basic.css' %}">
-  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/components/form.min.css">
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>
@@ -41,7 +40,7 @@
   {% endblock %}
   <!-- Google Font -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-  <style type="text/css">
+    <style type="text/css">
     input[type="text"], textarea, input[type="password"] {
       border:1px solid #ccc;
       border-radius: 5px;
@@ -50,6 +49,9 @@
      background-color: rgba(70,70,70,0.1);
      box-shadow: 0 1px 1px rgba(black, 0.1);
      resize: none;
+    }
+    input[name="login"], input[name="password"] {
+     width: 100%;
     }
     select {
       border:1px solid #ccc;
@@ -68,10 +70,6 @@
         vertical-align:middle;
         background:#581845 -19px top no-repeat;
         cursor:pointer;
-    }
-
-    input[type="checkbox"]:checked{
-        background:url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/210284/check_radio_sheet.png) -19px top no-repeat;
     }
 
     .btn-primary{
@@ -117,7 +115,9 @@
             <li class="dropdown messages-menu">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 <i class="fa fa-envelope-o"></i>
-                <span class="label label-success">0</span>
+                {% if not messeges_count == 0 %}
+                <span class="label label-warning">{{ messeges_count }}</span>
+                {% endif %}
               </a>
               <ul class="dropdown-menu">
                 <li class="header">header</li>
@@ -146,7 +146,9 @@
             <li class="dropdown notifications-menu">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 <i class="fa fa-bell-o"></i>
-                <span class="label label-warning">0</span>
+                {% if not notification_count == 0 %}
+                <span class="label label-warning">{{ notification_count }}</span>
+                {% endif %}
               </a>
               <ul class="dropdown-menu">
                 <li class="header">header</li>
@@ -167,7 +169,9 @@
             <li class="dropdown tasks-menu">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 <i class="fa fa-flag-o"></i>
-                <span class="label label-danger">0</span>
+                {% if not task_count == 0 %}
+                <span class="label label-warning">{{ task_count }}</span>
+                {% endif %}
               </a>
               <ul class="dropdown-menu">
                 <li class="header">header</li>
@@ -231,10 +235,10 @@
                 <!-- Menu Footer-->
                 <li class="user-footer">
                   <div class="pull-left">
-                    <a href="{% url 'profile:profile_view'%}" class="btn btn-default btn-flat">Profile</a>
+                    <a href="#" class="btn btn-default btn-flat">Profile</a>
                   </div>
                   <div class="pull-right">
-                    <a href="{% url 'account_logout' %}" class="btn btn-default btn-flat">Sign out</a>
+                    <a href="/accounts/logout/" class="btn btn-default btn-flat">Sign out</a>
                   </div>
                 </li>
               </ul>
@@ -277,16 +281,21 @@
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu" data-widget="tree">
           <li class="header">MAIN NAVIGATION</li>
-          <li class="treeview">
+          <li class="" id="Home-sidebar">
+            <a href="/">
+              <i class="fa fa-home"></i> <span>Home</span>
+            </a>
+          </li>
+          <li class="treeview" id="Leave-sidebar">
             <a href="#">
-              <i class="fa fa-dashboard"></i> <span>Leave</span>
+              <i class="glyphicon glyphicon-calendar"></i> <span>Leave</span>
               <span class="pull-right-container">
                 <i class="fa fa-angle-left pull-right"></i>
               </span>
             </a>
             <ul class="treeview-menu">
-              <li id='leave-apply'><a href="{% url 'leave_application:apply_for_leave' %}"><i class="fa fa-circle-o"></i> Apply for Leave</a></li>
-              <li id='leave-view'><a href="#"><i class="fa fa-circle-o"></i> View Applied Leave</a></li>
+              <li class="" id='Leave-sidebar-Apply'><a href="{% url 'leave_application:apply_for_leave' %}"><i class="fa fa-circle-o"></i> Apply for Leave</a></li>
+              <li class="" id='Leave-sidebar-View'><a href="#"><i class="fa fa-circle-o"></i> View Applied Leave</a></li>
             </ul>
           </li>
         </ul>
@@ -305,15 +314,19 @@
         {{ title }}
       </h1>
       <ol class="breadcrumb">
-        <li><a href="/"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li class="active">{{ title }}</li>
+        <li class="active"><a href="/"><i class="fa fa-home"></i></a>{{ title }}</li>
+        {% if action %}
+        <li>{{ action }}</li>
+        {% endif %}
       </ol>
     </section>
     <section class="content">
-
       {% block content %}
       {% endblock %}
-      <br><br><br><br>
+      <br><br>
+      {% block bass %}
+      {% endblock %}
+      <br><br>
       <br><br><br><br>
       <br><br><br><br>
       <br><br><br><br>
@@ -382,5 +395,12 @@
 <script src="{% static 'dist/js/pages/dashboard.js'%}"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="{% static 'dist/js/demo.js'%}"></script>
+<!-- custom inline js -->
+<script type="text/javascript">
+	$(document).ready(function(){	
+		$('#{{title}}-sidebar').addClass('active');
+		$('#{{title}}-sidebar-{{ action }}').addClass('active');
+	});
+</script>
 </body>
 </html>
