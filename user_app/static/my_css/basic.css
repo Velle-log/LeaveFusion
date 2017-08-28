@@ -2,6 +2,14 @@ body{
     font:300 16px/18px 'Open Sans',sans-serif;
 }
 
+
+
+.box-outline-soft{
+  border: 1px solid #ccc;
+  border-radius: 1em;
+  padding: 1em;
+}
+
 .message{
   align-self: center;
   float: right;

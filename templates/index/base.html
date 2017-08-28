@@ -46,20 +46,12 @@
       border-radius: 5px;
       padding: 0.3em;
      width: 70%;
-     background-color: rgba(70,70,70,0.1);
+/*     background-color: rgba(70,70,70,0.1);*/
      box-shadow: 0 1px 1px rgba(black, 0.1);
      resize: none;
     }
     input[name="login"], input[name="password"] {
      width: 100%;
-    }
-    select {
-      border:1px solid #ccc;
-      border-radius: 5px;
-      padding: 0.3em;
-      margin: 2px;
-      background-color: rgba(70,70,70,0.1);
-     box-shadow: 0 1px 1px rgba(black, 0.1);
     }
 
     input[type="checkbox"]{
@@ -75,9 +67,38 @@
     .btn-primary{
       width:30%;
     }
+    body select { 
+    	display: inline; 
+    	margin:0.3em;
+    	padding: 0.5em 70px 0.5em 0.6em !important; 
+    	max-width: 100%; height: auto !important; 
+    	border: 1px solid #e3e3e3; 
+    	border-radius: 3px;
+    	background: url("{% static 'img/arrow.png' %}") 
+    	right center no-repeat; 
+    	background-color: #fff; 
+    	color: #444444; 
+    	line-height: 16px !important; 
+    	appearance: none; 
+    	/* this is must */ 
+    	-webkit-appearance: none; 
+    	-moz-appearance: none; 
+    	} 
+    	/* body select.select_box option */ 
+    body select option 
+    { padding: 0 4px; } 
+    	/* for IE and Edge */ 
+    select::-ms-expand 
+    { 
+    		display: none; 
+    } 
+
+    select:disabled::-ms-expand 
+    { background: #f60; }
+
   </style>
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition sidebar-mini yellow-skin skin-yellow sidebar-collapse">
 {% if messages %}
       <!-- custom js -->
       <script src="{% static 'my_js/basic.js' %}" type="text/javascript"></script>
