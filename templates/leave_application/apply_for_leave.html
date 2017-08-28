@@ -1,6 +1,40 @@
-Hey there.
-<br>
-{% for field in form %}
-{{field.label_tag}}
-{{field}}<br>
-{% endfor %}
+{% extends 'index/base.html' %}
+{% block content %}
+<div class="box box-primary">
+    <div class="box-header with-border">
+        <h3 class="box-title">Leave Form</h3>
+    </div>
+            <!-- /.box-header -->
+            <!-- form start -->
+    <center>
+    <div class="box-body">
+        {% if message %}
+            {{message}}
+        {% endif %}
+        {% if form %}
+            {% if form.errors %}
+                <pre>
+                    {{form.errors}}
+                </pre>
+            {% endif %}
+      		<form role='form' method='post'>
+                {% csrf_token %}
+      			<div class="input-group">
+            	{% for field in form %}
+    			{{field.label_tag}}&emsp;
+    			{{field}}<br><br>
+    			{% endfor %}
+    			</div>
+    			<div class="box-footer">
+    	            <button type="submit" class="btn btn-primary">Submit</button>
+    	        </div>
+
+            </form>
+        {% else %}
+            <a href="{% url 'leave_application:apply_for_leave' %}"><button class='btn btn-info'> Back </button></a>
+        {% endif %}
+    </div>
+    </center>
+</div>
+
+{% endblock %}

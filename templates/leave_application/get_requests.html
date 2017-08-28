@@ -1,0 +1,33 @@
+{% extends 'index/base.html' %}
+{% load static %}
+
+{% block extra_head %}
+    <script src="{% static 'bower_components/jquery/dist/jquery.min.js'%}"></script>
+    <script src="{% static 'leave_application/js/process_request.js' %}" type='text/javascript' >
+    </script>
+{% endblock %}
+{% block content %}
+    <div class='box box-primary'>
+        {% for req in requests %}
+            <div id ='leave-request-{{ req.leave_request.id }}' class='box box-solid'>
+                <b> Username: </b> {{ req.leave_request.applicant.username }}<br><br>
+                <b> Leave Period: </b> <i> from <i> <strong> {{ req.leave_request.leave.start_date }}
+                </strong> <i> to </i> <strong> {{ req.leave_request.leave.end_date }}</strong>
+                    <br><br>
+                <b> Remark: </b><input type=textarea id='remark-{{req.leave_request.id}}' required />
+                {% if not req.forward %}
+                    <button class='btn btn-primary' id='accept' data='{{ req.leave_request.id }}'> Accept </button>
+                    <button class='btn btn-danger' id='reject' data='{{ req.leave_request.id }}'> Reject </button>
+                {% else %}
+                    <button id='forward' class='btn btn-info' data='{{ req.leave_request.id }}'> Forward </button>
+                {% endif %}
+                <br><br>
+                <b>{{req.leave_request.applicant.first_name}} {{req.leave_request.applicant.last_name}}</b>
+                requested you to
+                {% if req.leave_request.permission == 'academic' %} Academically replace his duties
+                {% elif req.leave.request.permission == 'admin' %} Administratively replace his duties
+                {% else %} allow him {% endif %} for the given period of absence (leave)
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

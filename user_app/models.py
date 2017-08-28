@@ -64,9 +64,9 @@ def add_extra_info(sender, instance, created, **kwargs):
 
 
 class Administration(models.Model):
-    administrator = models.ForeignKey(User, related_name='administration_duty',
+    administrator = models.OneToOneField(User, related_name='administration_duty',
                                             on_delete=models.CASCADE)
-    position = models.ForeignKey(Designation, on_delete=models.CASCADE)
+    position = models.OneToOneField(Designation, on_delete=models.CASCADE)
 
     def __str__(self):
         return '{} at position {}'.format(self.administrator.username, self.position)

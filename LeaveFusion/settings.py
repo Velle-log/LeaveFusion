@@ -27,17 +27,63 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+#Google authentication
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+            'hd' : 'iiitdmj.ac.in',
+        }
+    }
+}
+
+#allauth settings
+
+LOGIN_URL = 'accounts/login/'
+LOGOUT_URL = 'accounts/logout/'
+LOGIN_REDIRECT_URL = '/'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'ramlalfff@gmail.com'#email of sender
+EMAIL_HOST_PASSWORD = ''# password of sender
+EMAIL_PORT = 587
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_AUTHENTICATION_METHOD ='username_email'
+ACCOUNT_CONFIRM_EMAIL_ON_GET = False
+ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = '/accounts/login/'
+ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/'
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
+ACCOUNT_EMAIL_CONFIRMATION_HMAC = True
+ACCOUNT_EMAIL_VERIFICATION = 'optional'
+ACCOUNT_EMAIL_SUBJECT_PREFIX = 'Leave Application: '
+DEFAULT_FROM_EMAIL = 'ramlalfff@gmail.com'
+SERVER_EMAIL = 'ramlalfff@gmail.com'
+# ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5
+ACCOUNT_LOGOUT_REDIRECT_URL = '/accounts/login/'
+ACCOUNT_USERNAME_MIN_LENGTH = 3
+SOCIALACCOUNT_ADAPTER = 'user_app.adapters.MySocialAccountAdapter'
+
 # Application definition
 
 INSTALLED_APPS = [
+    'user_app.apps.UserAppConfig',
+    'leave_application.apps.LeaveApplicationConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'user_app.apps.UserAppConfig',
-    'leave_application.apps.LeaveApplicationConfig',
+    'django.contrib.sites',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth',
+    'allauth.socialaccount.providers.google',
 ]
 
 MIDDLEWARE = [
@@ -82,6 +128,14 @@ DATABASES = {
 }
 
 
+
+AUTHENTICATION_BACKENDS = (
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    'allauth.account.auth_backends.AuthenticationBackend',)
+
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
 
@@ -119,6 +173,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+SITE_ID = 3
+
+STATIC_ROOT = 'static/'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+MEDIA_URL = '/media/'
 
 
 if DEBUG:

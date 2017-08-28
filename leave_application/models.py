@@ -22,7 +22,7 @@ class LeavesCount(models.Model):
     restricted = models.IntegerField(default=2)
     station = models.IntegerField(default=2)
     earned = models.IntegerField(default=30)
-    vacation_leaves = models.IntegerField(default=60)
+    vacation = models.IntegerField(default=60)
 
     def __str__(self):
         return 'user: {}'.format(self.user.username)
@@ -32,7 +32,7 @@ class Leave(models.Model):
     applicant = models.ForeignKey(User,
                                   related_name='leave_applications',
                                   on_delete=models.CASCADE)
-    leave_type = models.CharField(max_length=20,
+    type_of_leave = models.CharField(max_length=20,
                                   choices=Constants.LEAVE_TYPE,
                                   default='casual')
     academic_replacement = models.ForeignKey(User,
@@ -50,7 +50,7 @@ class Leave(models.Model):
     status = models.CharField(max_length=10, blank=False, default='processing')
 
     @property
-    def count_leave_days(self):
+    def count_work_days(self):
         """
             property which returns the workdays in the leave period
             ==> Actual considered leave days
@@ -72,6 +72,7 @@ class CurrentLeaveRequest(models.Model):
                                        on_delete=models.SET_NULL, null=True)
     position = models.ForeignKey(Designation, on_delete=models.CASCADE)
     leave = models.ForeignKey(Leave, related_name='cur_requests', on_delete=models.CASCADE)
+    permission = models.CharField(max_length=20, default='academic')
 
     def __str__(self):
         return '{} requested from {}'.format(self.applicant.username, self.requested_from.username)
@@ -87,9 +88,10 @@ class LeaveRequest(models.Model):
                                        on_delete=models.SET_NULL, null=True)
     position = models.ForeignKey(Designation, on_delete=models.CASCADE)
     leave = models.ForeignKey(Leave, related_name='requests', on_delete=models.CASCADE)
-    both = models.BooleanField(default=False)
+    # both = models.BooleanField(default=False)
     remark = models.CharField(max_length=200, blank=False, default='')
     status = models.BooleanField(default=False)
+    timestamp = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return '{} requested from {}, status: {}'.format(self.applicant.username,
@@ -106,21 +108,22 @@ def add_current_leave_request(instance, sender, created, **kwargs):
                 CurrentLeaveRequest.objects.create(
                     applicant = instance.applicant,
                     requested_from = acad_rep,
-                    position = acad_rep.designation,
+                    position = acad_rep.extrainfo.designation,
                     leave = instance,
                 )
             if admin_rep is not None:
                 CurrentLeaveRequest.objects.create(
                     applicant = instance.applicant,
                     requested_from = admin_rep,
-                    position = admin_rep.designation,
+                    position = admin_rep.extrainfo.designation,
                     leave = instance,
+                    permission = 'admin',
                 )
         else:
             sanc_auth = instance.department.sanctioning_authority
             CurrentLeaveRequest.objects.create(
                 applicant = instance.applicant,
                 requested_from = sanc_auth,
-                position = sanc_auth.designation,
+                position = sanc_auth.extrainfo.designation,
                 leave = instance,
             )
