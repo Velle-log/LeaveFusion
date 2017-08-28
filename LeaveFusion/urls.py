@@ -11,6 +11,8 @@ urlpatterns = [
     url(r'^profile/', include('user_app.urls', namespace='profile')),
 ]
 
+
+
 if settings.DEBUG:
     import debug_toolbar
     urlpatterns = [

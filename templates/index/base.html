@@ -40,8 +40,65 @@
   {% endblock %}
   <!-- Google Font -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <style type="text/css">
+    input[type="text"], textarea, input[type="password"] {
+      border:1px solid #ccc;
+      border-radius: 5px;
+      padding: 0.3em;
+     width: 70%;
+/*     background-color: rgba(70,70,70,0.1);*/
+     box-shadow: 0 1px 1px rgba(black, 0.1);
+     resize: none;
+    }
+    input[name="login"], input[name="password"] {
+     width: 100%;
+    }
+
+    input[type="checkbox"]{
+        display:inline-block;
+        width:19px;
+        height:19px;
+        margin:-2px 10px 0 0;
+        vertical-align:middle;
+        background:#581845 -19px top no-repeat;
+        cursor:pointer;
+    }
+
+    .btn-primary{
+      width:30%;
+    }
+    body select {
+    	display: inline;
+    	margin:0.3em;
+    	padding: 0.5em 70px 0.5em 0.6em !important;
+    	max-width: 100%; height: auto !important;
+    	border: 1px solid #e3e3e3;
+    	border-radius: 3px;
+    	background: url("{% static 'img/arrow.png' %}")
+    	right center no-repeat;
+    	background-color: #fff;
+    	color: #444444;
+    	line-height: 16px !important;
+    	appearance: none;
+    	/* this is must */
+    	-webkit-appearance: none;
+    	-moz-appearance: none;
+    	}
+    	/* body select.select_box option */
+    body select option
+    { padding: 0 4px; }
+    	/* for IE and Edge */
+    select::-ms-expand
+    {
+    		display: none;
+    }
+
+    select:disabled::-ms-expand
+    { background: #f60; }
+
+  </style>
 </head>
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition sidebar-mini yellow-skin skin-yellow sidebar-collapse">
 {% if messages %}
       <!-- custom js -->
       <script src="{% static 'my_js/basic.js' %}" type="text/javascript"></script>
@@ -79,7 +136,9 @@
             <li class="dropdown messages-menu">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 <i class="fa fa-envelope-o"></i>
-                <span class="label label-success">0</span>
+                {% if not messeges_count == 0 %}
+                <span class="label label-warning">{{ messeges_count }}</span>
+                {% endif %}
               </a>
               <ul class="dropdown-menu">
                 <li class="header">header</li>
@@ -108,7 +167,9 @@
             <li class="dropdown notifications-menu">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 <i class="fa fa-bell-o"></i>
-                <span class="label label-warning">0</span>
+                {% if not notification_count == 0 %}
+                <span class="label label-warning">{{ notification_count }}</span>
+                {% endif %}
               </a>
               <ul class="dropdown-menu">
                 <li class="header">header</li>
@@ -129,7 +190,9 @@
             <li class="dropdown tasks-menu">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 <i class="fa fa-flag-o"></i>
-                <span class="label label-danger">0</span> <!-- enter the count of leave requests here -->
+                {% if not task_count == 0 %}
+                <span class="label label-warning">{{ task_count }}</span>
+                {% endif %}
               </a>
               <ul class="dropdown-menu">
                 <li class="header">header</li>
@@ -193,10 +256,10 @@
                 <!-- Menu Footer-->
                 <li class="user-footer">
                   <div class="pull-left">
-                    <a href="{% url 'profile:profile_view'%}" class="btn btn-default btn-flat">Profile</a>
+                    <a href="#" class="btn btn-default btn-flat">Profile</a>
                   </div>
                   <div class="pull-right">
-                    <a href="{% url 'account_logout' %}" class="btn btn-default btn-flat">Sign out</a>
+                    <a href="/accounts/logout/" class="btn btn-default btn-flat">Sign out</a>
                   </div>
                 </li>
               </ul>
@@ -239,16 +302,21 @@
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu" data-widget="tree">
           <li class="header">MAIN NAVIGATION</li>
-          <li class="treeview">
+          <li class="" id="Home-sidebar">
+            <a href="/">
+              <i class="fa fa-home"></i> <span>Home</span>
+            </a>
+          </li>
+          <li class="treeview" id="Leave-sidebar">
             <a href="#">
-              <i class="fa fa-dashboard"></i> <span>Leave</span>
+              <i class="glyphicon glyphicon-calendar"></i> <span>Leave</span>
               <span class="pull-right-container">
                 <i class="fa fa-angle-left pull-right"></i>
               </span>
             </a>
             <ul class="treeview-menu">
-              <li id='leave-apply'><a href="{% url 'leave_application:apply_for_leave' %}"><i class="fa fa-circle-o"></i> Apply for Leave</a></li>
-              <li id='leave-view'><a href="#"><i class="fa fa-circle-o"></i> View Applied Leave</a></li>
+              <li class="" id='Leave-sidebar-Apply'><a href="{% url 'leave_application:apply_for_leave' %}"><i class="fa fa-circle-o"></i> Apply for Leave</a></li>
+              <li class="" id='Leave-sidebar-View'><a href="#"><i class="fa fa-circle-o"></i> View Applied Leave</a></li>
             </ul>
           </li>
         </ul>
@@ -267,15 +335,19 @@
         {{ title }}
       </h1>
       <ol class="breadcrumb">
-        <li><a href="/"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li class="active">{{ title }}</li>
+        <li class="active"><a href="/"><i class="fa fa-home"></i></a>{{ title }}</li>
+        {% if action %}
+        <li>{{ action }}</li>
+        {% endif %}
       </ol>
     </section>
     <section class="content">
-
       {% block content %}
       {% endblock %}
-      <br><br><br><br>
+      <br><br>
+      {% block bass %}
+      {% endblock %}
+      <br><br>
       <br><br><br><br>
       <br><br><br><br>
       <br><br><br><br>
@@ -344,5 +416,12 @@
 <script src="{% static 'dist/js/pages/dashboard.js'%}"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="{% static 'dist/js/demo.js'%}"></script>
+<!-- custom inline js -->
+<script type="text/javascript">
+	$(document).ready(function(){
+		$('#{{title}}-sidebar').addClass('active');
+		$('#{{title}}-sidebar-{{ action }}').addClass('active');
+	});
+</script>
 </body>
 </html>

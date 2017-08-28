@@ -6,35 +6,25 @@
     </div>
             <!-- /.box-header -->
             <!-- form start -->
-    <center>
-    <div class="box-body">
-        {% if message %}
-            {{message}}
-        {% endif %}
-        {% if form %}
-            {% if form.errors %}
-                <pre>
-                    {{form.errors}}
-                </pre>
-            {% endif %}
-      		<form role='form' method='post'>
-                {% csrf_token %}
+
+    <div class="box-body" style="padding: 1em">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-2 box-outline-soft">
+      		<form role="form" method='post'>
       			<div class="input-group">
-            	{% for field in form %}
-    			{{field.label_tag}}&emsp;
-    			{{field}}<br><br>
-    			{% endfor %}
+                {% csrf_token %}
+            	{{ form.as_p }}
     			</div>
     			<div class="box-footer">
-    	            <button type="submit" class="btn btn-primary">Submit</button>
+    	            <button type="submit" style="float: right;" class="btn btn-success">Submit</button>
+
     	        </div>
 
             </form>
-        {% else %}
-            <a href="{% url 'leave_application:apply_for_leave' %}"><button class='btn btn-info'> Back </button></a>
-        {% endif %}
+            </div>
+        </div>
     </div>
-    </center>
+
 </div>
 
 {% endblock %}

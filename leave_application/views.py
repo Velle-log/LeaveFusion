@@ -19,7 +19,7 @@ class ApplyLeave(View):
             view to handle get request to /leave/apply
         """
         form = self.get_form(request)
-        return render(request, 'leave_application/apply_for_leave.html', {'form': form, 'title': 'Leave'})
+        return render(request, 'leave_application/apply_for_leave.html', {'form': form, 'title': 'Leave', 'action':'Apply'})
 
     def post(self, request):
         """
@@ -29,7 +29,9 @@ class ApplyLeave(View):
         # form2 = FacultyLeaveForm(request.POST, user=request.user)
         # print(form2.is_valid())
         # print(form2.errors)
+
         if form.is_valid():
+
             acad_done = False if form.cleaned_data.get('acad_rep', False) else True
             admin_done = False if form.cleaned_data.get('admin_rep', False) else True
             academic_replacement = get_object_or_none(User, username=form.cleaned_data.get('acad_rep'))
@@ -52,11 +54,11 @@ class ApplyLeave(View):
             except Exception as e:
                 return render(request,
                               'leave_application/apply_for_leave.html',
-                              {'form': form, 'message': 'Failed: {}'.format(e)})
-            return render(request, 'leave_application/apply_for_leave.html', {'message': 'success', 'title': 'Leave'})
+                              {'form': form, 'message': 'Failed'})
+            return render(request, 'leave_application/apply_for_leave', {'message': 'success', 'title': 'Leave', 'action':'Apply'})
 
         else:
-            return render(request, 'leave_application/apply_for_leave.html', {'form': form, 'title': 'Leave'})
+            return render(request, 'leave_application/apply_for_leave.html', {'form': form, 'title': 'Leave', 'action':'Apply'})
 
     def get_user_type(self, request):
         return request.user.extrainfo.user_type
@@ -67,6 +69,7 @@ class ApplyLeave(View):
 
         if user_type == 'faculty':
             form = self.get_form_object(FacultyLeaveForm, request)
+
         elif user_type == 'staff':
             form = self.get_form_object(StaffLeaveForm, request)
         else:

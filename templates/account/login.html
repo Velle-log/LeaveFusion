@@ -3,9 +3,9 @@
 {% load i18n %}
 {% load account socialaccount %}
 
-{% block content %}
 
-<div class="box box-primary">
+
+<div class="box box-primary" style="padding: 1em;">
     <div class="box-header with-border">
         <h3 class="box-title"><center><h1>{% trans "Sign In" %}</h1></center>
             {% get_providers as socialaccount_providers %}</h3>
@@ -21,6 +21,7 @@
           <div class="socialaccount_ballot">
 
             <ul class="socialaccount_providers">
+              <br>
               {% include "socialaccount/snippets/provider_list.html" with process="login" %}
             </ul>
 
@@ -32,16 +33,16 @@
       {% endif %}
       </div>
 
-        <div class="col-md-7" style="border-left:1px solid #ccc;">
+        <div class="col-md-5 col-md-offset-1" style="border-left:1px solid #ccc;">
           <form class="ui large form login" method="POST" action="{% url 'account_login' %}">
             {% csrf_token %}
             {{ form.as_p }}
+            <a class="button secondaryAction" style="display: inline; float: right; margin-top: -30px;" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
             {% if redirect_field_value %}
-            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-            {% endif %}
-            <button class="btn btn-block btn-primary" type="submit">{% trans "Sign In" %}</button>
+            <input type="hidden"  name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+            {% endif %} 
             <br>
-            <a class="button secondaryAction" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a> 
+            <button class="btn btn-block btn-primary" type="submit">{% trans "Sign In" %}</button>
           </form>
         </div>
         
@@ -50,4 +51,4 @@
 
 
 {% endblock %}
-{% endblock %}
+
