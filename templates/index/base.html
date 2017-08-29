@@ -98,7 +98,7 @@
 
   </style>
 </head>
-<body class="hold-transition sidebar-mini yellow-skin skin-yellow sidebar-collapse">
+<body class="hold-transition sidebar-mini yellow-skin skin-yellow">
 {% if messages %}
       <!-- custom js -->
       <script src="{% static 'my_js/basic.js' %}" type="text/javascript"></script>
@@ -119,9 +119,9 @@
     <!-- Logo -->
     <a href="/" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
-      <span class="logo-mini"><b>FSN</b></span>
+      <span class="logo-mini"><img class="img-responsive" src="{% static 'img/fusion_logo.png' %}"></span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><b>IIIT</b>DMJ <b>Fusion</b></span>
+      <span class="logo-lg"><img style="height: 30%; width: 30%; margin: -5%; padding: 0px; border:0px;" src="{% static 'img/fusion_logo.png' %}"><b> IIIT</b>DMJ <b>Fusion</b></span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-fixed-top">
