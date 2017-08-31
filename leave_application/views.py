@@ -6,9 +6,10 @@ from leave_application.forms import (FacultyLeaveForm,
                                      StudentLeaveForm,)
 
 from user_app.models import Administration
-from leave_application.models import Leave, CurrentLeaveRequest, LeaveRequest
+from leave_application.models import Leave, CurrentLeaveRequest, LeaveRequest, LeavesCount
 from django.contrib.auth.models import User
 from leave_application.helpers import FormData, get_object_or_none
+
 
 class ApplyLeave(View):
     """
@@ -84,6 +85,7 @@ class ApplyLeave(View):
         else:
             return cls(request.POST, user=request.user)
 
+
 class ProcessRequest(View):
 
     def get(self, request, id):
@@ -96,10 +98,18 @@ class ProcessRequest(View):
 
         sanc_auth = leave_request.applicant.extrainfo.department.sanctioning_authority
         sanc_officer = leave_request.applicant.extrainfo.department.sanctioning_officer
+
         designation = request.user.extrainfo.designation
+
         for_replacement = leave_request.permission == 'academic' \
                     or leave_request.permission == 'admin'
+
         if do == 'accept':
+
+            if leave_request.applicant.extrainfo.user_type == 'student' \
+                and request.user == leave_request.requested_from:
+                return self.process_student_request(sanc_auth, leave_request, remark, True)
+
             if leave_request.permission == 'academic':
                 if leave_request.leave.academic_replacement == request.user:
                     leave_request = self.create_leave_request(leave_request, False, accept=True, remark=remark)
@@ -143,12 +153,6 @@ class ProcessRequest(View):
             if for_replacement and leave_request.leave.acad_done \
                and leave_request.leave.admin_done:
 
-                # if type_of_leave in ['casual', 'restricted']:
-                #     next_user = Administration.objects.filter(position=sanc_auth).first().administrator
-                #     next_position = sanc_auth
-                # else:
-                #     next_user = Administration.objects.filter(position=sanc_officer).first().administrator
-                #     next_position = sanc_officer
                 next_user = Administration.objects.filter(position=sanc_auth).first().administrator
                 CurrentLeaveRequest.objects.create(
                     applicant = leave_request.applicant,
@@ -159,6 +163,9 @@ class ProcessRequest(View):
                 )
 
         elif do == 'reject':
+            if leave_request.applicant.extrainfo.user_type == 'student' \
+               and request.user == leave_request.requested_from:
+                return self.process_student_request(sanc_auth, leave_request, remark, False)
 
             if sanc_auth == designation and type_of_leave not in ['casual', 'restricted']:
                 raise Http404
@@ -182,6 +189,10 @@ class ProcessRequest(View):
             leave_request.leave.save()
 
         elif do == 'forward':
+
+            if leave_request.applicant.extrainfo.user_type == 'student':
+                raise Http404
+
             if sanc_auth == designation and type_of_leave not in ['casual', 'restricted']:
                 leave_request = self.create_leave_request(leave_request, False, accept=True, remark=remark)
                 sanc_officer_user = Administration.objects.filter(position=sanc_officer).first().administrator
@@ -214,10 +225,29 @@ class ProcessRequest(View):
         if not accept and final:
             cur_leave_request.leave.status = 'rejected'
         elif final:
+            count = LeavesCount.objects.get(user=cur_leave_request.applicant)
+            remain = getattr(count, cur_leave_request.leave.type_of_leave)
+            setattr(count, cur_leave_request.leave.type_of_leave,
+                           remain - cur_leave_request.leave.count_work_days)
+            count.save()
             cur_leave_request.leave.status = 'accepted'
 
         cur_leave_request.delete()
         return leave_request
+
+    def process_student_request(self, sanc_auth, leave_request, remark, process):
+
+        outcome = 'accepted' if process else 'rejected'
+        new_leave_request = LeaveRequest.objects.create(
+            applicant = leave_request,
+            requested_from = leave_request.requested_from,
+            position = leave_request.position,
+            leave = leave_request.leave,
+        )
+        new_leave_request.leave.status = outcome
+        leave_request.delete()
+        return JsonResponse({'message': 'Successful', 'type': 'success'}, status=200)
+
 
 class GetApplications(View):
 
@@ -242,69 +272,3 @@ class GetLeaves(View):
         leave_list = Leave.objects.filter(applicant=request.user).order_by('-id')
         count = len(list(leave_list))
         return render(request, 'leave_application/get_leaves.html', {'leaves':leave_list, 'count':count, 'title':'Leave', 'action':'ViewLeaves'})
-
-
-"""
-
-def get(self):
-    if do=='accept':
-                    # if sanc_auth == sanc_officer and designation == sanc_auth:
-                    #     self.create_leave_request(leave_request, True, accept=True, remark=remark)
-                    #
-                    # elif sanc_auth == designation:
-                    #
-                    #     if type_of_leave not in ['casual', 'restricted']:
-                    #         raise Http404
-                    #
-                    #         leave_request = self.create_leave_request(leave_request,
-                    #         True, accept=True,
-                    #         remark=remark)
-                    #
-                    #     elif sanc_officer == designation:
-                    #
-                    #         self.create_leave_request(leave_request, True, accept=True, remark=remark)
-                    #
-                    #     elif designation == leave_request.position:
-                    #         leave_request = self.create_leave_request(leave_request, False, accept=True, remark=remark)
-                    #         if leave_request.leave.academic_replacement == leave_request.requested_from:
-                    #             leave_request.leave.acad_done = True
-                    #
-                    #         elif leave_request.leave.administrative_replacement == leave_request.requested_from:
-                    #             leave_request.leave.admin_done = True
-                    #
-                    #             leave_request.leave.save()
-                    #             condition = leave_request.leave.admin_done and leave_request.leave.acad_done
-                    #
-                    #             if condition:
-                    #                 CurrentLeaveRequest.objects.get_or_create(
-                    #                 leave = leave_request.leave,
-                    #                 requested_from = sanc_auth,
-                    #                 applicant = leave_request.applicant,
-                    #                 position = sanc_auth,
-                    #                 )
-                    #
-                    #
-                    #             else:
-                    #                 raise Http404
-                    #
-                    #             elif do == 'forward':
-                    #
-                    #                 if sanc_auth == sanc_officer and designation == sanc_auth:
-                    #                     raise Http404
-                    #
-                    #                     condition = type_of_leave in ['casual', 'restricted'] \
-                    #                     and designation == sanc_auth
-                    #
-                    #                     if condition:
-                    #                         leave_request = self.create_leave_request(leave_request, False, accept=True, remark=remark)
-                    #                         CurrentLeaveRequest.objects.create(
-                    #                         leave = leave_request.leave,
-                    #                         requested_from = sanc_officer,
-                    #                         applicant = leave_request.applicant,
-                    #                         position = sanc_officer,
-                    #                         )
-                    #
-                    #                     else:
-                    #                         raise Http404
-
-"""

@@ -9,7 +9,6 @@ class Constants:
     LEAVE_TYPE = (
         ('casual', 'Casual Leave'),
         ('restricted', 'Restricted Holidays'),
-        ('station', 'Station Leave'),
         ('vacation', 'Vacation Leave'),
         ('earned', 'Earned Leave'),
         ('special_casual', 'Special Casual Leave'),
@@ -20,7 +19,6 @@ class LeavesCount(models.Model):
     casual = models.IntegerField(default=8)
     special_casual = models.IntegerField(default=10)
     restricted = models.IntegerField(default=2)
-    station = models.IntegerField(default=2)
     earned = models.IntegerField(default=30)
     vacation = models.IntegerField(default=60)
 
@@ -48,6 +46,7 @@ class Leave(models.Model):
     purpose = models.CharField(max_length=1000, blank=False, default='No Purpose')
     leave_address = models.CharField(max_length=100, blank=True, default='')
     status = models.CharField(max_length=10, blank=False, default='processing')
+    station = models.BooleanField(default=False)
 
     @property
     def count_work_days(self):
@@ -74,6 +73,7 @@ class CurrentLeaveRequest(models.Model):
     leave = models.ForeignKey(Leave, related_name='cur_requests', on_delete=models.CASCADE)
     permission = models.CharField(max_length=20, default='academic')
 
+    station = models.BooleanField(default=False)
     def __str__(self):
         return '{} requested from {}'.format(self.applicant.username, self.requested_from.username)
 
@@ -91,6 +91,7 @@ class LeaveRequest(models.Model):
     # both = models.BooleanField(default=False)
     remark = models.CharField(max_length=200, blank=False, default='')
     status = models.BooleanField(default=False)
+    station = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now=True)
 
     def __str__(self):

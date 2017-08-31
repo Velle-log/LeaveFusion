@@ -1,5 +1,7 @@
 # LeaveFusion  
-  A module which is going to be incorporated in larger Software Product. This mainly deals with the leave applications and the relavant processes mainly focused on Academic Institutions. Requires `python3.5+` and `django==1.11.4+`
+  A module which is going to be incorporated in larger Software Product.  
+  This mainly deals with the leave applications and the relavant processes mainly focused on Academic Institutions.  
+  Requires `python3.5+` and `django==1.11.4+`  
 
 ## Using it  
   * Install virtualenv `pip install virtualenv`  

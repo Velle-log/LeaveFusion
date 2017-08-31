@@ -46,26 +46,39 @@ SOCIALACCOUNT_PROVIDERS = {
 LOGIN_URL = 'accounts/login/'
 LOGOUT_URL = 'accounts/logout/'
 LOGIN_REDIRECT_URL = '/'
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'ramlalfff@gmail.com'#email of sender
-EMAIL_HOST_PASSWORD = 'unbeaten'# password of sender
+
+# email of sender
+EMAIL_HOST_USER = 'ramlalfff@gmail.com'
+
+# password of sender
+EMAIL_HOST_PASSWORD = ''
+
 EMAIL_PORT = 587
 ACCOUNT_EMAIL_REQUIRED = True
+
 ACCOUNT_AUTHENTICATION_METHOD ='username_email'
+
 ACCOUNT_CONFIRM_EMAIL_ON_GET = False
+
 ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = '/accounts/login/'
 ACCOUNT_EMAIL_CONFIRMATION_AUTHENTICATED_REDIRECT_URL = '/'
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 1
 ACCOUNT_EMAIL_CONFIRMATION_HMAC = True
+
 ACCOUNT_EMAIL_VERIFICATION = 'optional'
+
 ACCOUNT_EMAIL_SUBJECT_PREFIX = 'Fusion: '
 DEFAULT_FROM_EMAIL = 'ramlalfff@gmail.com'
+
 SERVER_EMAIL = 'ramlalfff@gmail.com'
-# ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5
+
 ACCOUNT_LOGOUT_REDIRECT_URL = '/accounts/login/'
 ACCOUNT_USERNAME_MIN_LENGTH = 3
+
 SOCIALACCOUNT_ADAPTER = 'user_app.adapters.MySocialAccountAdapter'
 
 # Application definition
@@ -73,6 +86,7 @@ SOCIALACCOUNT_ADAPTER = 'user_app.adapters.MySocialAccountAdapter'
 INSTALLED_APPS = [
     'user_app.apps.UserAppConfig',
     'leave_application.apps.LeaveApplicationConfig',
+    'calender.apps.CalenderConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

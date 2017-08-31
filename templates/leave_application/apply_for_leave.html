@@ -11,17 +11,21 @@
     <div class="box-body" style="padding: 1em">
         <div class="row">
             <div class="col-md-6 col-md-offset-2 box-outline-soft">
-      		<form role="form" method='post'>
-      			<div class="input-group">
-                {% csrf_token %}
-            	{{ form.as_p }}
-    			</div>
-    			<div class="box-footer">
-    	            <button type="submit" style="float: right;" class="btn btn-success">Submit</button>
+            {% if form %}
+          		<form role="form" method='post'>
+          			<div class="input-group">
+                    {% csrf_token %}
+                	{{ form.as_p }}
+        			</div>
+        			<div class="box-footer">
+        	            <button type="submit" style="float: right;" class="btn btn-success">Submit</button>
 
-    	        </div>
+        	        </div>
 
-            </form>
+                </form>
+            {% elif message %}
+                {{ message }}
+            {% endif %}
             </div>
         </div>
     </div>

@@ -9,6 +9,7 @@ urlpatterns = [
     url(r'^accounts/', include('allauth.urls')),
     url(r'^leave/', include('leave_application.urls', namespace='leave_application')),
     url(r'^profile/', include('user_app.urls', namespace='profile')),
+	url(r'^calender/', include('calender.urls', namespace='calender')),
 ]
 
 
