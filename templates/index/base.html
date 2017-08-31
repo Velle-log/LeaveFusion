@@ -119,9 +119,9 @@
     <!-- Logo -->
     <a href="/" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
-      <span class="logo-mini"><b>FSN</b></span>
+      <span class="logo-mini"><img class="img-responsive" src="{% static 'img/fusion_logo.png' %}"></span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><b>IIIT</b>DMJ <b>Fusion</b></span>
+      <span class="logo-lg"><img style="height: 30%; width: 30%; margin: -5%; padding: 0px; border:0px;" src="{% static 'img/fusion_logo.png' %}"><b> IIIT</b>DMJ <b>Fusion</b></span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-fixed-top">
@@ -256,7 +256,7 @@
                 <!-- Menu Footer-->
                 <li class="user-footer">
                   <div class="pull-left">
-                    <a href="#" class="btn btn-default btn-flat">Profile</a>
+                    <a href="{% url 'profile:profile_view' user.id %}" class="btn btn-default btn-flat">Profile</a>
                   </div>
                   <div class="pull-right">
                     <a href="/accounts/logout/" class="btn btn-default btn-flat">Sign out</a>

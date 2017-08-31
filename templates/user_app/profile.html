@@ -3,24 +3,25 @@
 {% load static %}
 <div class="row">
         <div class="col-md-3">
-
+        <!-- TODO: Add edit button on About me and education and modal form for display_pic change -->
           <!-- Profile Image -->
           <div class="box box-widget box-primary">
             <div class="box-body box-profile">
             	
               <img class="profile-user-img img-responsive img-circle" src="{% static 'img/user_avatar.png' %}" alt="User profile picture">
 
-              <h3 class="profile-username text-center">{{ request.user.first_name }} {{ request.user.last_name }}</h3>
+              <h3 class="profile-username text-center">{{ user.first_name }} {{ user.last_name }}</h3>
 
-              <p class="text-muted text-center">{{ request.user.username }} - {{ request.user.extrainfo.user_type }}</p>
+              <p class="text-muted text-center">{{ user.username }} - {{ user.extrainfo.user_type }}</p>
 
               <ul class="list-group list-group-unbordered">
                 <li class="list-group-item">
                   <b>Field 1</b> <a class="pull-right">link</a>
                 </li>
               </ul>
-
+              {% if not request.user == user %}
               <a href="#" class="btn btn-primary btn-block"><b>Follow</b></a>
+              {% endif %}
             </div>
             <!-- /.box-body -->
           </div>

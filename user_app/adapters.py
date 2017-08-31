@@ -26,4 +26,6 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
                 perform_login(request, u, 'none')
                 return redirect('/')
             except User.DoesNotExist:
-                pass
+                exception_string = "Seems Like you don't have an account here! Contact CC admin for your account."
+                messages.error(request, exception_string)
+                raise ImmediateHttpResponse(render_to_response('account\exception_no_account.html'))
