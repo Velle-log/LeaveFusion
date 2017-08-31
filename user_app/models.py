@@ -12,11 +12,6 @@ class Constants:
         ('O', 'Other')
     )
 
-    RELATIONSHIP = (
-        ('single', 'Single'),
-        ('married', 'Married')
-    )
-
 
 class Designation(models.Model):
     name = models.CharField(max_length=20, unique=True, blank=False)
@@ -40,8 +35,6 @@ class ExtraInfo(models.Model):
     user_type = models.CharField(max_length=20, default='student')
     unique_id = models.IntegerField(unique=True)
     sex = models.CharField(max_length=2, choices=Constants.SEX_CHOICES, default='M')
-    relationship_status = models.CharField(max_length=10,
-                                           choices=Constants.RELATIONSHIP, default='single')
     department = models.ForeignKey(DepartmentInfo, on_delete=models.CASCADE, null=True)
     profile_picture = models.ImageField(null=True, blank=True)
     about_me = models.TextField(default='', max_length=1000)

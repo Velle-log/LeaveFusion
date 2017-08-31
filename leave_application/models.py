@@ -56,6 +56,10 @@ class Leave(models.Model):
         """
         return count_work_days(self.start_date, self.end_date)
 
+    @property
+    def get_year(self):
+        return self.start_date.strftime('%Y')
+
     def __str__(self):
         return 'By: {}, type: {}'.format(self.applicant.username, self.type_of_leave)
 

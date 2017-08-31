@@ -3,9 +3,9 @@ from leave_application.models import CurrentLeaveRequest, LeavesCount
 from django.contrib.auth.models import User
 from user_app.models import Administration
 from leave_application.helpers import get_object_or_none, count_work_days
+from django.db.models import Q
 
 import datetime
-
 
 class LeaveForm(forms.Form):
 
@@ -21,6 +21,38 @@ class LeaveForm(forms.Form):
                                     max_length=100, required=False)
     purpose = forms.CharField(label='Purpose', widget=forms.Textarea, max_length=300)
 
+    def are_dates_valid(self):
+        from leave_application.models import Leave
+        start_date, end_date = self.cleaned_data['start_date'], self.cleaned_data['end_date']
+
+        objects = Leave.objects.filter(
+            Q(applicant = self.user) \
+            & Q(start_date__year = start_date.year) \
+            & ~Q(status = 'rejected')
+        )
+        if objects:
+            for obj in objects:
+                s_date = obj.start_date
+                e_date = obj.end_date
+                if max(start_date, s_date) <= min(end_date, e_date):
+                    return False
+        return True
+
+    def clean(self):
+
+        start_date = self.cleaned_data['start_date']
+        end_date = self.cleaned_data['start_date']
+
+        today = datetime.datetime.today()
+
+        if start_date > end_date or start_date < today or end_date < today \
+           or [start_date.year, end_date.year] != [today.year, today.year]:
+
+            raise forms.ValidationError('Invalid Dates')
+
+        if not self.are_dates_valid():
+            raise forms.ValidationError('You already have some leave overlapping '
+                                        'with the requested leave dates')
 
 class FacultyLeaveForm(LeaveForm):
 
@@ -51,6 +83,8 @@ class FacultyLeaveForm(LeaveForm):
 
     def clean(self):
 
+        super(FacultyLeaveForm, self).clean()
+
         admin_rep = self.cleaned_data.get('admin_rep', None)
         acad_rep = self.cleaned_data.get('acad_rep', None)
 
@@ -58,18 +92,12 @@ class FacultyLeaveForm(LeaveForm):
             raise forms.ValidationError('You can not choose yourself as replacement')
 
         type_of_leave = self.cleaned_data.get('type_of_leave')
-        leave_object = LeavesCount.objects.filter(user=self.user).first()
-
-        remaining_leaves = getattr(leave_object, type_of_leave)
 
         start_date = self.cleaned_data.get('start_date')
         end_date = self.cleaned_data.get('end_date')
 
         today = datetime.date.today()
 
-        if start_date > end_date or start_date < today or end_date < today\
-           or [start_date.year, end_date.year] != [today.year, today.year]:
-            raise forms.ValidationError('Invalid Dates')
         request_leaves = count_work_days(start_date, end_date)
 
         if type_of_leave == 'vacation':
@@ -80,7 +108,9 @@ class FacultyLeaveForm(LeaveForm):
             if not (start_date >= vac_start_date and end_date <= vac_end_date):
                 raise forms.ValidationError('Vacation Leave can only be taken in vacation time')
 
+        leave_object = LeavesCount.objects.filter(user=self.user).first()
 
+        remaining_leaves = getattr(leave_object, type_of_leave)
         # TODO: User must not have leaves in between start_date and end_date
 
         if remaining_leaves < request_leaves:
@@ -119,14 +149,17 @@ class StaffLeaveForm(LeaveForm):
 
 
     def clean(self):
+
+        super(StaffLeaveForm, self).clean()
         admin_rep = self.cleaned_data['admin_rep']
         start_date = self.cleaned_data['start_date']
         end_date = self.cleaned_data['end_date']
 
         today = datetime.datetime.today()
 
-        if start_date > end_date or start_date < today or end_date < today:
-            raise forms.ValidationError('Invalid Dates')
+
+        # if start_date > end_date or start_date < today or end_date < today:
+        #     raise forms.ValidationError('Invalid Dates')
 
         if admin_rep == self.user:
             raise forms.ValidationError('Can\'t use yourself as replacement user')
@@ -140,7 +173,7 @@ class StaffLeaveForm(LeaveForm):
 class StudentLeaveForm(LeaveForm):
 
     def clean(self):
-
+        super(StudentLeaveForm, self).clean()
         start_date = self.cleaned_data['start_date']
         end_date = self.cleaned_data['end_date']
 
@@ -148,5 +181,8 @@ class StudentLeaveForm(LeaveForm):
 
         if start_date > end_date or start_date < today or end_date < today:
             raise forms.ValidationError('Invalid Dates')
+
+        if not self.are_dates_valid():
+            raise
 
         #TODO: add validation
