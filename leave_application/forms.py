@@ -67,7 +67,8 @@ class FacultyLeaveForm(LeaveForm):
 
         today = datetime.date.today()
 
-        if start_date > end_date or start_date < today or end_date < today:
+        if start_date > end_date or start_date < today or end_date < today\
+           or [start_date.year, end_date.year] != [today.year, today.year]:
             raise forms.ValidationError('Invalid Dates')
         request_leaves = count_work_days(start_date, end_date)
 
