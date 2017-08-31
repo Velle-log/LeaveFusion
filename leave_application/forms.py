@@ -43,7 +43,7 @@ class LeaveForm(forms.Form):
         start_date = self.cleaned_data['start_date']
         end_date = self.cleaned_data['start_date']
 
-        today = datetime.datetime.today()
+        today = datetime.date.today()
 
         if start_date > end_date or start_date < today or end_date < today \
            or [start_date.year, end_date.year] != [today.year, today.year]:
@@ -69,9 +69,12 @@ class FacultyLeaveForm(LeaveForm):
             USER_CHOICES = list((user.username, '{} {}'.format(user.first_name, user.last_name)) \
                                  for user in User.objects.all() \
                                  if user.extrainfo.user_type == 'faculty' \
-                                 and user != self.user)
+                                 and user != self.user \
+                                 and user.extrainfo.department == self.user.extrainfo.department)
         except Exception as e:
+            print(e)
             USER_CHOICES = []
+            print(USER_CHOICES)
         super(FacultyLeaveForm, self).__init__(*args, **kwargs)
         self.fields['acad_rep'] = forms.CharField(label = 'Academic Responsibility Assigned To',
                                    widget=forms.Select(choices=USER_CHOICES))

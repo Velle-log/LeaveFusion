@@ -41,10 +41,10 @@
             </div>
             <div class="pull-right">
             {% if not req.forward %}
-                <button class='btn btn-success' id='accept' data='{{ req.leave_request.id }}'> Accept </button>
-                <button class='btn btn-danger' id='reject' data='{{ req.leave_request.id }}'> Reject </button>
+                <button class='btn btn-success accept' data='{{ req.leave_request.id }}'> Accept </button>
+                <button class='btn btn-danger reject' data='{{ req.leave_request.id }}'> Reject </button>
             {% else %}
-                <button id='forward' class='btn btn-info' data='{{ req.leave_request.id }}'> Forward </button>
+                <button class='btn btn-info forward' data='{{ req.leave_request.id }}'> Forward </button>
             {% endif %}
             </div>
         </div>

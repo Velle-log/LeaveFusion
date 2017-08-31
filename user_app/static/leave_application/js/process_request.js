@@ -12,7 +12,7 @@ $(document).ready(function(){
             var symbol = "check";
         else
             var symbol = "info";
-        var afterhtml = "<div class='col-md-8'><div class='alert alert-"+result+" alert-dismissible'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button><h4><i class='icon fa fa-"+symbol+"'></i> Alert!</h4>"+intext+"</div></div>";
+        var afterhtml = "<div class='col-md-8'><div class='alert alert-"+result+" alert-dismissible'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>×</button><h4><i class='icon fa fa-"+symbol+"'></i> Success !</h4><p>"+intext+"</p></div></div>";
         return afterhtml;
     }
 
