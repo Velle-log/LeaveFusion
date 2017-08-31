@@ -32,16 +32,19 @@ class DepartmentInfo(models.Model):
     sanctioning_officer = models.ForeignKey(Designation, on_delete=models.CASCADE)
 
     def __str__(self):
-        return 'name is {}'.format(self.name)
+        return 'department: {}'.format(self.name)
 
 class ExtraInfo(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     designation = models.ForeignKey(Designation, on_delete=models.CASCADE, null=True)
     user_type = models.CharField(max_length=20, default='student')
+    unique_id = models.IntegerField(unique=True)
     sex = models.CharField(max_length=2, choices=Constants.SEX_CHOICES, default='M')
     relationship_status = models.CharField(max_length=10,
                                            choices=Constants.RELATIONSHIP, default='single')
     department = models.ForeignKey(DepartmentInfo, on_delete=models.CASCADE, null=True)
+    profile_picture = models.ImageField(null=True, blank=True)
+    about_me = models.TextField(default='', max_length=1000)
 
     @property
     def is_onleave(self):

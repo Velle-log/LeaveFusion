@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    $('#accept').click(function(e){
+    $('.accept').click(function(e){
         // e.preventDefault();
         data = $(this).attr('data');
         // console.log('hey there'+data);
@@ -23,7 +23,7 @@ $(document).ready(function(){
         });
     });
 
-    $('#reject').click(function(e){
+    $('.reject').click(function(e){
         // e.preventDefault();
         data = $(this).attr('data');
         div = $('#leave-request-'+data);
@@ -45,7 +45,7 @@ $(document).ready(function(){
         });
     });
 
-    $('#forward').click(function(e){
+    $('.forward').click(function(e){
         // e.preventDefault();
         data = $(this).attr('data');
         div = $('#leave-request-'+data);

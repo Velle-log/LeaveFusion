@@ -16,16 +16,16 @@
                     <br><br>
                 <b> Remark: </b><input type=textarea id='remark-{{req.leave_request.id}}' required />
                 {% if not req.forward %}
-                    <button class='btn btn-primary' id='accept' data='{{ req.leave_request.id }}'> Accept </button>
-                    <button class='btn btn-danger' id='reject' data='{{ req.leave_request.id }}'> Reject </button>
+                    <button class='btn btn-primary accept' data='{{ req.leave_request.id }}'> Accept </button>
+                    <button class='btn btn-danger reject' data='{{ req.leave_request.id }}'> Reject </button>
                 {% else %}
-                    <button id='forward' class='btn btn-info' data='{{ req.leave_request.id }}'> Forward </button>
+                    <button class='btn btn-info forward' data='{{ req.leave_request.id }}'> Forward </button>
                 {% endif %}
                 <br><br>
                 <b>{{req.leave_request.applicant.first_name}} {{req.leave_request.applicant.last_name}}</b>
                 requested you to
                 {% if req.leave_request.permission == 'academic' %} Academically replace his duties
-                {% elif req.leave.request.permission == 'admin' %} Administratively replace his duties
+                {% elif req.leave_request.permission == 'admin' %} Administratively replace his duties
                 {% else %} allow him {% endif %} for the given period of absence (leave)
             </div>
         {% endfor %}

@@ -98,7 +98,7 @@
 
   </style>
 </head>
-<body class="hold-transition sidebar-mini yellow-skin skin-yellow sidebar-collapse">
+<body class="hold-transition sidebar-mini blue-skin skin-blue sidebar-collapse">
 {% if messages %}
       <!-- custom js -->
       <script src="{% static 'my_js/basic.js' %}" type="text/javascript"></script>
@@ -316,7 +316,7 @@
             </a>
             <ul class="treeview-menu">
               <li class="" id='Leave-sidebar-Apply'><a href="{% url 'leave_application:apply_for_leave' %}"><i class="fa fa-circle-o"></i> Apply for Leave</a></li>
-              <li class="" id='Leave-sidebar-View'><a href="#"><i class="fa fa-circle-o"></i> View Applied Leave</a></li>
+              <li class="" id='Leave-sidebar-View'><a href="{% url 'leave_application:get_applications' %}"><i class="fa fa-circle-o"></i> View Applied Leave</a></li>
             </ul>
           </li>
         </ul>
