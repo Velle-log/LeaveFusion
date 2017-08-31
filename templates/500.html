@@ -1,5 +1,4 @@
 <head>
-{% block extra_head %}
 {% load static %}
    <!--- basic page needs
    ================================================== -->
@@ -22,20 +21,25 @@
    ================================================== -->
 	<script src="{% static '404/js/modernizr.js'%}"></script>
 
-{% endblock %}
+<style type="text/css">
+   	.logo{ 
+   		margin-top: 2em; 
+   		font-size: 3em;
+   		display: inline;
+   	}
+   </style>
 </head>
 <body>
-{% block content %}
 
 	<!-- header 
    ================================================== -->
-    <header class="main-header">
-   	<div class="row">
-   		<div class="logo">
-	         <a href="/">Fusion</a>
-	      </div>   		
-   	</div>   
-   </header> 
+   	<header class="main-header">
+	   	<div class="row">
+	   		<div class="" >
+		         <a href="/"><b class="logo">IIIT<p style="display: inline; font-weight: 1em;">DMJ</p> Fusion</b></a>
+		     </div>   		
+	   	</div>   
+	</header>
 <!-- /header --> 
    <!-- navigation 
    ================================================== -->
@@ -107,15 +111,10 @@
 
 		</div> <!-- /content-wrap -->
    
-   </main> <!-- /main-404-content -->
-
-   <div id="preloader"> 
-    	<div id="loader"></div>
-   </div> 
+   </main> <!-- /main-404-content --> 
 
    <!-- Java Script
    ================================================== --> 
    <script src="{% static '404/js/plugins.js'%}"></script>
    <script src="{% static '404/js/main.js'%}"></script>
-
-{% endblock %}
+</body>

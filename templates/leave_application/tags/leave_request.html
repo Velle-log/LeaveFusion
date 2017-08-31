@@ -1,0 +1,55 @@
+<div class="col-md-8" id ='leave-request-{{ req.leave_request.id }}'>
+  <div class="box box-default box-solid collapsed-box" id="leave-request-body-{{ req.leave_request.id }}">
+    <div class="box-header with-border">
+      <h3 class="box-title"><b>#{{ req.leave_request.leave.id }}: </b>{{ req.leave_request.applicant.first_name }} {{ req.leave_request.applicant.last_name }} - {{ req.leave_request.leave.type_of_leave }}</h3>
+
+      <div class="box-tools pull-right">
+        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
+      </div>
+      <!-- /.box-tools -->
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body" style="display: none;">
+        <div class="pull-left">
+            <i>from: </i> <strong> {{ req.leave_request.leave.start_date }}</strong>
+        </div>
+        <div class="pull-right">
+            <i>to: </i> <strong> {{ req.leave_request.leave.end_date }}</strong>
+        </div>
+        <br>
+        <div class="box-solid">
+            <div class="box-header with-border">
+                <h4> <b><a href="{% url 'profile:profile_view' req.leave_request.applicant.id %}">{{req.leave_request.applicant.first_name}} {{req.leave_request.applicant.last_name}}</a> applied for {{ req.leave_request.leave.type_of_leave }} Leave.</b></h4>
+            </div>
+            <br>
+            <p><b>Purpose: </b>{{ req.leave_request.leave.purpose }}</p>
+            <br>
+            {% if req.leave_request.leave.leave_address %}
+            <p><b>Leave Address: </b>{{ req.leave_request.leave.leave_address }}</p>
+            <br>
+            {% endif %}
+            <p><a href="{% url 'profile:profile_view' req.leave_request.applicant.id %}">{{req.leave_request.applicant.first_name}} {{req.leave_request.applicant.last_name}}</a>
+            requested you to
+            {% if req.leave_request.permission == 'academic' %} Academically replace his/her duties
+            {% elif req.leave_request.permission == 'admin' %} Administratively replace his/her duties
+            {% else %} allow him/her {% endif %} for the given period of absence (leave)</p>
+            <br>
+        </div>
+        <div class="box-footer">
+            <div class="pull-left">
+                <b> Remark: </b><textarea type="text" id='remark-{{req.leave_request.id}}' required></textarea>
+            </div>
+            <div class="pull-right">
+            {% if not req.forward %}
+                <button class='btn btn-success' id='accept' data='{{ req.leave_request.id }}'> Accept </button>
+                <button class='btn btn-danger' id='reject' data='{{ req.leave_request.id }}'> Reject </button>
+            {% else %}
+                <button id='forward' class='btn btn-info' data='{{ req.leave_request.id }}'> Forward </button>
+            {% endif %}
+            </div>
+        </div>
+    </div>
+    <!-- /.box-body -->
+  </div>
+  <!-- /.box -->
+</div>

@@ -1,0 +1,36 @@
+{% extends 'index/base.html' %}
+{% load static %}
+{% load leave_tags %}
+{% block extra_head %}
+{% endblock %}
+{% block content %}
+
+<div class="nav-tabs-custom">
+    <ul class="nav nav-tabs">
+      <li class="active"><a href="#unprocessed" data-toggle="tab">Applied Leaves</a></li>
+    </ul>
+    <div class="tab-content">
+      <div class="active tab-pane" id="unprocessed">
+        <!-- The timeline -->
+        <div class="box-body">
+            <div class="box-outline-soft">
+                <div class="box-header with-border">
+                    <h4><b>All your applied Leaves  <i class="fa fa-angle-down"></i></b></h4>
+                </div>
+                <div class="box-body">
+                    <h4 class="text-muted">Total: {{ count }}</h4>
+                    {% for leave in leaves %}
+                        {% get_leave leave request.user %}
+                    {% endfor %}
+                    {% if count == 0 %}
+                        <h4 class="text-muted">No Leave applied !</h4>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+      </div>
+      <!-- /.tab-pane -->
+    </div>
+    <!-- /.tab-content -->
+</div>
+{% endblock %}

@@ -253,6 +253,22 @@ class GetApplications(View):
 
     def get(self, request):
 
+        prequest_list = LeaveRequest.objects.filter(requested_from=request.user).order_by('-id')
+
         request_list = map(lambda x: FormData(request, x),
+                           CurrentLeaveRequest.objects.filter(requested_from=request.user).order_by('-id'))
+
+        request_lis = map(lambda x: FormData(request, x),
                            CurrentLeaveRequest.objects.filter(requested_from=request.user))
-        return render(request, 'leave_application/get_requests.html', {'requests': request_list})
+
+        count = len(list(request_lis))
+        return render(request, 'leave_application/get_requests.html', {'requests': request_list, 'title':'Leave', 'action':'ViewRequests', 'count':count, 'prequests':prequest_list})
+
+
+class GetLeaves(View):
+
+    def get(self, request):
+
+        leave_list = Leave.objects.filter(applicant=request.user).order_by('-id')
+        count = len(list(leave_list))
+        return render(request, 'leave_application/get_leaves.html', {'leaves':leave_list, 'count':count, 'title':'Leave', 'action':'ViewLeaves'})
