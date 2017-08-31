@@ -10,8 +10,9 @@
 
     <div class="box-body" style="padding: 1em">
         <div class="row">
+        {% if form %}
             <div class="col-md-6 col-md-offset-2 box-outline-soft">
-            {% if form %}
+            
           		<form role="form" method='post'>
           			<div class="input-group">
                     {% csrf_token %}
@@ -19,14 +20,20 @@
         			</div>
         			<div class="box-footer">
         	            <button type="submit" style="float: right;" class="btn btn-success">Submit</button>
-
         	        </div>
-
                 </form>
-            {% elif message %}
-                {{ message }}
-            {% endif %}
             </div>
+        {% elif message %}
+            <div class="info-box bg-{% if message == 'success' %}green{% else %}yellow{% endif %}">
+                <span class="info-box-icon"><i class="fa fa-thumbs-o-up"></i></span>
+
+                <div class="info-box-content">
+                  <span class="info-box-text"><b><h3> {{ message }} !</h3></b></span>
+                </div>
+                <h5>{% if message == 'success' %}&emsp;Successfully Submitted your leave application{% else %}{% endif %}</h5>
+                <!-- /.info-box-content -->
+            </div>
+        {% endif %}
         </div>
     </div>
 

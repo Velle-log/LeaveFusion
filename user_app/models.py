@@ -44,7 +44,7 @@ class ExtraInfo(models.Model):
                                            choices=Constants.RELATIONSHIP, default='single')
     department = models.ForeignKey(DepartmentInfo, on_delete=models.CASCADE, null=True)
     profile_picture = models.ImageField(null=True, blank=True)
-    about_me = models.TextField(default='', max_length=1000)
+    about_me = models.TextField(default='', max_length=1000, blank=True)
 
     @property
     def is_onleave(self):

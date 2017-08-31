@@ -34,7 +34,7 @@
             <br>
             <div class="box-footer">
                 <div class="callout callout-{% if leave.status == 'accepted' %}success{% elif leave.status == 'rejected' %}danger{% else %}info{% endif %}">
-                    <b> Leave status: &emsp;{{ preq.leave.status }} &emsp;<i class="fa fa-{% if leave.status == 'accepted' %}check{% elif leave.status == 'rejected' %}ban{% else %}refresh{% endif %}"></i>
+                    <b> Leave status: &emsp;{{ leave.status }} &emsp;<i class="fa fa-{% if leave.status == 'accepted' %}check{% elif leave.status == 'rejected' %}ban{% else %}refresh{% endif %}"></i>
                 </div>
             </div>
         </div>
