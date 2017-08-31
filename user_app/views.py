@@ -1,16 +1,13 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, render_to_response
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
-from  django.http import Http404
+from django.http import Http404
 from django.contrib.auth.models import User
 
 
 # Create your views here.
 def handler404(request):
-  response = render_to_response('404.html', {},
-                                  context_instance=RequestContext(request))
-  response.status_code = 404
-  return response
+  return render(request, '500.html')
 
 
 def handler500(request):
@@ -27,8 +24,5 @@ def index(request):
 
 @login_required(login_url='/accounts/login/')
 def profile_view(request, id):
-  try:
-    user = User.objects.get(id = id)
-  except:
-    return Http404('Page not found :/')                               #TODO: raise an http404 exception so to reach the 404 page
+  user = get_object_or_404(User, id=id)                           #TODO: raise an http404 exception so to reach the 404 page
   return render(request, 'user_app/profile.html', {'title':user.username, 'user': user})
