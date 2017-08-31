@@ -106,7 +106,7 @@ class ProcessRequest(View):
 
         if do == 'accept':
 
-            if leave_request.applicant.user_type == 'student' \
+            if leave_request.applicant.extrainfo.user_type == 'student' \
                 and request.user == leave_request.requested_from:
                 return self.process_student_request(sanc_auth, leave_request, remark, True)
 
@@ -163,7 +163,7 @@ class ProcessRequest(View):
                 )
 
         elif do == 'reject':
-            if leave_request.applicant.user_type == 'student' \
+            if leave_request.applicant.extrainfo.user_type == 'student' \
                and request.user == leave_request.requested_from:
                 return self.process_student_request(sanc_auth, leave_request, remark, False)
 
@@ -190,7 +190,7 @@ class ProcessRequest(View):
 
         elif do == 'forward':
 
-            if leave_request.applicant.user_type == 'student':
+            if leave_request.applicant.extrainfo.user_type == 'student':
                 raise Http404
 
             if sanc_auth == designation and type_of_leave not in ['casual', 'restricted']:
