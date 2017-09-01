@@ -27,7 +27,7 @@ class DepartmentInfo(models.Model):
 
 class ExtraInfo(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    designation = models.ForeignKey(Designation, on_delete=models.CASCADE, null=True)
+    designation = models.ForeignKey(Designation, on_delete=models.CASCADE, related_name='holds_designation', null=True)
     user_type = models.CharField(max_length=20, default='student')
     unique_id = models.IntegerField(blank=True, null=True)
     sex = models.CharField(max_length=2, choices=Constants.SEX_CHOICES, default='M')
@@ -35,19 +35,22 @@ class ExtraInfo(models.Model):
     profile_picture = models.ImageField(null=True, blank=True)
     about_me = models.TextField(default='', max_length=1000, blank=True)
     sanctioning_authority = models.ForeignKey(Designation,
-                                              related_name='sanctioning_auth_to',
+                                              related_name='sanctioning_auth',
                                               on_delete=models.CASCADE, null=True, blank=True)
-    sanctioning_officer = models.ForeignKey(Designation, related_name='sanctioning_officer_to', on_delete=models.CASCADE, null=True, blank=True)
+    sanctioning_officer = models.ForeignKey(Designation, related_name='sanctioning_officer', on_delete=models.CASCADE, null=True, blank=True)
 
     @property
     def is_onleave(self):
+        from django.db.models import Q
         from leave_application.models import Leave
-        now = datetime.datetime.now()
-        leave = Leave.objects.filter(applicant = self.user,
-                                     start_date__gte = now, end_date__lte = now,
-                                     status = 'accepted')
+        now = datetime.date.today()
+        leave = Leave.objects.filter(Q(applicant = self.user) \
+                                     & Q(start_date__gte = now) & Q(end_date__lte = now) \
+                                     & ~Q(status = 'rejected'))
 
         return True if leave else False
+
+    @property
 
     def __str__(self):
         return '{} type is {}'.format(self.user.username, self.user_type)

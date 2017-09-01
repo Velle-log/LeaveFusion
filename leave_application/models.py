@@ -57,6 +57,7 @@ class Leave(models.Model):
     leave_address = models.CharField(max_length=100, blank=True, default='')
     status = models.CharField(max_length=10, blank=False, default='processing')
     station = models.BooleanField(default=False)
+    timestamp = models.DateTimeField(auto_now=True)
 
     @property
     def count_work_days(self):
@@ -85,8 +86,7 @@ class CurrentLeaveRequest(models.Model):
                                        on_delete=models.SET_NULL, null=True)
     position = models.ForeignKey(Designation, on_delete=models.CASCADE)
     leave = models.ForeignKey(Leave, related_name='cur_requests', on_delete=models.CASCADE)
-    permission = models.CharField(max_length=20, default='academic')
-
+    permission = models.CharField(max_length=20, default='other')
     station = models.BooleanField(default=False)
     def __str__(self):
         return '{} requested from {}'.format(self.applicant.username, self.requested_from.username)
@@ -125,6 +125,7 @@ def add_current_leave_request(instance, sender, created, **kwargs):
                     requested_from = acad_rep,
                     position = acad_rep.extrainfo.designation,
                     leave = instance,
+                    permission = 'academic',
                 )
             if admin_rep is not None:
                 CurrentLeaveRequest.objects.create(
@@ -135,10 +136,11 @@ def add_current_leave_request(instance, sender, created, **kwargs):
                     permission = 'admin',
                 )
         else:
-            sanc_auth = instance.applicant.sanctioning_authority
+            sanc_auth = instance.applicant.extrainfo.sanctioning_authority
+            req_user = sanc_auth.holds_designation.first().user
             CurrentLeaveRequest.objects.create(
                 applicant = instance.applicant,
-                requested_from = sanc_auth,
+                requested_from = req_user,
                 position = sanc_auth,
                 leave = instance,
             )
