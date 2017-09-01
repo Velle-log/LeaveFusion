@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from user_app.models import ExtraInfo
 from .helpers import count_work_days
 
 from django.dispatch import receiver
@@ -10,6 +11,7 @@ class Constants:
         ('casual', 'Casual Leave'),
         ('restricted', 'Restricted Holidays'),
         ('vacation', 'Vacation Leave'),
+        ('commuted', 'Commuted Leave'),
         ('earned', 'Earned Leave'),
         ('special_casual', 'Special Casual Leave'),
     )
@@ -17,13 +19,21 @@ class Constants:
 class LeavesCount(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     casual = models.IntegerField(default=8)
-    special_casual = models.IntegerField(default=10)
+    special_casual = models.IntegerField(default=15)
     restricted = models.IntegerField(default=2)
+    commuted = models.IntegerField(default=20)
     earned = models.IntegerField(default=30)
     vacation = models.IntegerField(default=60)
 
     def __str__(self):
         return 'user: {}'.format(self.user.username)
+
+@receiver(models.signals.post_save, sender=ExtraInfo)
+def create_leaves_count(instance, created, **kwargs):
+    if created:
+        if instance.user_type != 'student':
+            LeavesCount.objects.create(user = instance.user)
+
 
 class Leave(models.Model):
     # TODO: Add required fields
@@ -55,6 +65,10 @@ class Leave(models.Model):
             ==> Actual considered leave days
         """
         return count_work_days(self.start_date, self.end_date)
+
+    @property
+    def get_year(self):
+        return self.start_date.strftime('%Y')
 
     def __str__(self):
         return 'By: {}, type: {}'.format(self.applicant.username, self.type_of_leave)
@@ -121,10 +135,10 @@ def add_current_leave_request(instance, sender, created, **kwargs):
                     permission = 'admin',
                 )
         else:
-            sanc_auth = instance.department.sanctioning_authority
+            sanc_auth = instance.applicant.sanctioning_authority
             CurrentLeaveRequest.objects.create(
                 applicant = instance.applicant,
                 requested_from = sanc_auth,
-                position = sanc_auth.extrainfo.designation,
+                position = sanc_auth,
                 leave = instance,
             )

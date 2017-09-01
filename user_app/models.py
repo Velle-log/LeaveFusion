@@ -12,11 +12,6 @@ class Constants:
         ('O', 'Other')
     )
 
-    RELATIONSHIP = (
-        ('single', 'Single'),
-        ('married', 'Married')
-    )
-
 
 class Designation(models.Model):
     name = models.CharField(max_length=20, unique=True, blank=False)
@@ -26,10 +21,6 @@ class Designation(models.Model):
 
 class DepartmentInfo(models.Model):
     name = models.CharField(max_length=30, unique=True)
-    sanctioning_authority = models.ForeignKey(Designation,
-                                              related_name='sanctioning_leave_to',
-                                              on_delete=models.CASCADE)
-    sanctioning_officer = models.ForeignKey(Designation, on_delete=models.CASCADE)
 
     def __str__(self):
         return 'department: {}'.format(self.name)
@@ -38,13 +29,15 @@ class ExtraInfo(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     designation = models.ForeignKey(Designation, on_delete=models.CASCADE, null=True)
     user_type = models.CharField(max_length=20, default='student')
-    unique_id = models.IntegerField(unique=True)
+    unique_id = models.IntegerField(blank=True, null=True)
     sex = models.CharField(max_length=2, choices=Constants.SEX_CHOICES, default='M')
-    relationship_status = models.CharField(max_length=10,
-                                           choices=Constants.RELATIONSHIP, default='single')
     department = models.ForeignKey(DepartmentInfo, on_delete=models.CASCADE, null=True)
     profile_picture = models.ImageField(null=True, blank=True)
     about_me = models.TextField(default='', max_length=1000, blank=True)
+    sanctioning_authority = models.ForeignKey(Designation,
+                                              related_name='sanctioning_auth_to',
+                                              on_delete=models.CASCADE, null=True, blank=True)
+    sanctioning_officer = models.ForeignKey(Designation, related_name='sanctioning_officer_to', on_delete=models.CASCADE, null=True, blank=True)
 
     @property
     def is_onleave(self):

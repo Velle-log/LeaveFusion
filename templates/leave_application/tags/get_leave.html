@@ -2,7 +2,7 @@
   <div class="box box-default box-solid collapsed-box" id="leave-body-{{ leave.id }}">
     <div class="box-header with-border">
       <h3 class="box-title">
-      <b>#{{ leave.id }}: </b>{{ leave.applicant.first_name }} {{ leave.applicant.last_name }} - {{ leave.type_of_leave }}&emsp;&emsp; 
+      <b>#{{ leave.id }}: </b>{{ leave.applicant.first_name }} {{ leave.applicant.last_name }} - {{ leave.type_of_leave }}&emsp;&emsp;
       <i class="fa fa-{% if leave.status == 'accepted' %}check" style="color:green;" {% elif leave.status == 'rejected' %}ban" style="color:red;"{% else %}refresh" style="color:blue;"{% endif %}></i>
       </h3>
 

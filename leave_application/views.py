@@ -109,8 +109,8 @@ class ProcessRequest(View):
         do = request.GET.get('do')
         remark = request.GET.get('remark', '')
 
-        sanc_auth = leave_request.applicant.extrainfo.department.sanctioning_authority
-        sanc_officer = leave_request.applicant.extrainfo.department.sanctioning_officer
+        sanc_auth = leave_request.applicant.extrainfo.sanctioning_authority
+        sanc_officer = leave_request.applicant.extrainfo.sanctioning_officer
 
         designation = request.user.extrainfo.designation
 
@@ -238,12 +238,19 @@ class ProcessRequest(View):
         if not accept and final:
             cur_leave_request.leave.status = 'rejected'
         elif final:
+
             count = LeavesCount.objects.get(user=cur_leave_request.applicant)
+
             remain = getattr(count, cur_leave_request.leave.type_of_leave)
-            setattr(count, cur_leave_request.leave.type_of_leave,
-                           remain - cur_leave_request.leave.count_work_days)
-            count.save()
-            cur_leave_request.leave.status = 'accepted'
+            required_leaves = cur_leave_request.leave.count_work_days
+
+            if remain < required_leaves:
+                cur_leave_request.leave.status = 'outdated'
+            else:
+                setattr(count, cur_leave_request.leave.type_of_leave,
+                               remain - required_leaves)
+                count.save()
+                cur_leave_request.leave.status = 'accepted'
 
         cur_leave_request.delete()
         return leave_request
@@ -269,15 +276,30 @@ class GetApplications(View):
 
         prequest_list = LeaveRequest.objects.filter(requested_from=request.user).order_by('-id')
 
-        request_list = map(lambda x: FormData(request, x),
-                           CurrentLeaveRequest.objects.filter(requested_from=request.user).order_by('-id'))
+        request_list = list(map(lambda x: self.should_forward(request, x),
+                           CurrentLeaveRequest.objects.filter(requested_from=request.user).order_by('-id')))
 
-        request_lis = map(lambda x: FormData(request, x),
-                           CurrentLeaveRequest.objects.filter(requested_from=request.user))
-
-        count = len(list(request_lis))
+        count = len(request_list)
         return render(request, 'leave_application/get_requests.html', {'requests': request_list, 'title':'Leave', 'action':'ViewRequests', 'count':count, 'prequests':prequest_list})
 
+    def should_forward(self, request, query_obj):
+
+        obj = FormData(request, query_obj)
+        sanc_auth = query_obj.applicant.extrainfo.sanctioning_authority
+        sanc_officer = query_obj.applicant.extrainfo.sanctioning_officer
+        type_of_leave = query_obj.leave.type_of_leave
+
+        designation = request.user.extrainfo.designation
+
+        if (sanc_auth == designation and type_of_leave not in ['casual', 'restricted']) \
+             and query_obj.permission not in ['academic', 'admin']:
+
+             obj.forward = True
+
+        else:
+            obj.forward = False
+        print(obj)
+        return obj
 
 class GetLeaves(View):
 
