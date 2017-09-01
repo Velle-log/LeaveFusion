@@ -41,12 +41,9 @@ class ApplyLeave(View):
             view to handle post request to /leave/apply
         """
         form = self.get_form(request)
-        # form2 = FacultyLeaveForm(request.POST, user=request.user)
-        # print(form2.is_valid())
-        # print(form2.errors)
 
         if form.is_valid():
-
+            type_of_leave = form.cleaned_data.get('type_of_leave', 'casual')
             acad_done = False if form.cleaned_data.get('acad_rep', False) else True
             admin_done = False if form.cleaned_data.get('admin_rep', False) else True
             academic_replacement = get_object_or_none(User, username=form.cleaned_data.get('acad_rep'))
@@ -55,7 +52,7 @@ class ApplyLeave(View):
             try:
                 leave_obj = Leave.objects.create(
                     applicant = request.user,
-                    type_of_leave = form.cleaned_data['type_of_leave'],
+                    type_of_leave = type_of_leave,
                     academic_replacement = academic_replacement,
                     administrative_replacement = administrative_replacement,
                     purpose = form.cleaned_data['purpose'],
@@ -67,6 +64,7 @@ class ApplyLeave(View):
                 )
 
             except Exception as e:
+                print(e)
                 return render(request,
                               'leave_application/apply_for_leave.html',
                               {'form': form, 'message': 'Failed'})
@@ -74,6 +72,17 @@ class ApplyLeave(View):
 
         else:
             return render(request, 'leave_application/apply_for_leave.html', {'form': form, 'title': 'Leave', 'action':'Apply'})
+
+    def delete(self, request):
+        id = request.DELETE.get('id', None)
+
+        leave = get_object_or_none(Leave, id=id)
+        today = datetime.date.today()
+        if not id or not leave or leave.applicant != request.user or leave.start_date < today:
+            return JsonResponse({'message': 'Deletion Faild', 'type': 'error'}, status=200)
+
+        leave.delete()
+        return JsonResponse({'message': 'Successfully Deleted', 'type': 'success'}, status=200)
 
     def get_user_type(self, request):
         return request.user.extrainfo.user_type
@@ -259,12 +268,15 @@ class ProcessRequest(View):
 
         outcome = 'accepted' if process else 'rejected'
         new_leave_request = LeaveRequest.objects.create(
-            applicant = leave_request,
+            applicant = leave_request.applicant,
             requested_from = leave_request.requested_from,
             position = leave_request.position,
             leave = leave_request.leave,
+            status = process,
+            remark = remark,
         )
         new_leave_request.leave.status = outcome
+        new_leave_request.leave.save()
         leave_request.delete()
         return JsonResponse({'message': 'Successful', 'type': 'success'}, status=200)
 
@@ -308,3 +320,21 @@ class GetLeaves(View):
         leave_list = Leave.objects.filter(applicant=request.user).order_by('-id')
         count = len(list(leave_list))
         return render(request, 'leave_application/get_leaves.html', {'leaves':leave_list, 'count':count, 'title':'Leave', 'action':'ViewLeaves'})
+
+
+
+"""
+
+$.ajax({
+    type: 'delete',
+    url: '/leave/apply',
+    data: {'id': 17},
+    success: function(data){
+        alert(data.message);
+    },
+    error: function(err){
+        alert('error');
+    }
+});
+
+"""
