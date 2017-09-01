@@ -1,4 +1,5 @@
 {% load static %}
+{% load leave_tags %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -255,22 +256,22 @@
             <!-- User Account: style can be found in dropdown.less -->
             <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                <img src="{% static 'img/user_avatar.png'%}" class="user-image" alt="User Image">
+                {% get_user_dp request.user 'small' %}
                 <span class="hidden-xs">{{ request.user.username }}</span>
               </a>
 
               <ul class="dropdown-menu">
                 <!-- User image -->
                 <li class="user-header">
-                  <img src="{% static 'img/user_avatar.png'%}" class="img-circle" alt="User Image">
+                  {% get_user_dp request.user 'medium' %}
 
                   <p>
-                    {{ request.user.username }} - {{ request.user.extrainfo.user_type }}
-                    <small>{{ request.user.date_joined }}</small>
+                    <b>{{ request.user.first_name }} {{ request.user.last_name }}</b><br> {{ request.user.extrainfo.user_type }}
+                    <small>Joined on- {{ request.user.date_joined }}</small>
                   </p>
                 </li>
                 <!-- Menu Body -->
-                <li class="user-body">
+                <!-- <li class="user-body">
                   <div class="row">
                     <div class="col-xs-4 text-center">
                       <a href="#">Attr 1</a>
@@ -282,15 +283,14 @@
                       <a href="#">Attr 3</a>
                     </div>
                   </div>
-                  <!-- /.row -->
-                </li>
+                </li> -->
                 <!-- Menu Footer-->
                 <li class="user-footer">
                   <div class="pull-left">
-                    <a href="{% url 'profile:profile_view' user.id %}" class="btn btn-default btn-flat">Profile</a>
+                    <a href="{% url 'profile:profile_view' user.id %}" class="btn btn-blue btn-flat"><i class="fa fa-user"></i> Profile</a>
                   </div>
                   <div class="pull-right">
-                    <a href="/accounts/logout/" class="btn btn-default btn-flat">Sign out</a>
+                    <a href="/accounts/logout/" class="btn btn-red btn-flat" style="color:red;"><i class="fa fa-power-off"></i> Sign out</a>
                   </div>
                 </li>
               </ul>
@@ -312,11 +312,11 @@
       {% if request.user.is_authenticated %}
         <div class="user-panel">
           <div class="pull-left image">
-            <img src="{% static 'img/user_avatar.png'%}" class="img-circle" alt="User Image">
+            {% get_user_dp request.user 'medium' %}
           </div>
           <div class="pull-left info">
-            <p>{{ request.user.username }}</p>
-            <a href="#">{{ request.user.extrainfo.user_type }}</a>
+            <p><a href="{% url 'profile:profile_view' request.user.id %}">{{ request.user.first_name }} {{ request.user.last_name }}</p>
+            {{ request.user.extrainfo.user_type }}</a>
           </div>
         </div>
         <!-- search form -->
@@ -340,7 +340,7 @@
           </li>
           <li class="treeview" id="Leave-sidebar">
             <a href="#">
-              <i class="glyphicon glyphicon-calendar"></i> <span>Leave</span>
+              <i class="fa fa-calendar-minus-o"></i> <span>Leave</span>
               <span class="pull-right-container">
                 <i class="fa fa-angle-left pull-right"></i>
               </span>
@@ -374,6 +374,7 @@
       </ol>
     </section>
     <section class="content">
+    <!-- TODO: Modal or popups.js -->
       {% block content %}
       {% endblock %}
       <br><br>
@@ -388,6 +389,26 @@
       <br><br><br><br>
     </section>
     <!-- /.content -->
+  </div>
+  <div class="modal modal-warning fade" id="modal-warning">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span></button>
+          <h4 class="modal-title">Warning Modal</h4>
+        </div>
+        <div class="modal-body">
+          <p>One fine body…</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-outline">Save changes</button>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
   </div>
   <!-- /.content-wrapper -->
   <footer class="main-footer">

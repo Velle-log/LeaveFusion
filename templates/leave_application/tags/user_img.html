@@ -1,0 +1,2 @@
+{% load static %}
+<img src="{% if user.extrainfo.profile_picture %}{{ user.extrainfo.profile_picture.url }}{% else %}{% static 'img/user_avatar.png' %}{% endif %}" class="{% if size == 'small' %}user-image{% elif size == 'medium' %}img-circle{% else %}img-responsive" style="border-radius: 0.3em; max-width: 8em; max-height: 8em; height: auto; width: auto; align-self: center; {% endif %}" alt="User Image">

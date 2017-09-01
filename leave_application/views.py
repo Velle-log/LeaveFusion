@@ -19,6 +19,20 @@ class ApplyLeave(View):
         """
             view to handle get request to /leave/apply
         """
+        # TODO: Check if leave not rejected or accepted and leave instance belongs to user
+        # TODO: Take another value as action so that action can specify edit or delete with same constraint
+
+        # id = request.GET.get('id')
+        # if id:
+        #     leave = get_object_or_404(Leave, id=id)
+        #     user_type = self.get_user_type(request)
+        #     if user_type == 'faculty':
+        #         form = FacultyLeaveForm(leave, user=request.user)
+        #     elif user_type == 'staff':
+        #         form = StaffLeaveForm(leave, user=request.user)
+        #     else:
+        #         form = StudentLeaveForm(leave)
+        #     return render(request, 'leave_application/apply_for_leave.html', {'form': form, 'title': 'Leave', 'action':'Edit'})
         form = self.get_form(request)
         return render(request, 'leave_application/apply_for_leave.html', {'form': form, 'title': 'Leave', 'action':'Apply'})
 
@@ -70,7 +84,6 @@ class ApplyLeave(View):
 
         if user_type == 'faculty':
             form = self.get_form_object(FacultyLeaveForm, request)
-
         elif user_type == 'staff':
             form = self.get_form_object(StaffLeaveForm, request)
         else:
@@ -247,6 +260,7 @@ class ProcessRequest(View):
         new_leave_request.leave.status = outcome
         leave_request.delete()
         return JsonResponse({'message': 'Successful', 'type': 'success'}, status=200)
+
 
 
 class GetApplications(View):

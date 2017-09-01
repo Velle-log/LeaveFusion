@@ -1,27 +1,71 @@
 {% extends 'index/base.html' %}
 {% block content %}
 {% load static %}
+{% load leave_tags %}
+<div class="col-md-12">
+          <!-- Widget: user widget style 1 -->
+  <div class="box box-widget widget-user">
+    <!-- Add the bg color to the header using any of the bg-* classes -->
+    <div class="widget-user-header bg-black" style="background: url('{% static 'img/4.jpg' %}') center center;">
+      <h3 class="widget-user-username">{{ user.first_name }} {{ user.last_name }}</h3>
+      <h5 class="widget-user-desc"><i class="fa fa-at"></i> {{ user.username }} - {{ user.extrainfo.user_type }}</h5>
+    </div>
+    <div class="widget-user-image" style="width: 100%">
+      {% get_user_dp user 'responsive' %}
+    </div>
+    <div class="box-footer">
+      <div class="row">
+        <div class="col-sm-4 border-right">
+          <div class="description-block">
+            <h5 class="description-header">
+              <i class="{% if request.user == user %}fa fa-edit{% else %}fa fa-user-plus{% endif %}"></i>
+            </h5>
+            <span class="description-text">
+                {% if request.user == user %}
+                  <a href="{% url 'profile:edit_info' %}"><b>Edit Profile</b> </a>
+                {% else %}
+                  <a href="#"><b>Follow</b></a>
+                {% endif %}
+            </span>
+          </div>
+          <!-- /.description-block -->
+        </div>
+        <!-- /.col -->
+        <div class="col-sm-4 border-right">
+          <div class="description-block">
+          </div>
+          <!-- /.description-block -->
+        </div>
+        <!-- /.col -->
+        <div class="col-sm-4">
+          <div class="description-block">
+            <h5 class="description-header"><i class="fa fa-group"></i></h5>
+            <span class="description-text">{{ user.extrainfo.department.name }}</span>
+          </div>
+          <!-- /.description-block -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row -->
+        {% if user.extrainfo.about_me %}
+        <div class="row" style="margin:-1%;margin-top: 0px;">
+          <div class="widget-user-header bg-aqua-active" style="height: auto; border-top-right-radius: 0px;border-top-left-radius: 0px;border-bottom-right-radius: 3px;border-bottom-left-radius: 3px;">
+            <h3 class="widget-user-username"> About me </h3><hr style="margin-top: 2px;">
+            <p class="widget-user-desc">{{ user.extrainfo.about_me|safe }}</p>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
 <div class="row">
         <div class="col-md-3">
-        <!-- TODO: Add edit button on About me and education and modal form for display_pic change -->
           <!-- Profile Image -->
           <div class="box box-widget box-primary">
             <div class="box-body box-profile">
-            	
-              <img class="profile-user-img img-responsive img-circle" src="{% static 'img/user_avatar.png' %}" alt="User profile picture">
+              <h3 class="profile-username text-center">Discription</h3>
+              <p class="text-muted text-center"></p>
 
-              <h3 class="profile-username text-center">{{ user.first_name }} {{ user.last_name }}</h3>
-
-              <p class="text-muted text-center">{{ user.username }} - {{ user.extrainfo.user_type }}</p>
-
-              <ul class="list-group list-group-unbordered">
-                <li class="list-group-item">
-                  <b>Field 1</b> <a class="pull-right">link</a>
-                </li>
-              </ul>
-              {% if not request.user == user %}
-              <a href="#" class="btn btn-primary btn-block"><b>Follow</b></a>
-              {% endif %}
             </div>
             <!-- /.box-body -->
           </div>
@@ -30,31 +74,11 @@
           <!-- About Me Box -->
           <div class="box box-primary">
             <div class="box-header with-border">
-              <h3 class="box-title">About Me</h3>
+              <h3 class="box-title"></h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-              <strong><i class="fa fa-book margin-r-5"></i> Education</strong>
-
-              <p class="text-muted">
-                Data
-              </p>
-
-              <hr>
-
-              <strong><i class="fa fa-map-marker margin-r-5"></i> Location</strong>
-
-              <p class="text-muted">Data</p>
-
-              <hr>
-
-              <strong><i class="fa fa-pencil margin-r-5"></i> Skills</strong>
-
-              <p>
-                <span class="label label-danger">UI Design</span>
-                <span class="label label-info">Javascript</span>
-                <span class="label label-primary">Node.js</span>
-              </p>
+              <h5></h5>
             </div>
             <!-- /.box-body -->
           </div>
@@ -88,6 +112,11 @@
         <!-- /.col -->
       </div>
       <!-- /.row -->
-
+<br><br><br><br>
+      <br><br><br><br>
+      <br><br><br><br>
+      <br><br><br><br>
+      <br><br><br><br>
+      <br><br>
 
 {% endblock %}
