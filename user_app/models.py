@@ -50,8 +50,6 @@ class ExtraInfo(models.Model):
 
         return True if leave else False
 
-    @property
-
     def __str__(self):
         return '{} type is {}'.format(self.user.username, self.user_type)
 

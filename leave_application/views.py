@@ -59,16 +59,16 @@ class ApplyLeave(View):
         else:
             return render(request, 'leave_application/apply_for_leave.html', {'form': form, 'title': 'Leave', 'action':'Apply'})
 
-    def delete(self, request):
-        id = request.DELETE.get('id', None)
-
-        leave = get_object_or_none(Leave, id=id)
-        today = datetime.date.today()
-        if not id or not leave or leave.applicant != request.user or leave.start_date < today:
-            return JsonResponse({'message': 'Deletion Faild', 'type': 'error'}, status=200)
-
-        leave.delete()
-        return JsonResponse({'message': 'Successfully Deleted', 'type': 'success'}, status=200)
+    # def delete(self, request):
+    #     id = request.DELETE.get('id', None)
+    #
+    #     leave = get_object_or_none(Leave, id=id)
+    #     today = datetime.date.today()
+    #     if not id or not leave or leave.applicant != request.user or leave.start_date < today:
+    #         return JsonResponse({'message': 'Deletion Faild', 'type': 'error'}, status=200)
+    #
+    #     leave.delete()
+    #     return JsonResponse({'message': 'Successfully Deleted', 'type': 'success'}, status=200)
 
     def get_user_type(self, request):
         return request.user.extrainfo.user_type
