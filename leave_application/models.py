@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from user_app.models import ExtraInfo
 from .helpers import count_work_days
-
 from django.dispatch import receiver
 # Create your models here.
 

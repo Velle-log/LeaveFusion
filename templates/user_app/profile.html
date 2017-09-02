@@ -10,7 +10,7 @@
       <h3 class="widget-user-username">{{ user.first_name }} {{ user.last_name }}</h3>
       <h5 class="widget-user-desc"><i class="fa fa-at"></i> {{ user.username }} - {{ user.extrainfo.user_type }}</h5>
     </div>
-    <div class="widget-user-image" style="width: 100%">
+    <div class="widget-user-image" style="width: 100%; overflow: hidden;">
       {% get_user_dp user 'responsive' %}
     </div>
     <div class="box-footer">

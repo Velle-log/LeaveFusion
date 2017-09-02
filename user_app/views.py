@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.views.generic import UpdateView
 from PIL import Image
 from django.contrib import messages
+from django.core.urlresolvers import reverse
 
 # Create your views here.
 def handler404(request):
@@ -38,7 +39,7 @@ def edit_info(request):
 		user_details.about_me = request.POST.get('about_me')
 		user_details.save()
 		messages.success(request, ('Your profile was successfully updated!'))
-		return redirect('/')
+		return redirect(reverse('profile:profile_view', args=[request.user.id]))
 	return render(request, 'user_app/user_form.html', { 'user':request.user, 'title': 'Profile', 'action':'Edit-Profile' })
 
 @login_required(login_url='/accounts/login/')

@@ -40,7 +40,7 @@
       <div class="row">
         <div class="col-md-2 col-md-offset-1">
           <div class="box-body">
-            <h4 class="text-muted">Preview</h4>
+            <h4 class="text-muted">Preview </h4>
             <img class="img-responsive" src="{% if user.extrainfo.profile_picture %}{{ user.extrainfo.profile_picture.url }}{% else %}{% static 'img/user_avatar.png' %}{% endif %}" id='img-upload'/>
           </div>
         </div>
@@ -60,6 +60,7 @@
               </span>
               <input type="text" class="form-control" value="{{ user.extrainfo.profile_picture.name }}" readonly>
             </div>
+            <h4 class="text-muted">Images with more even dimensions look better !</h4>
             <br>
             <br>
             <label>Remove Profile Picture</label>
