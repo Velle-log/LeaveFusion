@@ -188,7 +188,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-SITE_ID = 3
+SITE_ID = 4
 
 STATIC_ROOT = 'static/'
 

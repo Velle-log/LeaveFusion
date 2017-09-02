@@ -11,7 +11,7 @@
     <div class="box-body" style="padding: 1em">
         <div class="row">
         {% if form %}
-            <div class="col-md-6 col-md-offset-2 box-outline-soft">
+            <div class="col-md-6 col-md-offset-1 box-outline-soft">
             
           		<form role="form" method='post'>
           			<div class="input-group">
@@ -23,6 +23,33 @@
         	        </div>
                 </form>
             </div>
+            {% if request.user.leavescount %}
+            <div class="col-md-3 col-md-offset-1 box-outline-soft">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Remaining Leaves</h3>
+                </div>
+                <ul class="list-group list-group-unbordered">
+                    <li class="list-group-item">
+                      <b><span class="label label-danger">Casual</span></b> <p class="pull-right">{{ request.user.leavescount.casual }}</p>
+                    </li>
+                    <li class="list-group-item">
+                      <b><span class="label label-success">Special Casual</span></b> <p class="pull-right">{{ request.user.leavescount.special_casual }}</p>
+                    </li>
+                    <li class="list-group-item">
+                      <b><span class="label label-info">Restricted</span></b> <p class="pull-right">{{ request.user.leavescount.restricted }}</p>
+                    </li>
+                    <li class="list-group-item">
+                      <b><span class="label label-warning">Commuted</span></b> <p class="pull-right">{{ request.user.leavescount.commuted }}</p>
+                    </li>
+                    <li class="list-group-item">
+                      <b><span class="label label-primary">Earned</span></b> <p class="pull-right">{{ request.user.leavescount.earned }}</p>
+                    </li>
+                    <li class="list-group-item">
+                      <b><span class="label label-danger">Vacation</span></b> <p class="pull-right">{{ request.user.leavescount.vacation }}</p>
+                    </li>
+                </ul>  
+            </div>
+            {% endif %}
         {% elif message %}
             <div class="info-box bg-{% if message == 'success' %}green{% else %}yellow{% endif %}">
                 <span class="info-box-icon"><i class="fa fa-thumbs-o-up"></i></span>

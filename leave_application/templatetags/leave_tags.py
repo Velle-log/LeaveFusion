@@ -36,6 +36,14 @@ def get_leave(object, user):
             }
 
 
+def get_user_dp(user, size):
+    return {
+        'user': user,
+        'size': size,
+    }
+
+
+register.inclusion_tag('leave_application/tags/user_img.html')(get_user_dp)
 register.inclusion_tag('leave_application/tags/get_leave.html')(get_leave)
 register.inclusion_tag('leave_application/tags/processed_request.html')(get_processed_request)
 register.inclusion_tag('leave_application/tags/leave_request.html')(get_leave_request)

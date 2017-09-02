@@ -14,7 +14,7 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
         email = user.email
         if not email.split('@')[1] == 'iiitdmj.ac.in':
             messages.error(request, 'Use iiitdmj mail to sign in to this account !')
-            raise ImmediateHttpResponse(render_to_response('account\exception.html'))
+            raise ImmediateHttpResponse(render_to_response('account/exception.html'))
 
         else:
             if user.id:
@@ -28,4 +28,4 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
             except User.DoesNotExist:
                 exception_string = "Seems Like you don't have an account here! Contact CC admin for your account."
                 messages.error(request, exception_string)
-                raise ImmediateHttpResponse(render_to_response('account\exception_no_account.html'))
+                raise ImmediateHttpResponse(render_to_response('account/exception_no_account.html'))
