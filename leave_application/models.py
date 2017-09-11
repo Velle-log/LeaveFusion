@@ -143,3 +143,35 @@ def add_current_leave_request(instance, sender, created, **kwargs):
                 position = sanc_auth,
                 leave = instance,
             )
+
+class LeaveMigration(models.Model):
+
+    CHOICES = [
+        ('add', 'Add'),
+        ('del', 'Delete'),
+    ]
+
+    from user_app.models import Replacement
+
+    type = models.CharField(max_length=10, choices=CHOICES, default='add')
+    start_date = models.DateField(blank=True)
+    end_date = models.DateField(blank=True, null=True)
+    replacement_type = models.CharField(max_length=20, default='academic')
+    replacee = models.ForeignKey(User, related_name='to_be_migrated', on_delete=models.CASCADE)
+    replacer = models.ForeignKey(User, related_name='to_be_migrated_rep', on_delete=models.CASCADE)
+    rep = models.ForeignKey(Replacement, on_delete=models.CASCADE, null=True)
+
+    def __str__(self):
+        if self.type == 'add':
+            return 'Type: {} | {} replaces {} on {}'.format(self.type,
+                                                            self.replacer.username,
+                                                            self.replacee.username,
+                                                            self.start_date)
+
+        return 'Type: {} | {} gets position back from {} on {}'.format(self.type,
+                                                                        self.replacee.username,
+                                                                        self.replacer.username,
+                                                                        self.start_date)
+
+class MigrationChangeDate(models.Model):
+    last_date_change = models.DateField()

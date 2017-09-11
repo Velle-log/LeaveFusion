@@ -8,6 +8,8 @@ from leave_application.models import LeavesCount
 import user_app
 django.setup()
 
+a = 0
+
 class Data:
 
     def __init__(self, excel_file):
@@ -139,7 +141,7 @@ class Data:
                 LeavesCount.objects.create(user=u)
             except Exception as e:
                 print(e)
-                
+
 
     def get_unicode(self, string):
         return string.value.strip()
@@ -163,6 +165,8 @@ class Data:
 
 
 """
-from feed_data import Data; data = Data('data.xlsx'); data.create_users();
-data.create_designations(data.get_designations())
+from feed_data import Data; data = Data('data.xlsx');
+data.create_departments(data.get_departments());
+data.create_designations(data.get_designations());
+data.create_users();
 """

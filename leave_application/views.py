@@ -5,8 +5,10 @@ from leave_application.forms import (FacultyLeaveForm,
                                      StaffLeaveForm,
                                      StudentLeaveForm,)
 
-from user_app.models import Administration
-from leave_application.models import Leave, CurrentLeaveRequest, LeaveRequest, LeavesCount
+from user_app.models import Administration, Replacement, ExtraInfo
+from leave_application.models import (Leave, CurrentLeaveRequest,
+                                      LeaveRequest, LeavesCount,
+                                      LeaveMigration,)
 from django.contrib.auth.models import User
 from leave_application.helpers import FormData, get_object_or_none
 
@@ -121,7 +123,10 @@ class ProcessRequest(View):
         sanc_auth = leave_request.applicant.extrainfo.sanctioning_authority
         sanc_officer = leave_request.applicant.extrainfo.sanctioning_officer
 
-        designation = request.user.extrainfo.designation
+        if leave_request.requested_from in list(rep.replacee for rep in request.user.replacing.all()):
+            designation = leave_request.position
+        else:
+            designation = request.user.extrainfo.designation
 
         for_replacement = leave_request.permission == 'academic' \
                     or leave_request.permission == 'admin'
@@ -147,6 +152,8 @@ class ProcessRequest(View):
                     return JsonResponse({'message': 'Not allowed', 'type': 'error'}, status=200)
 
             elif leave_request.permission == 'sanc_auth':
+
+                # requested_from =
 
                 if sanc_auth == designation and type_of_leave in ['casual', 'restricted']:
 
@@ -174,8 +181,8 @@ class ProcessRequest(View):
             leave_request.leave.save()
             if for_replacement and leave_request.leave.acad_done \
                and leave_request.leave.admin_done:
-
-                next_user = Administration.objects.filter(position=sanc_auth).first().administrator
+                print(sanc_auth.name)
+                next_user = ExtraInfo.objects.get(designation=sanc_auth).user
                 CurrentLeaveRequest.objects.create(
                     applicant = leave_request.applicant,
                     requested_from = next_user,
@@ -259,6 +266,7 @@ class ProcessRequest(View):
                 setattr(count, cur_leave_request.leave.type_of_leave,
                                remain - required_leaves)
                 count.save()
+                self.create_migration(cur_leave_request.leave)
                 cur_leave_request.leave.status = 'accepted'
 
         cur_leave_request.delete()
@@ -280,7 +288,46 @@ class ProcessRequest(View):
         leave_request.delete()
         return JsonResponse({'message': 'Successful', 'type': 'success'}, status=200)
 
+    def create_migration(self, leave):
+        import datetime
 
+        if leave.start_date <= datetime.date.today():
+            Replacement.objects.create(
+                replacee = leave.applicant,
+                replacer = leave.academic_replacement,
+                replacement_type = 'academic',
+            )
+            Replacement.objects.create(
+                replacee = leave.applicant,
+                replacer = leave.administrative_replacement,
+                replacement_type = 'administrative',
+            )
+
+        else:
+            # if leave.start_date not in to_be.migrations.keys():
+                # to_be.migrations[leave.start_date] = []
+
+            LeaveMigration.objects.create(
+                type = 'add',
+                replacee = leave.applicant,
+                replacer = leave.academic_replacement,
+                start_date = leave.start_date,
+                end_date = leave.end_date,
+                replacement_type = 'academic',
+            )
+
+            LeaveMigration.objects.create(
+                type = 'add',
+                replacee = leave.applicant,
+                replacer = leave.administrative_replacement,
+                start_date = leave.start_date,
+                end_date = leave.end_date,
+                replacement_type = 'administrative',
+            )
+
+    def is_problematic(self, leave):
+        #TODO: Add automatic hadling of outdated or problematic leave requests
+        pass
 
 class GetApplications(View):
 
@@ -291,8 +338,18 @@ class GetApplications(View):
         request_list = list(map(lambda x: self.should_forward(request, x),
                            CurrentLeaveRequest.objects.filter(requested_from=request.user).order_by('-id')))
 
+        for reps in Replacement.objects.filter(replacer=request.user, replacement_type='administrative'):
+
+            request_list += list(map(lambda x: self.should_forward(request, x),
+                               CurrentLeaveRequest.objects.filter(requested_from=reps.replacee)))
+
+
         count = len(request_list)
-        return render(request, 'leave_application/get_requests.html', {'requests': request_list, 'title':'Leave', 'action':'ViewRequests', 'count':count, 'prequests':prequest_list})
+        return render(request, 'leave_application/get_requests.html', {'requests': request_list,
+                                                                       'title':'Leave',
+                                                                       'action':'ViewRequests',
+                                                                       'count':count,
+                                                                       'prequests':prequest_list})
 
     def should_forward(self, request, query_obj):
 
@@ -319,7 +376,10 @@ class GetLeaves(View):
 
         leave_list = Leave.objects.filter(applicant=request.user).order_by('-id')
         count = len(list(leave_list))
-        return render(request, 'leave_application/get_leaves.html', {'leaves':leave_list, 'count':count, 'title':'Leave', 'action':'ViewLeaves'})
+        return render(request, 'leave_application/get_leaves.html', {'leaves':leave_list,
+                                                                     'count':count,
+                                                                     'title':'Leave',
+                                                                     'action':'ViewLeaves'})
 
 
 
