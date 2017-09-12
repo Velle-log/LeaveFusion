@@ -66,7 +66,6 @@ class ApplyLeave(View):
                 )
 
             except Exception as e:
-                print(e)
                 return render(request,
                               'leave_application/apply_for_leave.html',
                               {'form': form, 'message': 'Failed'})
@@ -115,131 +114,110 @@ class ProcessRequest(View):
     def get(self, request, id):
 
         leave_request = get_object_or_404(CurrentLeaveRequest, id=id)
-        type_of_leave = leave_request.leave.type_of_leave
 
         do = request.GET.get('do')
-        remark = request.GET.get('remark', '')
 
+        response = JsonResponse({'message': 'Failed', 'type': 'Error'}, status=400)
+
+        rep_user = get_object_or_none(Replacement, replacee=leave_request.requested_from,
+                                                   replacement_type='administrative')
+        if rep_user:
+            rep_user = rep_user.replacer
+        if request.user in [leave_request.requested_from, rep_user] \
+           and do in ['accept', 'reject', 'forward']:
+
+            response = getattr(self, do)(request, leave_request) or response
+
+        return response
+
+
+    def accept(self, request, leave_request):
+        type_of_leave = leave_request.leave.type_of_leave
         sanc_auth = leave_request.applicant.extrainfo.sanctioning_authority
         sanc_officer = leave_request.applicant.extrainfo.sanctioning_officer
+        remark = request.GET.get('remark', '')
+        response = JsonResponse({'message': 'Successful', 'type': 'success'}, status=200)
 
-        if leave_request.requested_from in list(rep.replacee for rep in request.user.replacing.all()):
-            designation = leave_request.position
-        else:
-            designation = request.user.extrainfo.designation
-
-        for_replacement = leave_request.permission == 'academic' \
-                    or leave_request.permission == 'admin'
-
-        if do == 'accept':
-
-            if leave_request.applicant.extrainfo.user_type == 'student' \
-                and request.user == leave_request.requested_from:
-                return self.process_student_request(sanc_auth, leave_request, remark, True)
+        if leave_request.permission in ['academic', 'admin']:
 
             if leave_request.permission == 'academic':
-                if leave_request.leave.academic_replacement == request.user:
-                    leave_request = self.create_leave_request(leave_request, False, accept=True, remark=remark)
-                    leave_request.leave.acad_done = True
-                else:
-                    return JsonResponse({'message': 'Not allowed', 'type': 'error'}, status=200)
-
-            elif leave_request.permission == 'admin':
-                if leave_request.leave.administrative_replacement == request.user:
-                    leave_request = self.create_leave_request(leave_request, False, accept=True, remark=remark)
-                    leave_request.leave.admin_done = True
-                else:
-                    return JsonResponse({'message': 'Not allowed', 'type': 'error'}, status=200)
-
-            elif leave_request.permission == 'sanc_auth':
-
-                # requested_from =
-
-                if sanc_auth == designation and type_of_leave in ['casual', 'restricted']:
-
-                    leave_request = self.create_leave_request(leave_request, True, accept=True, remark=remark)
-                    leave_request.leave.status = 'accepted'
-                    leave_request.leave.save()
-
-                else:
-                    return JsonResponse({'message': 'Not allowed', 'type': 'error'}, status=200)
-
-            elif leave_request.permission == 'sanc_officer':
-
-                if sanc_officer == designation:
-
-                    leave_request = self.create_leave_request(leave_request, True, accept=True, remark=remark)
-                    leave_request.leave.status = 'accepted'
-                    leave_request.leave.save()
-
-                else:
-                    return JsonResponse({'message': 'Not allowed', 'type': 'error'}, status=200)
-
+                leave_request.leave.acad_done = True
             else:
-                return JsonResponse({'message': 'Not allowed', 'type': 'error'}, status=200)
+                leave_request.leave.admin_done = True
 
             leave_request.leave.save()
-            if for_replacement and leave_request.leave.acad_done \
-               and leave_request.leave.admin_done:
-                print(sanc_auth.name)
-                next_user = ExtraInfo.objects.get(designation=sanc_auth).user
+            leave_request = self.create_leave_request(leave_request, False, accept=True, remark=remark)
+
+            if leave_request.leave.replacement_confirm:
+                position = leave_request.applicant.extrainfo.sanctioning_authority
+                next_user = ExtraInfo.objects.filter(designation=position).first().user
                 CurrentLeaveRequest.objects.create(
                     applicant = leave_request.applicant,
                     requested_from = next_user,
-                    position = sanc_auth,
-                    leave = leave_request.leave,
                     permission = 'sanc_auth',
+                    position = position,
+                    leave = leave_request.leave,
+                    station = leave_request.station,
                 )
 
-        elif do == 'reject':
-            if leave_request.applicant.extrainfo.user_type == 'student' \
-               and request.user == leave_request.requested_from:
-                return self.process_student_request(sanc_auth, leave_request, remark, False)
-
-            if sanc_auth == designation and type_of_leave not in ['casual', 'restricted']:
-                raise Http404
-
-            if sanc_auth == sanc_officer and designation == sanc_auth:
-                self.create_leave_request(leave_request, True, accept=False, remark=remark)
-
-            elif designation in [sanc_auth, sanc_officer]:
-                leave_request = self.create_leave_request(leave_request,
-                                                          True, accept=False,
-                                                          remark=remark)
-            elif leave_request.requested_from == request.user:
-                leaves_data = leave_request.leave.cur_requests
-                for leave in leaves_data:
-                    self.create_leave_request(leave, False, accept=False, remark=remark)
-
-            else:
-                return JsonResponse({'message':'Not Allowed', 'type': 'error'}, status=200)
-
-            leave_request.leave.status = 'rejected'
+        elif sanc_auth == sanc_officer or leave_request.permission == 'sanc_officer':
+            leave_request = self.create_leave_request(leave_request, True, accept=True, remark=remark)
+            leave_request.leave.status = 'accepted'
             leave_request.leave.save()
 
-        elif do == 'forward':
-
-            if leave_request.applicant.extrainfo.user_type == 'student':
-                raise Http404
-
-            if sanc_auth == designation and type_of_leave not in ['casual', 'restricted']:
-                leave_request = self.create_leave_request(leave_request, False, accept=True, remark=remark)
-                sanc_officer_user = Administration.objects.filter(position=sanc_officer).first().administrator
-                CurrentLeaveRequest.objects.create(
-                    applicant=leave_request.applicant,
-                    requested_from = sanc_officer_user,
-                    position = sanc_officer,
-                    leave = leave_request.leave,
-                    permission = 'sanc_officer',
-                )
-
+        elif leave_request.permission == 'sanc_auth':
+            if type_of_leave in ['casual', 'restricted']:
+                leave_request = self.create_leave_request(leave_request, True, accept=True, remark=remark)
             else:
-                return JsonResponse({'message': 'Not allowed', 'type': 'error'}, status=200)
+                response = None
 
+        return response
+
+    def reject(self, request, leave_request):
+        remark = request.GET.get('remark', '')
+        type_of_leave = leave_request.leave.type_of_leave
+        response = JsonResponse({'message': 'Successfully Rejected', 'type': 'success'}, status=200)
+
+        if not leave_request.leave.replacement_confirm or leave_request.permission == 'sanc_officer':
+            leave_request = self.create_leave_request(leave_request, True, accept=False, remark=remark)
+            list(map(lambda x: x.delete(), leave_request.leave.cur_requests.all()))
+
+        elif leave_request.permission == 'sanc_auth':
+            if type_of_leave in ['casual', 'restricted']:
+                leave_request = self.create_leave_request(leave_request, True, accept=False, remark=remark)
+            else:
+                response = None
         else:
-            raise Http404
+            response = None
+        return response
 
-        return JsonResponse({'message': 'Operation Successful'}, status=200)
+    def forward(self, request, leave_request):
+
+        remark = request.GET.get('remark', '')
+        type_of_leave = leave_request.leave.type_of_leave
+
+        response = JsonResponse({'message': 'Successfully Forwarded', 'type': 'success'}, status=200)
+
+        if leave_request.permission == 'sanc_auth' and \
+            type_of_leave not in ['casual', 'restricted']:
+            leave_request = self.create_leave_request(leave_request, False, accept=False, remark=remark)
+
+            position = leave_request.applicant.extrainfo.sanctioning_officer
+
+            next_user = ExtraInfo.objects.filter(designation=position).first().user
+
+            CurrentLeaveRequest.objects.create(
+                applicant = leave_request.applicant,
+                requested_from = next_user,
+                position = position,
+                station = leave_request.station,
+                leave = leave_request.leave,
+                permission = 'sanc_officer',
+            )
+        else:
+            response = None
+
+        return response
 
     def create_leave_request(self, cur_leave_request, final, accept=False, remark=''):
         leave_request = LeaveRequest.objects.create(
@@ -268,7 +246,7 @@ class ProcessRequest(View):
                 count.save()
                 self.create_migration(cur_leave_request.leave)
                 cur_leave_request.leave.status = 'accepted'
-
+        cur_leave_request.leave.save()
         cur_leave_request.delete()
         return leave_request
 
@@ -358,16 +336,16 @@ class GetApplications(View):
         sanc_officer = query_obj.applicant.extrainfo.sanctioning_officer
         type_of_leave = query_obj.leave.type_of_leave
 
-        designation = request.user.extrainfo.designation
-
-        if (sanc_auth == designation and type_of_leave not in ['casual', 'restricted']) \
+        designation = query_obj.requested_from.extrainfo.designation
+        if sanc_auth == sanc_officer:
+            obj.forward = False
+        elif (sanc_auth == designation and type_of_leave not in ['casual', 'restricted']) \
              and query_obj.permission not in ['academic', 'admin']:
 
              obj.forward = True
 
         else:
             obj.forward = False
-        print(obj)
         return obj
 
 class GetLeaves(View):

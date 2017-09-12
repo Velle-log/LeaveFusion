@@ -10,7 +10,7 @@ from django.contrib import messages
 from django.core.urlresolvers import reverse
 
 from datetime import date
-
+import datetime
 from user_app.models import Replacement
 
 from leave_application.models import LeaveMigration, MigrationChangeDate
@@ -66,7 +66,7 @@ def make_migrations():
     last_date = MigrationChangeDate.objects.all().first()
 
     if today > last_date.last_date_change:
-        data_to_delete = LeaveMigration.objects.filter(end_date__lt=today)
+        data_to_delete = LeaveMigration.objects.filter(end_date__lte=today)
 
         for migration in data_to_delete:
             if migration.type == 'add':
@@ -86,7 +86,7 @@ def make_migrations():
 
                 LeaveMigration.objects.create(
                     type = 'del',
-                    start_date = migration.end_date+datetime.timedelta(days=1),
+                    start_date = migration.end_date + datetime.timedelta(days=1),
                     replacer = migration.replacer,
                     replacee = migration.replacee,
                     rep = rp,

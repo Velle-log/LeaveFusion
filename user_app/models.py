@@ -80,6 +80,9 @@ class Replacement(models.Model):
     replacer = models.ForeignKey(User, related_name='replacing', on_delete=models.CASCADE)
     replacement_type = models.CharField(max_length=20, choices=CHOICES, default='academic')
 
+    def __str__(self):
+        return '{}: {} replaces {}'.format(self.replacement_type, self.replacer, self.replacee)
+
 
 """
 from django.contrib.auth.models import User; User.objects.all()[0].delete();

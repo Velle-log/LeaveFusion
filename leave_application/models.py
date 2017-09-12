@@ -70,6 +70,10 @@ class Leave(models.Model):
     def get_year(self):
         return self.start_date.strftime('%Y')
 
+    @property
+    def replacement_confirm(self):
+        return self.acad_done & self.admin_done
+
     def __str__(self):
         return 'By: {}, type: {}'.format(self.applicant.username, self.type_of_leave)
 
@@ -87,6 +91,7 @@ class CurrentLeaveRequest(models.Model):
     leave = models.ForeignKey(Leave, related_name='cur_requests', on_delete=models.CASCADE)
     permission = models.CharField(max_length=20, default='other')
     station = models.BooleanField(default=False)
+
     def __str__(self):
         return '{} requested from {}'.format(self.applicant.username, self.requested_from.username)
 

@@ -5,7 +5,7 @@ $(document).ready(function(){
         var over = "<div class='overlay' id='overlay-div-"+data+"'><i class='fa fa-refresh fa-spin'></i></div>";
         return over
     }
-    
+
 
     function after_event(result, intext){
         if(result == 'success')
@@ -40,7 +40,7 @@ $(document).ready(function(){
             },
             error: function(data, err){
                 over.remove();
-                alert('error');
+                alert('Bad Request');
                 //TODO: add modal for error
             },
         });
@@ -66,7 +66,8 @@ $(document).ready(function(){
             },
             error: function(data, err){
                 over.remove();
-                alert('error');
+                // console.log(err);
+                alert('Bad Request');
                 //TODO: add modal for error
             },
         });
@@ -92,7 +93,7 @@ $(document).ready(function(){
             },
             error: function(data, err){
                 over.remove();
-                alert('error');
+                alert('Bad Request');
                 //TODO: add modal for error
             },
         });
