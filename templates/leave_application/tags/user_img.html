@@ -1,2 +1,2 @@
 {% load static %}
-<img src="{% if user.extrainfo.profile_picture %}{{ user.extrainfo.profile_picture.url }}{% else %}{% static 'img/user_avatar.png' %}{% endif %}" class="{% if size == 'small' %}user-image{% elif size == 'medium' %}img-circle{% else %}img-responsive" style="border-radius: 0.3em;  {% endif %}" alt="User Image">
+<img src="{% if user.extrainfo.profile_picture %}{{ user.extrainfo.profile_picture.url }}{% else %}{% static 'fusion/img/zlatan.jpg' %}{% endif %}" class="ui {% if size == 'small' %}avatar image{% elif size == 'medium' %}small circular image{% else %}image" style="border-radius: 0.3em;  {% endif %}" alt="User Image">

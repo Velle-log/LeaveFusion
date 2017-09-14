@@ -6,18 +6,24 @@
 </div>
 
 
-<div class="box box-primary" style="padding: 1em;"> 
-    <div class="box-header with-border">
-        <h3 class="box-title"><center><h1>{% trans "Sign Up" %}</h1>
-</center></h3>
+<div class="ui stackable grid" > 
+<div class="three wide column"></div>
+  <div class="ten wide column">
+    <div class="ui top attached segment">
+        <h3 class="box-title"><center><h1>{% trans "Sign Up" %}</h1></center></h3>
     </div>
-<div>
-<p>{% blocktrans %}We don't accept sign-up ! Please contact CC admin for your account details or <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
-<form class="ui form signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
-  {% if redirect_field_value %}
-  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-  {% endif %}
-</form>
+	<div class="ui bottom attached segment">
+		<div class="ui icon warning message">
+			<i class="warning icon"></i>
+  			<div class="header">{% blocktrans %}We don't accept sign-up ! Please contact CC admin for your account details or <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}
+  				</div>
+  		</div>
+		<form class="ui form signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+		  {% if redirect_field_value %}
+		  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+		  {% endif %}
+		</form>
+	</div>
 </div>
 </div>
 {% endblock %}

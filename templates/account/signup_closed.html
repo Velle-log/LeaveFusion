@@ -5,7 +5,15 @@
 {% block head_title %}{% trans "Sign Up Closed" %}{% endblock %}
 
 {% block bass %}
-<h1>{% trans "Sign Up Closed" %}</h1>
-
-<p>{% trans "We are sorry, but the sign up is currently closed." %}</p>
+<div class="ui stackable grid" > 
+<div class="three wide column"></div>
+  <div class="ten wide column">
+    <div class="ui top attached segment">
+		<h1>{% trans "Sign Up Closed" %}</h1>
+	</div>
+	<div class="ui bottom attached segment">
+		<p>{% trans "We are sorry, but the sign up is currently closed." %}</p>
+	</div>
+</div>
+</div>
 {% endblock %}

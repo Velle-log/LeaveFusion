@@ -2,7 +2,7 @@ $(document).ready(function(){
 
 
     function overlay(data){
-        var over = "<div class='overlay' id='overlay-div-"+data+"'><i class='fa fa-refresh fa-spin'></i></div>";
+        var over = "<div class='ui active inverted dimmer' id = 'overlay-div-"+data+"'><div class='ui text loader'>Loading</div></div>";
         return over
     }
     
@@ -24,10 +24,12 @@ $(document).ready(function(){
         // console.log('hey there'+data);
         div = $('#leave-request-'+data);
         body = $('#leave-request-body-'+data);
+        title = $('#leave-request-title-'+data);
         body.append(overlay(data));
         over = $('#overlay-div-'+data);
         // alert('#leave-request-'+data);
         text = $('#remark-'+data);
+        req_count = $('#processed-count');
         $.ajax({
             type: 'get',
             url: '/leave/process-request/'+data,
@@ -36,23 +38,31 @@ $(document).ready(function(){
                 remark: text.val(),
             },
             success: function(data){
-                div.html(after_event('success', "Successfully accepted the request !"));
+                div.slideToggle();
+                title.slideToggle();
+                req_count.html((parseInt(req_count.html())-1));
+                successNotif("Successfully accepted the request !");
             },
             error: function(data, err){
                 over.remove();
-                alert('error');
+                alert("An Error occured while processing request !");
+                // infoNotif("An Error occured while processing request !");
                 //TODO: add modal for error
             },
         });
     });
+    // ERROR
 
     $('.reject').click(function(e){
         // e.preventDefault();
         data = $(this).attr('data');
+        // console.log('hey there'+data);
         div = $('#leave-request-'+data);
         body = $('#leave-request-body-'+data);
+        title = $('#leave-request-title-'+data);
         body.append(overlay(data));
         over = $('#overlay-div-'+data);
+        // alert('#leave-request-'+data);
         text = $('#remark-'+data);
         $.ajax({
             type: 'get',
@@ -62,11 +72,14 @@ $(document).ready(function(){
                 remark: text.val(),
             },
             success: function(data){
-                div.html(after_event('danger', "The Leave request has been rejected !"));
+                div.slideToggle();
+                title.slideToggle();
+                successNotif("Successfully rejected the request !");
             },
             error: function(data, err){
                 over.remove();
-                alert('error');
+                alert("An Error occured while processing request !");
+                // infoNotif("An Error occured while processing request !");
                 //TODO: add modal for error
             },
         });
@@ -75,11 +88,15 @@ $(document).ready(function(){
     $('.forward').click(function(e){
         // e.preventDefault();
         data = $(this).attr('data');
+        // console.log('hey there'+data);
         div = $('#leave-request-'+data);
         body = $('#leave-request-body-'+data);
+        title = $('#leave-request-title-'+data);
         body.append(overlay(data));
         over = $('#overlay-div-'+data);
+        // alert('#leave-request-'+data);
         text = $('#remark-'+data);
+        req_count = $('#processed-count');
         $.ajax({
             type: 'get',
             url: '/leave/process-request/'+data,
@@ -88,11 +105,15 @@ $(document).ready(function(){
                 remark: text.val(),
             },
             success: function(data){
-                div.html(after_event('success', "Successfully forwarded the request !"));
+                div.slideToggle();
+                title.slideToggle();
+                req_count.html((parseInt(req_count.html())-1));
+                successNotif("Successfully forwarded the request !");
             },
             error: function(data, err){
                 over.remove();
-                alert('error');
+                alert("An Error occured while processing request !");
+                // infoNotif("An Error occured while processing request !");
                 //TODO: add modal for error
             },
         });

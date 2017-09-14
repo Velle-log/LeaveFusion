@@ -1,64 +1,71 @@
-{% extends 'index/base.html' %}
+{% extends 'fusion/base.html' %}
 {% block content %}
 {% load static %}
-<div class="box box-primary">
-    <div class="box-header with-border">
-        <h3 class="box-title">Leave Form</h3>
-    </div>
+<style type="text/css">label{
+        font-weight: 700;
+    }
+    </style>
+<h3 class="ui top attached header">Leave Form</h3>
+<div class="ui bottom attached segment">
+    
             <!-- /.box-header -->
             <!-- form start -->
-
-    <div class="box-body" style="padding: 1em">
-        <div class="row">
+    <div class="ui body" style="padding: 1em">
+        <div class="ui grid">
         {% if form %}
-            <div class="col-md-6 col-md-offset-1 box-outline-soft">
-            
-          		<form role="form" method='post'>
+            <div class="eight wide column">
+          		<form class="ui form" role="form" method='post'>
           			<div class="input-group">
                     {% csrf_token %}
                 	{{ form.as_p }}
         			</div>
         			<div class="box-footer">
-        	            <button type="submit" style="float: right;" class="btn btn-success">Submit</button>
+        	            <button class="ui positive button" type="submit" style="float: right;" class="btn btn-success">Submit</button>
         	        </div>
                 </form>
             </div>
             {% if request.user.leavescount %}
-            <div class="col-md-3 col-md-offset-1 box-outline-soft">
-                <div class="box-header with-border">
-                    <h3 class="box-title">Remaining Leaves</h3>
-                </div>
-                <ul class="list-group list-group-unbordered">
-                    <li class="list-group-item">
-                      <b><span class="label label-danger">Casual</span></b> <p class="pull-right">{{ request.user.leavescount.casual }}</p>
-                    </li>
-                    <li class="list-group-item">
-                      <b><span class="label label-success">Special Casual</span></b> <p class="pull-right">{{ request.user.leavescount.special_casual }}</p>
-                    </li>
-                    <li class="list-group-item">
-                      <b><span class="label label-info">Restricted</span></b> <p class="pull-right">{{ request.user.leavescount.restricted }}</p>
-                    </li>
-                    <li class="list-group-item">
-                      <b><span class="label label-warning">Commuted</span></b> <p class="pull-right">{{ request.user.leavescount.commuted }}</p>
-                    </li>
-                    <li class="list-group-item">
-                      <b><span class="label label-primary">Earned</span></b> <p class="pull-right">{{ request.user.leavescount.earned }}</p>
-                    </li>
-                    <li class="list-group-item">
-                      <b><span class="label label-danger">Vacation</span></b> <p class="pull-right">{{ request.user.leavescount.vacation }}</p>
-                    </li>
-                </ul>  
+            <div class="column"><div class="ui vertical divider"></div></div>
+            <div class="six wide column segment">
+
+                <table class="ui very basic collapsing celled table">
+                    <thead>
+                        <tr><th><b>Type of Leave</b></th>
+                        <th><b>Remaining Leaves</b></th>
+                    </tr></thead>
+                    <tbody>
+                        <tr class="list-group-item">
+                          <b><td class="ui right pointing label red">&emsp;Casual</td></b> <td class="right floated">{{ request.user.leavescount.casual }}</td>
+                        </tr>
+                        <tr class="list-group-item">
+                          <b><td class="ui right pointing label green">&emsp;Special Casual</td></b> <td class="right floated">{{ request.user.leavescount.special_casual }}</td>
+                        </tr>
+                        <tr class="list-group-item">
+                          <b><td class="ui right pointing label blue">&emsp;Restricted</td></b> <td class="right floated">{{ request.user.leavescount.restricted }}</td>
+                        </tr>
+                        <tr class="list-group-item">
+                          <b><td class="ui right pointing label yellow">&emsp;Commuted</td></b> <td class="right floated">{{ request.user.leavescount.commuted }}</td>
+                        </tr>
+                        <tr class="list-group-item">
+                          <b><td class="ui right pointing label purple">&emsp;Earned</td></b> <td class="right floated">{{ request.user.leavescount.earned }}</td>
+                        </tr>
+                        <tr class="list-group-item">
+                          <b><td class="ui right pointing label orange">&emsp;Vacation</td></b> <td class="right floated">{{ request.user.leavescount.vacation }}</td>
+                        </tr>
+                    </tbody>
+                </table>  
             </div>
             {% endif %}
         {% elif message %}
-            <div class="info-box bg-{% if message == 'success' %}green{% else %}yellow{% endif %}">
-                <span class="info-box-icon"><i class="fa fa-thumbs-o-up"></i></span>
-
-                <div class="info-box-content">
-                  <span class="info-box-text"><b><h3> {{ message }} !</h3></b></span>
+            <div class="ui icon {% if message == 'success' %}success{% endif %} message">
+                <i class="close icon"></i>
+                <i class="checkmark icon"></i>
+                <div class="content">
+                    <div class="header">
+                        {{ message }}
+                    </div>
+                    <p>{% if message == 'success' %}&emsp;Successfully Submitted your leave application{% else %}{% endif %}</p>
                 </div>
-                <h5>{% if message == 'success' %}&emsp;Successfully Submitted your leave application{% else %}{% endif %}</h5>
-                <!-- /.info-box-content -->
             </div>
         {% endif %}
         </div>

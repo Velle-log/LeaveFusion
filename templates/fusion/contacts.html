@@ -1,0 +1,27 @@
+{% load static %}
+
+{% block contacts %}
+{% comment %}The Modules start here!{% endcomment %}
+    <div class="stackable ui internally celled grid">
+        <div class="column">
+            <div class="ui fluid card" style="padding-top: 12px; padding-bottom: 24px; max-width: 18vw;">
+                <a class="ui top attached black label">
+                    <span class="ui inverted header">Contacts</span>
+                    <i class="setting icon right floated"></i>
+                    <i class="chevron up icon right floated"></i>
+                </a>
+
+                <div class="content contact" style="max-height: 75vh; overflow-y: auto;">
+                    <div class="ui two column stackable doubling grid">
+                        {% comment %}A single modules row starts here!{% endcomment %}
+                        <div class="row">
+                            <div class="column">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% comment %}The Modules ends here!{% endcomment %}
+{% endblock %}

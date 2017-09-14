@@ -1,44 +1,33 @@
-<div class="col-md-8" id ='leave-{{ leave.id }}'>
-  <div class="box box-default box-solid collapsed-box" id="leave-body-{{ leave.id }}">
-    <div class="box-header with-border">
-      <h3 class="box-title">
-      <b>#{{ leave.id }}: </b>{{ leave.applicant.first_name }} {{ leave.applicant.last_name }} - {{ leave.type_of_leave }}&emsp;&emsp;
-      <i class="fa fa-{% if leave.status == 'accepted' %}check" style="color:green;" {% elif leave.status == 'rejected' %}ban" style="color:red;"{% else %}refresh" style="color:blue;"{% endif %}></i>
-      </h3>
-
-      <div class="box-tools pull-right">
-        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
-      </div>
+{% load leave_tags %}
+<div class="icon title">
+    <i class="dropdown icon"></i>
+    <b>#{{ leave.id }}: </b>{{ leave.applicant.first_name }} {{ leave.applicant.last_name }} - {{ leave.type_of_leave }}&emsp;&emsp;
+      <i class="{% if leave.status == 'accepted' %}green checkmark icon{% elif leave.status == 'rejected' %}red remove icon{% else %}blue refresh icon{% endif %}"></i>&emsp;&emsp;
+      <i class="calendar icon"></i>from:  <strong> {{ leave.start_date }}</strong>&emsp;&emsp;-&emsp;&emsp;<i class="calendar icon"></i>to: <strong> {{ leave.end_date }}</strong>
+</div>
+<div class="content" id ='leave-{{ leave.id }}'>
+  <div class="transition visible" id="leave-body-{{ leave.id }}">
       <!-- /.box-tools -->
-    </div>
     <!-- /.box-header -->
-    <div class="box-body" style="display: none;">
-        <div class="pull-left">
-            <i>from: </i> <strong> {{ leave.start_date }}</strong>
+        <div class="ui top attached header">
+            <h4> <b><a href="{% url 'profile:profile_view' leave.applicant.id %}">{% get_user_dp leave.applicant 'small' %}{{leave.applicant.first_name}} {{leave.applicant.last_name}}</a> applied for {{ leave.type_of_leave }} Leave.</b></h4>
         </div>
-        <div class="pull-right">
-            <i>to: </i> <strong> {{ leave.end_date }}</strong>
-        </div>
-        <br>
-        <div class="box-solid">
-            <div class="box-header with-border">
-                <h4> <b><a href="{% url 'profile:profile_view' leave.applicant.id %}">{{leave.applicant.first_name}} {{leave.applicant.last_name}}</a> applied for {{ leave.type_of_leave }} Leave.</b></h4>
-            </div>
-            <br>
+        <div class="ui horizontal attached segment">
             <p><b>Purpose: </b>{{ leave.purpose }}</p>
-            <br>
             {% if leave.leave_address %}
             <p><b>Leave Address: </b>{{ leave.leave_address }}</p>
-            <br>
             {% endif %}
-            <br>
-            <div class="box-footer">
-                <div class="callout callout-{% if leave.status == 'accepted' %}success{% elif leave.status == 'rejected' %}danger{% else %}info{% endif %}">
-                    <b> Leave status: &emsp;{{ leave.status }} &emsp;<i class="fa fa-{% if leave.status == 'accepted' %}check{% elif leave.status == 'rejected' %}ban{% else %}refresh{% endif %}"></i>
-                </div>
-            </div>
         </div>
-    </div>
+        <div class="ui bottom attached {% if leave.status == 'accepted' %}positive{% elif leave.status == 'rejected' %}negative{% else %}info{% endif %} icon message">
+          <i class="{% if leave.status == 'accepted' %}checkmark{% elif leave.status == 'rejected' %}remove{% else %}refresh{% endif %} icon"></i>
+          <div class="content">
+            <div class="header">
+              <b> Leave status:</b>&emsp;{{ leave.status }} &emsp;
+            </div>
+            <div class="ui divider"></div>
+            {% for req in leave.requests.all %}<p><b><a href="{% url 'profile:profile_view' req.requested_from.id %}">{{ req.requested_from.first_name }}&nbsp;{{ req.requested_from.last_name }}</a>'s&nbsp;Remark: </b> {{ req.remark }}</p>{% endfor%}
+          </div>
+        </div>
     <!-- /.box-body -->
   </div>
   <!-- /.box -->

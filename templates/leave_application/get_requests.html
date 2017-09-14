@@ -1,59 +1,40 @@
-{% extends 'index/base.html' %}
+{% extends 'fusion/base.html' %}
 {% load static %}
 {% load leave_tags %}
 {% block extra_head %}
     <script src="{% static 'bower_components/jquery/dist/jquery.min.js'%}"></script>
-    <script src="{% static 'leave_application/js/process_request.js' %}" type='text/javascript' ></script>
-    <script src="{% static 'bower_components/jquery-slimscroll/jquery.slimscroll.min.js'%}"></script>
-<!-- FastClick -->
-<script src="{% static 'bower_components/fastclick/lib/fastclick.js'%}"></script>
-    </script>
 {% endblock %}
 {% block content %}
 
-<div class="nav-tabs-custom">
-    <ul class="nav nav-tabs">
-      <li class="active"><a href="#unprocessed" data-toggle="tab">Unprocessed Leave Reqeusts</a></li>
-      <li><a href="#processed" data-toggle="tab">Processed Leave Request</a></li>
-    </ul>
-    <div class="tab-content">
-      <div class="active tab-pane" id="unprocessed">
-        <!-- The timeline -->
-        <div class="box-body">
-            <div class="box-outline-soft">
-                <div class="box-header with-border">
-                    <h4><b>All Unprocessed Leave Requests  <i class="fa fa-angle-down"></i></b></h4>
-                </div>
-                <div class="box-body">
-                    <h4 class="text-muted">Total: {{ count }}</h4>
-                    {% for req in requests %}
-                        {% get_leave_request req request.user %}
-                    {% endfor %}
-                    {% if count == 0 %}
-                        <h4 class="text-muted">No Leave Requests to process !</h4>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-      </div>
-      <!-- /.tab-pane -->
 
-      <div class="tab-pane" id="processed">
-        <div class="box-body">
-            <div class="box-outline-soft">
-                <div class="box-header with-border">
-                    <h4><b>All Processed Leave Requests  <i class="fa fa-angle-down"></i></b></h4>
-                </div>
-                <div class="box-body">
-                {% for preq in prequests %}
-                    {% get_processed_request preq request.user %}
-                {% endfor %}
-                </div>
-            </div>
-        </div>
-      </div>
-      <!-- /.tab-pane -->
+  <div class="ui segment sixteen wide column">
+    <div class="ui menu top">
+      <a class="active item" data-tab="processed"><i class="icon edit sign"></i>Unprocessed Requests</a>
+      <a class="item" data-tab="unprocessed"><i class="icon edit sign"></i>Processed Requests</a>
     </div>
-    <!-- /.tab-content -->
-</div>
+    
+    <div class="ui active tab" data-tab="processed">
+        <div class="ui accordion" style="display: block;">
+            <h4>Total: <p  id="processed-count" style="display: inline;">{{ count }}</p></h4>
+            {% for req in requests %}
+                {% get_leave_request req request.user %}
+            {% endfor %}
+            {% if count == 0 %}
+                <h4 class="text-muted">No Leave Requests to process !</h4>
+            {% endif %}
+        </div>
+    </div>
+    <div class="ui tab" data-tab="unprocessed">
+        <div class="ui accordion" style="display: block;">
+            {% for preq in prequests %}
+                {% get_processed_request preq request.user %}
+            {% endfor %}
+        </div>
+    </div>
+
+  </div>
+<script type="text/javascript">
+    $('.top.menu .item').tab();
+</script>
+<script type="text/javascript" src="{% static 'leave_application/js/process_request.js' %}"></script>
 {% endblock %}

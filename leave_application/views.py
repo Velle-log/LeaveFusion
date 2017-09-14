@@ -111,7 +111,7 @@ class ApplyLeave(View):
 class ProcessRequest(View):
 
     def get(self, request, id):
-
+        print("reached")
         leave_request = get_object_or_404(CurrentLeaveRequest, id=id)
         type_of_leave = leave_request.leave.type_of_leave
 
@@ -127,7 +127,6 @@ class ProcessRequest(View):
                     or leave_request.permission == 'admin'
 
         if do == 'accept':
-
             if leave_request.applicant.extrainfo.user_type == 'student' \
                 and request.user == leave_request.requested_from:
                 return self.process_student_request(sanc_auth, leave_request, remark, True)
@@ -200,7 +199,7 @@ class ProcessRequest(View):
                                                           True, accept=False,
                                                           remark=remark)
             elif leave_request.requested_from == request.user:
-                leaves_data = leave_request.leave.cur_requests
+                leaves_data = leave_request.leave.cur_requests.all()
                 for leave in leaves_data:
                     self.create_leave_request(leave, False, accept=False, remark=remark)
 
@@ -287,7 +286,6 @@ class GetApplications(View):
     def get(self, request):
 
         prequest_list = LeaveRequest.objects.filter(requested_from=request.user).order_by('-id')
-
         request_list = list(map(lambda x: self.should_forward(request, x),
                            CurrentLeaveRequest.objects.filter(requested_from=request.user).order_by('-id')))
 

@@ -1,0 +1,28 @@
+{% load static %}
+
+{% block calendar %}
+    <div class="stackable ui internally celled  grid">
+        <div class="column">
+            <div class="ui fluid card" style="padding-top: 12px; padding-bottom: 24px; max-width: 18vw;">
+                <a class="ui top attached black label">
+                    <span class="ui inverted header">Calendar</span>
+                    <i class="setting icon right floated"></i>
+                    <i class="chevron up icon right floated" id="toggleCalendarIcon" onclick="toggleContent()"></i>
+                </a>
+
+                <div class="content calendar" style="max-height: 75vh; overflow-y: auto;">
+                    <div class="ui two column stackable doubling grid">
+                        {% comment %}A single modules row starts here!{% endcomment %}
+                        <div class="row">
+                            {% comment %}
+
+                                Add everything here!
+
+                            {% endcomment %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

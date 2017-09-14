@@ -1,36 +1,62 @@
-{% extends 'index/base.html' %}
+{% extends 'fusion/base.html' %}
 {% load static %}
 {% load leave_tags %}
 {% block extra_head %}
 {% endblock %}
 {% block content %}
 
-<div class="nav-tabs-custom">
-    <ul class="nav nav-tabs">
-      <li class="active"><a href="#unprocessed" data-toggle="tab">Applied Leaves</a></li>
-    </ul>
-    <div class="tab-content">
-      <div class="active tab-pane" id="unprocessed">
-        <!-- The timeline -->
-        <div class="box-body">
-            <div class="box-outline-soft">
-                <div class="box-header with-border">
-                    <h4><b>All your applied Leaves  <i class="fa fa-angle-down"></i></b></h4>
-                </div>
-                <div class="box-body">
-                    <h4 class="text-muted">Total: {{ count }}</h4>
-                    {% for leave in leaves %}
-                        {% get_leave leave request.user %}
-                    {% endfor %}
-                    {% if count == 0 %}
-                        <h4 class="text-muted">No Leave applied !</h4>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-      </div>
-      <!-- /.tab-pane -->
+
+  <div class="ui segment">
+    <div class="ui menu top">
+      <a class="active item" data-tab="leaves"><i class="icon edit sign"></i>Yor Applied Leaves</a>
+      <a class="item" data-tab="leaves-balance"><i class="icon edit sign"></i>Yor Leave balance</a>
     </div>
-    <!-- /.tab-content -->
-</div>
+    
+    <div class="ui active tab" data-tab="leaves">
+        <div class="ui accordion" style="display: block;">
+            <h4 class="text-muted">Total: {{ count }}</h4>
+            {% for leave in leaves %}
+                {% get_leave leave request.user %}
+            {% endfor %}
+            {% if count == 0 %}
+                <h4 class="text-muted">No Leave applied !</h4>
+            {% endif %}
+        </div>
+    </div>
+    <div class="ui tab" data-tab="leaves-balance">
+        <div class="ui accordion" style="display: block;">
+            <center>
+            <table class="ui very basic collapsing celled table">
+                <thead>
+                    <tr><th><b>Type of Leave</b></th>
+                    <th><b>Remaining Leaves</b></th>
+                </tr></thead>
+                <tbody>
+                    <tr class="list-group-item">
+                      <b><td class="ui right pointing label red">&emsp;Casual</td></b> <td class="right floated">{{ request.user.leavescount.casual }}</td>
+                    </tr>
+                    <tr class="list-group-item">
+                      <b><td class="ui right pointing label green">&emsp;Special Casual</td></b> <td class="right floated">{{ request.user.leavescount.special_casual }}</td>
+                    </tr>
+                    <tr class="list-group-item">
+                      <b><td class="ui right pointing label blue">&emsp;Restricted</td></b> <td class="right floated">{{ request.user.leavescount.restricted }}</td>
+                    </tr>
+                    <tr class="list-group-item">
+                      <b><td class="ui right pointing label yellow">&emsp;Commuted</td></b> <td class="right floated">{{ request.user.leavescount.commuted }}</td>
+                    </tr>
+                    <tr class="list-group-item">
+                      <b><td class="ui right pointing label purple">&emsp;Earned</td></b> <td class="right floated">{{ request.user.leavescount.earned }}</td>
+                    </tr>
+                    <tr class="list-group-item">
+                      <b><td class="ui right pointing label orange">&emsp;Vacation</td></b> <td class="right floated">{{ request.user.leavescount.vacation }}</td>
+                    </tr>
+                </tbody>
+            </table>  
+            </center>
+        </div>
+    </div>
+
+  </div>
+
+
 {% endblock %}

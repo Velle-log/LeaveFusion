@@ -5,20 +5,23 @@
 {% block head_title %}{% trans "Sign Out" %}{% endblock %}
 
 {% block bass %}
-<div class="box box-primary" style="padding: 1em;">
-    <div class="box-header with-border">
-        <h3 class="box-title"><center><h1>{% trans "Sign Out" %}</h1></center></h3>
+<div class="ui stackable grid" > 
+  <div class="sixteen wide column">
+    <div class="ui top attached segment">
+        <h3 class="header"><center><h1>{% trans "Sign Out" %}</h1></center></h3>
     </div>
-<center>
-<p>{% trans 'Are you sure you want to sign out?' %}</p>
+    <div class="ui bottom attached segment">
+		<p>{% trans 'Are you sure you want to sign out?' %}</p>
 
-	<form method="post" action="{% url 'account_logout' %}">
-	  {% csrf_token %}
-	  {% if redirect_field_value %}
-	  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
-	  {% endif %}
-	  <button class='btn btn-block btn-primary' type="submit">{% trans 'Sign Out' %}</button>
-	</form>
-</center>
+		<form method="post" action="{% url 'account_logout' %}">
+		  {% csrf_token %}
+		  {% if redirect_field_value %}
+		  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+		  {% endif %}
+		  <button class='ui right floated positive button' type="submit">{% trans 'Sign Out' %}</button>
+		  <br><br>
+		</form>
+	</div>
+</div>
 </div>
 {% endblock %}

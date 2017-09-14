@@ -14,52 +14,12 @@
 {% endfor %}
 {% endif %}
 	{% if provider.name == 'Google' %}
-        <style type="text/css">
-        #customBtn {
-          display: inline-block;
-          background: white;
-          color: #444;
-          width: 190px;
-          border-radius: 5px;
-          border: thin solid #888;
-          box-shadow: 1px 1px 1px grey;
-          white-space: nowrap;
-        }
-        #customBtn:hover {
-          cursor: pointer;
-        }
-        span.label {
-          font-family: serif;
-          font-weight: normal;
-        }
-        span.icon {
-          background: url('{% static 'img/google.png' %}') transparent 5px 50% no-repeat;
-          display: inline-block;
-          vertical-align: middle;
-          width: 42px;
-          height: 42px;
-        }
-        span.buttonText {
-          display: inline-block;
-          vertical-align: middle;
-          padding-left: 42px;
-          padding-right: 42px;
-        }
-        
-        #customBtn:hover {
-            background: rgba(230,230,230,0.5);
-        }
-      </style>
       <!-- In the callback, you would hide the gSignInWrapper element on a
       successful sign in -->
-        <a title="{{provider.name}}" class="socialaccount_provider {{provider.id}}" 
+        <a title="{{provider.name}}" class="socialaccount_provider {{provider.id}} ui google plus button" 
          href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">
-            <div id="gSignInWrapper">
-                <div id="customBtn" class="customGPlusSignIn">
-                  <span class="icon"></span>
-                  <span class="buttonText">{{provider.name}}</span>
-                </div>
-            </div>
+            <i class="google plus icon"></i>
+            <span class="buttonText">{{provider.name}}</span>
         </a>
      {% else %}
      <a title="{{provider.name}}" class="socialaccount_provider {{provider.id}}" 

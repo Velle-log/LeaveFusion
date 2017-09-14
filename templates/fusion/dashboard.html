@@ -1,0 +1,71 @@
+{% extends 'fusion/base.html' %}
+{% load static %}
+
+
+{% block title %}
+    Dashboard
+{% endblock %}
+
+
+{% block body %}
+    {% block navBar %}
+        {% include 'fusion/navbar.html' %}
+    {% endblock %}
+
+    <div class="container" style="margin-left: 2.5%; max-right: 7.5%;">
+        <div class="ui stackable grid">
+
+            {% comment %}Modules start here!{% endcomment %}
+            <div class="three wide column">
+                <div class="ui large fluid raised card" style="min-width: 240px; max-width: 320px;">
+                        <div class="image">
+                            <img src="{% static 'fusion/img/faculty.png' %}">
+                        </div>
+
+                        <div class="content">
+                            {% comment %}http://web.iiitdmj.ac.in/~vkjain{% endcomment %}
+                            <div class="ui large header" href="">
+                                {{ request.user.first_name }}
+                                {{ request.user.last_name }}
+                                <span class="right floated meta">
+                                {{ request.user.first_name }}
+                            </span>
+                            </div>
+
+                            <div class="meta">
+                            <span>
+                                {{ userDesignation }}
+                            </span>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            {% comment %}Modules end here!{% endcomment %}
+
+            {% comment %}Calendar starts here!{% endcomment %}
+            <div class="thirteen wide column">
+                {% comment %}The Modules:{% endcomment %}
+                {% block content %}
+                {% endblock %}
+                {% block bass %}
+                {% endblock %}
+            </div>
+
+
+        </div>
+    </div>
+
+{% endblock %}
+
+
+{% block javascript %}
+    {% comment %}
+    <script>
+        function toggleContent() {
+            $('.content.contact').toggle();
+            $('#toggleContactIcon').removeClass("chevron up");
+            $('#toggleContactIcon').addClass("chevron down");
+        }
+    </script>
+    {% endcomment %}
+{% endblock %}

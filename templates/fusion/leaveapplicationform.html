@@ -1,0 +1,174 @@
+<div class="ui container">
+    <div class="ui vertical stripe team segment"
+         style="padding-left: 5%;
+                padding-right: 5%;">
+        <div class="ui header">
+            <span>
+                Please Checkout Your Personal Details:
+            </span>
+        </div>
+
+        <div class="ui divider"></div>
+        <br>
+
+        <form class="ui large form"
+              style="margin-left: 7.5%;
+                     margin-right: 7.5%;">
+
+            <div class="two fields">
+                <div class="field">
+                    <label>First name</label>
+                    <input placeholder="First Name" value="Preeti" readonly="" type="text">
+                </div>
+
+                <div class="field">
+                    <label>Last name</label>
+                    <input placeholder="Last Name" value="Khanna" readonly="" type="text">
+                </div>
+            </div>
+
+            <div class="field">
+                <label>Email</label>
+                <input placeholder="Email" value="pkhanna@iiitdmj.ac.in" readonly="" type="text">
+            </div>
+
+            <div class="two fields">
+                <div class="field">
+                    <label>Designation</label>
+                    <input placeholder="Designation" value="Associate Professor" readonly="" type="text">
+                </div>
+
+                <div class="field">
+                    <label>Department</label>
+                    <input placeholder="Department" value="C.S.E." readonly="" type="text">
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+<div class="ui vertical stripe team segment"
+     style="padding-left: 5%;
+                padding-right: 5%;">
+
+    <div class="ui header">
+        <span>
+            Leave Details:
+        </span>
+    </div>
+
+    <div class="ui divider"></div>
+    <br>
+
+    <div class="ui sub dividing header"
+         style="margin-left: 7.5%;
+                 margin-right: 7.5%;
+                 margin-bottom: 2.5%;">
+
+        Apply for Leave:
+
+        <button class="ui large icon button circular right floated" style="background-color: #FFF;"
+                onclick="addLeave()">
+            <i class="plus large green icon right floated"></i>
+        </button>
+
+    </div>
+
+    <form class="ui large form"
+          style="margin-left: 7.5%;
+                 margin-right: 7.5%;
+                 margin-bottom: 5%;">
+
+        {% comment %} The ApplyLeave conatianer starts here! {% endcomment %}
+        <div id="applyLeave">
+
+            <div class="fields">
+                <div class="four wide field">
+                    <label>Leave From:</label>
+                    <input>
+                </div>
+
+                <div class="four wide field">
+                    <label>Leave To:</label>
+                    <input>
+                </div>
+
+                <div class="six wide field">
+                    {% comment %}The Dropdown field starts here!{% endcomment %}
+                    <label>Leave Type</label>
+
+{% comment %}
+                    <div class="fieldWrapper">
+                        <div class=" ui fluid search selection dropdown">
+                            {{ leaveapplicationform.laf_LeaveType.errors }}
+                            <input name="Leave Type" type="hidden">
+                            <i class="dropdown icon"></i>
+
+                            <div class="default text">Select Leave</div>
+
+                            <div class="menu">
+                                    {{ leaveapplicationform.laf_LeaveType }}
+                                <div class="item">
+                                    {{ leaveapplicationform.laf_LeaveType }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+{% endcomment %}
+
+{% comment %}
+                    <div class="fieldWrapper">
+                        {{ form.location.errors }}
+                        <label for="id_name">Location</label>
+                        {{ form.location }}
+                    </div>
+{% endcomment %}
+
+                    <div class="ui fluid search selection dropdown">
+                        <input name="Leave Type" type="hidden">
+                        <i class="dropdown icon"></i>
+
+                        <div class="default text">Select Leave</div>
+
+                        <div class="menu">
+                            <div class="item" data-value="CL">
+                                Casual Leave
+                            </div>
+
+                            <div class="item" data-value="COL">
+                                Commuted Leave
+                            </div>
+
+                            <div class="item" data-value="EL">
+                                Earned Leave
+                            </div>
+
+                            <div class="item" data-value="RH">
+                                Restricted Holiday
+                            </div>
+
+                            <div class="item" data-value="SCL">
+                                Sp. Casual Leave
+                            </div>
+
+                            <div class="item" data-value="VL">
+                                Vacation Leave
+                            </div>
+                        </div>
+                    </div>
+                    {% comment %}The Dropdown field ends here!{% endcomment %}
+                </div>
+
+                <div class="field">
+                    <label>Station Leave:</label>
+                    <div class="ui toggle checkbox"
+                         style="margin-top: 8px;">
+                        <label>Required</label>
+                        <input tabindex="0" class="hidden" type="checkbox">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+</div>

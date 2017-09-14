@@ -43,8 +43,8 @@ SOCIALACCOUNT_PROVIDERS = {
 
 #allauth settings
 
-LOGIN_URL = 'accounts/login/'
-LOGOUT_URL = 'accounts/logout/'
+LOGIN_URL = '/accounts/login/'
+LOGOUT_URL = '/accounts/logout/'
 LOGIN_REDIRECT_URL = '/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

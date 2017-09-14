@@ -5,12 +5,15 @@
 {% block head_title %}{% trans "Account Inactive" %}{% endblock %}
 
 {% block base %}
-<div class="box box-primary" > 
-    <div class="box-header with-border">
+<div class="ui stackable grid" > 
+	<div class="sixteen wide column">
+    <div class="ui top attached segment">
         <h3 class="box-title"><center><h1>{% trans "Account Inactive" %}</h1></center></h3>
     </div>
-
-
-<p>{% trans "This account is inactive." %}</p>
+	
+    <div class="ui bottom attached segment">
+		<p>{% trans "This account is inactive." %}</p>
+	</div>
+</div>
 </div>
 {% endblock %}

@@ -2,53 +2,87 @@
 {%block bass%}
 {% load i18n %}
 {% load account socialaccount %}
+{% load static %}
+<style type="text/css">
+  label{
+    font-weight: 700;
+  }
+</style>
+<div class="ui raised stackable doubling centered card right floated"
+         style="margin: auto;
+                margin-top: 7.5%;
+                min-width: 360px;">
 
+        <div class="content">
+            <img class="ui rounded centered small image"
+                 src="{% static 'fusion/img/user.png' %}"
+                 style="margin-top: -27.5%;
+                        margin-left: 27.5%;"
+                 alt="User Image" >
 
+            <div class="ui huge centered header">
+                Employee Login
+            </div>
+
+        </div>
+
+        <div class="content">
+            <form method="post" class="ui form" style="margin-top: 2.5%;margin-bottom: 2.5%;">
+                <div class="box-header with-border">
+                        {% get_providers as socialaccount_providers %}</h3>
+                </div>
+                  <center>
+                  {% if socialaccount_providers %}
+                    <div class="socialaccount_ballot">
+                      <div class="socialaccount_providers">
+                        {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+                      </div>
+                    </div>
+                    {% include "socialaccount/snippets/login_extra.html" %}
+                    {% endif %}
+                  </center>
+                <div class="ui divider"><center style="margin-top: -0.5em;">OR</center></div>
+                {% csrf_token %}
+                {{ form.as_p }}
+                <a class="button secondaryAction" style="display: inline; float: right; margin-top: -30px;" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+                {% if redirect_field_value %}
+                <input type="hidden"  name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                {% endif %} 
+                <br>
+                <div class="field"
+                     style="margin-top: 2.5%;
+                                 margin-bottom: 2.5%;">
+                    <div class="ui divider"></div>
+                </div>
+
+                <div class="field">
+                    <button class="ui fluid large primary button" type="submit">Login</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="ui row">
+        <br>
+        <br>
+        <br>
+    </div>
 
 <div class="box box-primary" style="padding: 1em;">
-    <div class="box-header with-border">
-        <h3 class="box-title"><center><h1>{% trans "Sign In" %}</h1></center>
-            {% get_providers as socialaccount_providers %}</h3>
-    </div>
+    
     <br>
     <div class="row">
       
-      <div class="col-md-5">
-          <center>{% if socialaccount_providers %}
-          <p>{% blocktrans with site.name as site_name %}Please sign in with one
-          of your existing third party accounts.{% endblocktrans %}</p>
-
-          <div class="socialaccount_ballot">
-
-            <ul class="socialaccount_providers">
-              <br>
-              {% include "socialaccount/snippets/provider_list.html" with process="login" %}
-            </ul>
-
-          </div>
-
-      {% include "socialaccount/snippets/login_extra.html" %}
-          </center>
-      {% else %}
-      {% endif %}
-      </div>
+      
 
         <div class="col-md-5 col-md-offset-1" style="border-left:1px solid #ccc;">
           <form class="ui large form login" method="POST" action="{% url 'account_login' %}">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <a class="button secondaryAction" style="display: inline; float: right; margin-top: -30px;" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
-            {% if redirect_field_value %}
-            <input type="hidden"  name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-            {% endif %} 
-            <br>
-            <button class="btn btn-block btn-primary" type="submit">{% trans "Sign In" %}</button>
+            
           </form>
         </div>
         
     </div>
 </div>
 
-
+<script type="text/javascript"></script>
 {% endblock %}
 

@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    {% load leave_tags %}
+    <meta charset="UTF-8">
+    <title>Fusion!
+        {% block title %}{% endblock %}
+    </title>
+
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'fusion/semantic-ui/components/reset.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'fusion/semantic-ui/components/icon.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'fusion/css/semantic.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'fusion/semantic-ui/components/checkbox.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'my_css/lobibox.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'my_css/sweetalert.css' %}">
+    {% block css %}
+    {% endblock %}
+
+    <!-- Javascript -->
+    <script src="{% static 'bower_components/jquery/dist/jquery.min.js'%}"></script>
+    <script src="{% static 'fusion/semantic-ui/components/checkbox.js' %}"></script>
+    <script type="text/javascript" src="{% static 'my_js/sweetalert.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'my_js/popups.js' %}"></script>
+    <style type="text/css">
+    body{
+      font:300 16px/18px 'Open Sans',sans-serif;
+    }
+    .errorlist{
+      color: #a30603;
+      text-decoration: none;
+      padding-top: 0.3em;
+      padding-bottom: 0.3em;
+      border: 1px solid #a30603;
+      border-radius: 3px;
+      background-color: rgba(172,8,5,0.1);
+    }
+       .marginlefting {
+       margin-left: 60px !important;
+     }
+     
+     .displaynone {
+       display: none !important;
+     }
+     
+     .displayblock {
+       display: block !important;
+     }
+     
+     .sidebar .item i {
+       font-size: 24px;
+       margin-top: -5px !important;
+     }
+     
+     .logo {
+       height: 48px !important;
+       padding: 10px !important;
+     }
+     
+     .logo img {
+       width: 100% !important;
+       height: 38px !important;
+     }
+     
+     .title.item {
+       padding: .92857143em 1.14285714em !important;
+     }
+     
+     .dropdown .menu .header {
+       padding-top: 3.9px!important;
+       padding-bottom: 3.9px!important;
+     }
+
+     .scrollbar
+        {
+          margin-left: 30px;
+          float: left;
+          height: 300px;
+          width: 65px;
+          background: #F5F5F5;
+          overflow-y: scroll;
+          margin-bottom: 25px;
+        }
+        #style-1::-webkit-scrollbar
+        {
+          width: 0.5%;
+          background-color: #F5F5F5;
+        }
+
+        #style-1::-webkit-scrollbar-thumb
+        {
+          border-radius: 10px;
+          -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+          background-color: #555;
+        }
+        input[type="checkbox"]{
+        display:inline-block;
+        width:19px;
+        height:19px;
+        margin:-2px 10px 0 0;
+        vertical-align:middle;
+        background:#581845 -19px top no-repeat;
+        cursor:pointer;
+    }
+    input[type="checkbox"]{
+        display:inline-block;
+        width:19px;
+        height:19px;
+        margin:-2px 10px 0 0;
+        vertical-align:middle;
+        background:#581845 -19px top no-repeat;
+        cursor:pointer;
+    }
+    .ui .form select{
+        display: inline; 
+        width: auto;   
+      }
+    </style>
+
+</head>
+<body style="background-color: rgba(189, 189, 189, 0.1); font:300 16px/18px 'Open Sans',sans-serif;" id="style-1">
+
+{% if messages %}
+    {% for message in messages %}
+          <button class="ui button blue not notification" id="notification" data-animation="" data-type="info" data-size="normal" data-message="{{ message }}" style="display: none;"></button>
+    {% endfor %}
+{% endif %}
+<div style="display: none;">
+  <button class="ui button blue not" id="notification-info" data-animation="" data-type="info" data-size="normal" data-message="{{ message }}" style="display: none;"></button>
+  <button class="ui button green not" id="notification-success" data-animation="" data-type="success" data-size="normal" data-message="This is default notification">Success Notification</button>
+</div>
+
+{% if request.user.is_authenticated %}
+<div class="ui sidebar vertical left menu overlay visible"  style="-webkit-transition-duration: 0.5s; overflow: visible!important;">
+  <div class="item logo">
+    <!-- <img src="img/logo.png"><img src="img/thumblogo.png" style="display: none"> -->
+  </div>
+  <div class="ui accordion sidebar-accordion" id="style-1" style="max-height: 90%; overflow-y: scroll;">
+    <div class="ui centered raised item">
+        <center>{% get_user_dp request.user 'medium' %}</center>
+
+        <br>
+
+        <div class="ui bottom attached inverted" style="text-align: center;">
+            <h2 class="ui header">{{ request.user.first_name }} {{ request.user.last_name }}</h2>
+            <span class="ui meta">{{ request.user.extrainfo.user_type }}</span>
+            <br>
+            <span class="ui meta">{{ request.user.extrainfo.designation.name }} - {{ request.user.extrainfo.department.name }}</span>
+        </div>
+
+    </div>
+    <a class="item" href="/"><i class="home icon"></i>Home</a>
+    <div class="title item">
+      <i class="dropdown icon"></i> Leave
+    </div>
+    <div class="content">
+      <a class="item" href="{% url 'leave_application:apply_for_leave' %}">Apply for Leave
+                    </a>
+      <a class="item" href="{% url 'leave_application:get_leaves' %}">Applied Leaves
+                    </a>
+      <a class="item" href="{% url 'leave_application:get_applications' %}">Leave Requests
+                    </a>
+    </div>
+  </div>
+  <div class="ui dropdown item displaynone" tabindex="0" href="/">
+    <z>Home</z>
+    <i class="icon demo-icon home icon-home"></i>
+
+    <div class="menu" tabindex="-1">
+      <div class="header">
+        Home
+      </div>
+      <div class="ui divider"></div>
+      <a class="item" href="/">Home</a>
+    </div>
+  </div>
+  <div class="ui dropdown item displaynone" tabindex="0">
+    <z>Leave</z>
+    <i class="icon demo-icon calendar icon-calendar"></i>
+
+    <div class="menu" tabindex="-1">
+      <div class="header">
+        Leave
+      </div>
+      <div class="ui divider"></div>
+      <a class="item" href="{% url 'leave_application:apply_for_leave' %}">Apply for Leave
+                    </a>
+      <a class="item" href="{% url 'leave_application:get_leaves' %}">Applied Leaves
+                    </a>
+      <a class="item" href="{% url 'leave_application:get_applications' %}">Leave Requests
+                    </a>
+    </div>
+  </div>
+  <!-- <div class="ui dropdown item displaynone" tabindex="0">
+    <z>Pages</z>
+    <i class="icon demo-icon  icon-params alarm"></i>
+
+    <div class="menu" tabindex="-1">
+      <div class="header">
+        Layouts
+      </div>
+      <div class="ui divider"></div>
+      <a class="item" href="sidebar.html">Sidebar
+                    </a>
+      <a class="item" href="menu.html">Nav
+                    </a>
+      <a class="item" href="animatedicon.html">Animated Icon
+                    </a>
+      <a class="item" href="box.html">Box
+                    </a>
+      <a class="item" href="cards.html">Cards
+                    </a>
+      <a class="item" href="color.html">Colors
+                    </a>
+      <a class="item" href="comment.html">Comment
+                    </a>
+      <a class="item" href="embed.html">Embed
+                    </a>
+      <a class="item" href="faq.html">Faq
+                    </a>
+      <a class="item" href="feed.html">Feed
+                    </a>
+      <a class="item" href="gallery.html">Gallery
+                    </a>
+      <a class="item" href="grid.html">Grid
+                    </a>
+      <a class="item" href="header.html">Header
+                    </a>
+      <a class="item" href="timeline.html">Timeline
+                    </a>
+      <a class="item" href="message.html">Message
+                    </a>
+      <a class="item" href="price.html">Price
+                    </a>
+    </div>
+  </div> -->
+</div>
+<div class="pusher">
+  <div class="ui inverted menu asd borderless" style="border-radius: 0!important; border: 0; margin-left: 260px; -webkit-transition-duration: 0.5s;">
+    <a class="inverted item openbtn" id="openbtn">
+      <i class="icon content"></i>
+    </a>
+    <a class="inverted item" href="/">
+        <b>IIIT</b>DMJ<b>&nbsp;Fusion</b>
+    </a>
+
+    <div class="inverted right menu">
+        <a class="item" href="{% url 'profile:profile_view' request.user.id %}">
+            {% get_user_dp request.user 'small' %}
+            {{request.user.username}}
+        </a>
+
+        <a class="item">
+            <i class="icon mail"></i>
+            <!-- <div class="ui red label">22</div> -->
+        </a>
+
+        <a class="item">
+            <i class="icon users"></i>
+            <!-- <div class="ui teal label">22</div> -->
+        </a>
+        <div class="ui dropdown icon item">
+            <i class="large settings icon"></i>
+            <div class="menu">
+                <a class="right item" href="/accounts/logout/">
+                    <i class="ui sign out icon"></i>
+                    Logout
+                </a>
+            </div>
+
+        </div>
+        
+
+    </div>
+  </div>
+  <!-- Page content starts here -->
+  
+  <div class="ui stackable asd grid" style="border-radius: 0!important; border: 0; margin-left: 260px; -webkit-transition-duration: 0.5s;">
+    <div class="four wide column">
+      <div class="ui card">
+        <div class="content">
+          <img class="right floated mini ui image" src="{% if request.user.extrainfo.profile_picture %}{{ request.user.extrainfo.profile_picture.url }}{% else %}{% static 'fusion/img/zlatan.jpg' %}{% endif %}">
+          <div class="header">
+            {{ request.user.first_name }}&nbsp;{{ request.user.last_name}}
+          </div>
+          <div class="meta">
+            {{ request.user.extrainfo.designation }}
+          </div>
+        </div>
+        <div class="extra content">
+          <div class="ui two buttons">
+            <a class="ui basic blue button" href="{% url 'profile:profile_view' request.user.id %}">View profile</a>
+            <a class="ui basic purple button" href="{% url 'profile:edit_info' %}">Edit profile</a>
+          </div>
+          <div class="ui vertical menu" style="width: 100%;">
+            <a class="item" href="/accounts/password/change/"><i class="lock icon"></i>Change Password</a>
+            <a class="item" href="/accounts/password/reset/"><i class="configure icon"></i>Reset Password</a>
+            <a class="right item" href="/accounts/logout/"><i class="ui sign out icon"></i>Logout</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="eleven wide column">
+    {% endif %}
+      {% block content %}
+      {% endblock %}
+      {% block bass %}
+      {% endblock %}
+{% if request.user.is_authenticated %}
+    </div>
+  </div>
+  <!-- page content ends here -->
+</div>
+
+{% endif %}
+
+
+
+<script type="text/javascript">
+  $(document).ready(function(){
+   setTimeout(function(){
+    $(".notification").trigger('click');
+    $(".ui.sidebar").toggleClass("very thin icon");
+   $(".asd").toggleClass("marginlefting");
+   $(".sidebar z").toggleClass("displaynone");
+   $(".sidebar-accordion").toggleClass("displaynone");
+   $(".ui.dropdown.item").toggleClass("displayblock");
+   $(".logo").find('img').toggle();
+  }, 60);
+  });
+</script>
+<script type="text/javascript">
+   $(".openbtn").on("click", function() {
+   $(".ui.sidebar").toggleClass("very thin icon");
+   $(".asd").toggleClass("marginlefting");
+   $(".sidebar z").toggleClass("displaynone");
+   $(".sidebar-accordion").toggleClass("displaynone");
+   $(".ui.dropdown.item").toggleClass("displayblock");
+
+   $(".logo").find('img').toggle();
+
+ });
+ $(".ui.dropdown").dropdown({
+   allowCategorySelection: true,
+   transition: "fade up",
+   context: 'sidebar',
+   on: "hover"
+ });
+
+ $('.ui.accordion').accordion({
+   selector: {
+
+   }
+ });
+</script>
+<script type="text/javascript">
+
+
+</script>
+
+<script type="text/javascript" src="{% static 'fusion/js/jquery.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'fusion/js/semantic.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'fusion/js/dropdown.js' %}"></script>
+
+<script src="{% static 'my_js/notifications.js' %}"></script>
+<script src="{% static 'my_js/app.min.js' %}"></script>
+<script src="{% static 'my_js/pace.js' %}"></script>
+<script>
+      $(document).ready(function(){
+            $('.ui.accordion').accordion('refresh');
+
+            $('.ui.sidebar')
+                //.sidebar('toggle')
+                .sidebar('attach events', '#navbar #sidebartrigger')
+                .sidebar('setting', 'transition', 'overlay')
+            ;
+        });
+    </script>
+{% block javascript %}
+{% endblock %}
+
+</html>

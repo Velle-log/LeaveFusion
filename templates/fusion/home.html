@@ -1,0 +1,679 @@
+{% extends 'fusion/base.html' %}
+{% load static %}
+
+{% block title %}
+    Home
+{% endblock %}
+
+{% block body %}
+    {% block navBar %}
+        {% include 'fusion/navbar.html' %}
+
+        {% comment %}The grid starts here!{% endcomment %}
+        <div class="ui stackable doubling grid pusher">
+
+            {% comment %}The left-margin segment!{% endcomment %}
+            <div class="column"></div>
+
+            {% comment %}The left-rail segment starts here!{% endcomment %}
+            <div class="three wide column">
+
+                {% comment %}ROW #1 starts here!{% endcomment %}
+                <div class="row">
+                    {% comment %}The Employee Image Card starts here!{% endcomment %}
+                    <div class="ui large fluid raised card"
+                         style="min-width: 240px;
+                            max-width: 320px;">
+
+                        <div class="image">
+                            <img src="{% static 'fusion/img/faculty.png' %}">
+                        </div>
+
+                        <div class="content">
+                            {% comment %}http://web.iiitdmj.ac.in/~vkjain{% endcomment %}
+                            <div class="ui large header" href="">
+                                {{ userFirstName }}
+                                {{ userLastName }}
+                                <span class="right floated meta">
+                                {{ userDepartment.upper }}
+                            </span>
+                            </div>
+
+                            <div class="meta">
+                            <span>
+                                {{ userDesignation }}
+                            </span>
+                            </div>
+                        </div>
+                    </div>
+                    {% comment %}The Employee Image Card ends here!{% endcomment %}
+                </div>
+                {% comment %}ROW #1 ends here!{% endcomment %}
+
+                <div class="ui divider"></div>
+
+                {% comment %}ROW #2 starts here!{% endcomment %}
+                <div class="row">
+                    {% comment %}The Tab-Menu starts here!{% endcomment %}
+                    <div class="ui huge fluid vertical pointing menu"
+                         style="min-width: 240px;
+                            max-width: 320px;">
+                        <a class="active item" data-tab="first">
+                            Leave Application
+                            <i class="right floated chevron right icon"></i>
+                        </a>
+
+                        <a class="item" data-tab="second">
+                            Leave Status
+                            <i class="right floated chevron right icon"></i>
+                        </a>
+
+                        <a class="item" data-tab="third">
+                            Leave Balance
+                            <i class="right floated chevron right icon"></i>
+                        </a>
+
+                        <a class="item" data-tab="fourth">
+                            Leave History
+                            <i class="right floated chevron right icon"></i>
+                        </a>
+
+                        {% if employeePK %}
+                            <a class="item" data-tab="fifth">
+                                Approve
+                                <i class="right floated chevron right icon"></i>
+                            </a>
+                        {% endif %}
+                    </div>
+                    {% comment %}The Tab-Menu ends here!{% endcomment %}
+
+                </div>
+                {% comment %}ROW #2 ends here!{% endcomment %}
+
+            </div>
+            {% comment %}The left-rail segment endss here!{% endcomment %}
+
+            {% comment %}The central-rail segment starts here!{% endcomment %}
+            <div class="eight wide column">
+                <div class="row">
+
+                    {% comment %}The Leave Application Form starts here!{% endcomment %}
+                    <div class="ui active tab segment" data-tab="first">
+                        {% block leaveapplicationform %}
+                            {% include 'fusion/leaveapplicationform.html' %}
+                        {% endblock %}
+                    </div>
+                    {% comment %}The Leave Application Form ends here!{% endcomment %}
+
+                    {% comment %}The Leave Status starts here!{% endcomment %}
+                    <div class="ui tab segment" data-tab="second">
+                        <div class="ui fluid raised card">
+                            <div class="content">
+                                <div class="header">
+                                    Leave Status:
+                                </div>
+                            </div>
+
+                            <div class="content">
+                                <div class="description">
+                                    <div class="">
+
+                                        <table class="ui very basic collapsing celled large table"
+                                               style="padding-left: 2.5%;
+                                                          padding-right: 2.5%;
+                                                          padding-top: 1%;
+                                                          padding-bottom: 1.5%;
+                                                          margin: auto;">
+                                            <thead>
+                                            <tr>
+                                                <th>
+                                                    Employee
+                                                </th>
+
+                                                <th>
+                                                    Type
+                                                </th>
+
+                                                <th>
+                                                    From
+                                                </th>
+
+                                                <th>
+                                                    To
+                                                </th>
+
+                                                <th>
+                                                    Duration
+                                                </th>
+
+                                                <th>
+                                                    Status
+                                                </th>
+                                            </tr>
+                                            </thead>
+
+                                            <tbody>
+
+                                            {% for leave in leave_type %}
+
+                                                <tr>
+                                                    <td>
+                                                        <h4 class="ui image header">
+                                                            <img src="{% static 'fusion/img/user.png' %}" class="ui mini rounded image">
+                                                            <div class="content">
+                                                                {{ userFirstName }}
+                                                                {{ userLastName }}
+                                                                <div class="sub header">
+                                                                    {{ userDesignation }}
+                                                                </div>
+                                                            </div>
+                                                        </h4>
+                                                    </td>
+
+                                                    <td>
+                                                        {{ leave }}
+                                                    </td>
+
+                                                    <td>
+                                                        22 Sept'17
+                                                    </td>
+
+                                                    <td>
+                                                        22 Sept'17
+                                                    </td>
+
+                                                    <td>
+                                                        1
+                                                    </td>
+
+                                                    <td>
+                                                        <i class="large green checkmark icon"></i>
+                                                    </td>
+                                                </tr>
+
+                                            {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="extra content">
+                                <div class="" style="text-align: center;">
+                                    <i class="large green checkmark icon"></i> : Approved &ensp;&ensp;&ensp;&ensp;&ensp;
+                                    <i class="large orange warning icon"></i> : Pending &ensp;&ensp;&ensp;&ensp;&ensp;
+                                    <i class="large red x icon"></i> : Declined
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% comment %}The Leave Status ends here!{% endcomment %}
+
+                    {% comment %}The Leave Balance starts here!{% endcomment %}
+                    <div class="ui tab segment" data-tab="third">
+                        <div class="ui fluid raised card">
+                            <div class="content">
+                                <div class="header">
+                                    Leave Balance:
+                                </div>
+                            </div>
+
+                            <div class="content">
+                                <div class="description">
+                                    {% comment %}The HTML5 Canvas for the Chart starts here!{% endcomment %}
+                                    <canvas id="myChart"></canvas>
+                                </div>
+                            </div>
+
+                            <div class="extra content">
+
+                                <br>
+
+                                <div class="ui six equal width blue small stackable statistics"
+                                     style="margin: auto;">
+
+                                    <div class="ui statistic">
+                                        <div class="value">
+                                            8
+                                        </div>
+
+                                        <div class="label">
+                                            <i class="plane icon"></i>
+                                            CL&ensp;
+                                        </div>
+                                    </div>
+
+                                    <div class="ui statistic">
+                                        <div class="value">
+                                            20
+                                        </div>
+
+                                        <div class="label">
+                                            <i class="plane icon"></i>
+                                            COL&ensp;
+                                        </div>
+                                    </div>
+
+                                    <div class="ui statistic">
+                                        <div class="value">
+                                            30
+                                        </div>
+
+                                        <div class="label">
+                                            <i class="plane icon"></i>
+                                            EL
+                                        </div>
+                                    </div>
+
+                                    <div class="ui statistic">
+                                        <div class="value">
+                                            2
+                                        </div>
+
+                                        <div class="label">
+                                            <i class="plane icon"></i>
+                                            RH
+                                        </div>
+                                    </div>
+
+                                    <div class="ui statistic">
+                                        <div class="value">
+                                            2
+                                        </div>
+
+                                        <div class="label">
+                                            <i class="plane icon"></i>
+                                            Sp. CL&ensp;
+                                        </div>
+                                    </div>
+
+                                    <div class="ui statistic">
+                                        <div class="value">
+                                            60
+                                        </div>
+
+                                        <div class="label">
+                                            <i class="plane icon"></i>
+                                            VL
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    {% comment %}The Leave Balance ends here!{% endcomment %}
+
+                    <div class="ui tab segment" data-tab="fourth">
+                        <div class="ui row">
+                        <span class="ui header">
+                            Leave History:
+                        </span>
+                            <div class="ui divider"></div>
+                        </div>
+
+                        <table class="ui very basic collapsing celled large table"
+                               style="padding-left: 2.5%;
+                                                          padding-right: 2.5%;
+                                                          padding-top: 1%;
+                                                          padding-bottom: 1.5%;
+                                                          margin: auto;">
+                            <thead>
+                            <tr>
+                                <th>
+                                    Employee
+                                </th>
+
+                                <th>
+                                    Type
+                                </th>
+
+                                <th>
+                                    From
+                                </th>
+
+                                <th>
+                                    To
+                                </th>
+
+                                <th>
+                                    Duration
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+
+                            {% for leave in leave_type %}
+
+                                <tr>
+                                    <td>
+                                        <h4 class="ui image header">
+                                            <img src="{% static 'fusion/img/user.png' %}" class="ui mini rounded image">
+                                            <div class="content">
+                                                {{ userFirstName }}
+                                                {{ userLastName }}
+                                                <div class="sub header">
+                                                    {{ userDesignation }}
+                                                </div>
+                                            </div>
+                                        </h4>
+                                    </td>
+
+                                    <td>
+                                        {{ leave }}
+                                    </td>
+
+                                    <td>
+                                        22 Sept'17
+                                    </td>
+
+                                    <td>
+                                        22 Sept'17
+                                    </td>
+
+                                    <td>
+                                        1
+                                    </td>
+
+                                    <td>
+                                        <i class="large green checkmark icon"></i>
+                                    </td>
+                                </tr>
+
+                            {% endfor %}
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                    {% if employeePK %}
+                        <div class="ui tab segment" data-tab="fifth">
+                            <div class="ui row">
+                            <span class="ui header">
+                                Approve Leaves:
+                            </span>
+                                <div class="ui divider"></div>
+                            </div>
+
+                            <br>
+
+                            <div class="header">
+                                CL/RH
+                            </div>
+
+                            <div class="ui divider"></div>
+
+                            <table class="ui compact celled definition table">
+                                <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Name</th>
+                                    <th>E-mail address</th>
+                                    <th>From</th>
+                                    <th>To</th>
+                                    <th>Leave Type</th>
+                                    <th>Station Leave</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+
+                                <tr>
+                                    <td class="collapsing">
+                                        <div class="ui fitted slider checkbox">
+                                            <input type="checkbox"> <label></label>
+                                        </div>
+                                    </td>
+                                    <td>Dr. Atul Gupta</td>
+                                    <td>atulgupta@iiitdmj.ac.in</td>
+                                    <td>September 14, 2017</td>
+                                    <td>September 15, 2017</td>
+                                    <td>CL</td>
+                                    <td>No</td>
+                                </tr>
+
+                                <tr>
+                                    <td class="collapsing">
+                                        <div class="ui fitted slider checkbox">
+                                            <input type="checkbox"> <label></label>
+                                        </div>
+                                    </td>
+                                    <td>Dr. Atul Gupta</td>
+                                    <td>atulgupta@iiitdmj.ac.in</td>
+                                    <td>September 18, 2017</td>
+                                    <td>September 19, 2017</td>
+                                    <td>CL</td>
+                                    <td>No</td>
+                                </tr>
+
+                                <tr>
+                                    <td class="collapsing">
+                                        <div class="ui fitted slider checkbox">
+                                            <input type="checkbox"> <label></label>
+                                        </div>
+                                    </td>
+                                    <td>Dr. Atul Gupta</td>
+                                    <td>atulgupta@iiitdmj.ac.in</td>
+                                    <td>September 29, 2017</td>
+                                    <td>September 30, 2017</td>
+                                    <td>RH</td>
+                                    <td>Yes</td>
+                                </tr>
+
+                                </tbody>
+                                <tfoot class="full-width">
+                                <tr>
+                                    <th></th>
+                                    <th colspan="6">
+                                        <div class="ui right floated small primary labeled icon button">
+                                            <i class="large save icon"></i> Save
+                                        </div>
+
+                                        <div class="ui small button">
+                                            Approve All
+                                        </div>
+                                    </th>
+                                </tr>
+                                </tfoot>
+                            </table>
+
+                            <br>
+                            <br>
+                            <br>
+
+                            <div class="header">
+                                Other Leave Types:
+                            </div>
+
+                            <div class="ui divider"></div>
+
+                            <table class="ui compact celled definition table">
+                                <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Name</th>
+                                    <th>E-mail address</th>
+                                    <th>From</th>
+                                    <th>To</th>
+                                    <th>Leave Type</th>
+                                    <th>Station Leave</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td class="collapsing">
+                                        <div class="ui fitted slider checkbox">
+                                            <input type="checkbox"> <label></label>
+                                        </div>
+                                    </td>
+                                    <td>Dr. Atul Gupta</td>
+                                    <td>atulgupta@iiitdmj.ac.in</td>
+                                    <td>September 14, 2017</td>
+                                    <td>September 15, 2017</td>
+                                    <td>VL</td>
+                                    <td>Yes</td>
+                                </tr>
+
+                                <tr>
+                                    <td class="collapsing">
+                                        <div class="ui fitted slider checkbox">
+                                            <input type="checkbox"> <label></label>
+                                        </div>
+                                    </td>
+                                    <td>Dr. Atul Gupta</td>
+                                    <td>atulgupta@iiitdmj.ac.in</td>
+                                    <td>September 14, 2017</td>
+                                    <td>September 15, 2017</td>
+                                    <td>VL</td>
+                                    <td>Yes</td>
+                                </tr>
+
+                                <tr>
+                                    <td class="collapsing">
+                                        <div class="ui fitted slider checkbox">
+                                            <input type="checkbox"> <label></label>
+                                        </div>
+                                    </td>
+                                    <td>Dr. Atul Gupta</td>
+                                    <td>atulgupta@iiitdmj.ac.in</td>
+                                    <td>September 14, 2017</td>
+                                    <td>September 15, 2017</td>
+                                    <td>VL</td>
+                                    <td>Yes</td>
+                                </tr>
+
+                                </tbody>
+                                <tfoot class="full-width">
+                                <tr>
+                                    <th></th>
+                                    <th colspan="6">
+                                        <div class="ui right floated small primary labeled icon button">
+                                            <i class="large save icon"></i> Save
+                                        </div>
+
+                                        <div class="ui small button">
+                                            Approve All
+                                        </div>
+                                    </th>
+                                </tr>
+                                </tfoot>
+                            </table>
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+            </div>
+            {% comment %}The central-rail segment endss here!{% endcomment %}
+
+            {% comment %}The right-rail segment starts here!{% endcomment %}
+            <div class="three wide column">
+                <div class="ui row">
+                    <div class="ui text segment"
+                         style="height: auto;
+                            min-height: 15vh;">
+                        <div class="ui active large text loader"
+                             id="loader">
+                            Loading ...
+                        </div>
+
+                        <span class="ui header" id="textLoader">
+                        No new Replacement Requests!
+                    </span>
+
+                    </div>
+                    <div class="ui divider"></div>
+                </div>
+
+            </div>
+            {% comment %}The right-rail segment ends here!{% endcomment %}
+
+            {% comment %}The right-margin segment!{% endcomment %}
+            <div class="column"></div>
+
+        </div>
+        {% comment %}The grid ends here!{% endcomment %}
+
+    {% endblock %}
+{% endblock %}
+
+
+
+{% block javascript %}
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.js"></script>
+    <script type="text/javascript" src="{% static 'fusion/js/chartjs/src/chart.js' %}"></script>
+
+    <script type="text/javascript" src="{% static 'fusion/js/tab.js' %}"></script>
+    <script type="text/javascript" src="{% static 'fusion/js/checkbox.js' %}"></script>
+    <script type="text/javascript" src="{% static 'fusion/js/addLeave.js' %}"></script>
+
+    <script>
+        $(document).ready(function(){
+            $("#textLoader").toggle();
+            setTimeout(loader, 1200);
+        });
+
+        function loader() {
+            $("#textLoader").toggle();
+            $("#loader").removeClass("active");
+            $("#loader").addClass("disabled");
+        }
+    </script>
+
+    <script>
+        var ctx = document.getElementById("myChart").getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+
+            data: {
+                labels: ["Casual Leave", "Commuted Leave", "Earned Leave", "Restricted Holiday", "Sp. Casual Leave", "Vacation Leave"],
+                datasets: [{
+                    label: 'Leave Balance',
+                    data: [8, 20, 30, 2, 2, 60],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255,99,132,1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+        });
+    </script>
+{% endblock %}
+
+{% comment %}
+
+labels: ["CL", "COL", "EL", "RH", "Sp. CL", "VL"],
+data: [8, 20, 30, 2, 2, 60],
+
+{% endcomment %}
