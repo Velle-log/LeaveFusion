@@ -8,10 +8,10 @@
 
   <div class="ui segment">
     <div class="ui menu top">
-      <a class="active item" data-tab="leaves"><i class="icon edit sign"></i>Yor Applied Leaves</a>
-      <a class="item" data-tab="leaves-balance"><i class="icon edit sign"></i>Yor Leave balance</a>
+      <a class="active item" data-tab="leaves"><i class="icon calendar"></i>Yor Applied Leaves</a>
+      {% if request.user.leavescount %}<a class="item" data-tab="leaves-balance"><i class="icon inbox"></i>Yor Leave balance</a>{% endif %}
     </div>
-    
+
     <div class="ui active tab" data-tab="leaves">
         <div class="ui accordion" style="display: block;">
             <h4 class="text-muted">Total: {{ count }}</h4>
@@ -23,6 +23,7 @@
             {% endif %}
         </div>
     </div>
+    {% if request.user.leavescount %}
     <div class="ui tab" data-tab="leaves-balance">
         <div class="ui accordion" style="display: block;">
             <center>
@@ -51,10 +52,11 @@
                       <b><td class="ui right pointing label orange">&emsp;Vacation</td></b> <td class="right floated">{{ request.user.leavescount.vacation }}</td>
                     </tr>
                 </tbody>
-            </table>  
+            </table>
             </center>
         </div>
     </div>
+    {% endif %}
 
   </div>
 

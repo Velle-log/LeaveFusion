@@ -98,11 +98,9 @@ class FacultyLeaveForm(LeaveForm):
         super(FacultyLeaveForm, self).__init__(*args, **kwargs)
         self.fields['acad_rep'] = forms.CharField(label = 'Academic Responsibility Assigned To',
                                    widget=forms.Select(choices=USER_CHOICES))
-        is_administrator = get_object_or_none(Administration, administrator=self.user)
+        self.fields['admin_rep'] = forms.CharField(label = 'Administrative Responsibility Assigned To',
+                                    widget=forms.Select(choices=USER_CHOICES))
 
-        if is_administrator:
-            self.fields['admin_rep'] = forms.CharField(label = 'Administrative Responsibility Assigned To',
-                                        widget=forms.Select(choices=USER_CHOICES))
 
     def clean(self):
 
@@ -117,8 +115,6 @@ class FacultyLeaveForm(LeaveForm):
 
         if self.user.username in [acad_rep, admin_rep]:
             raise forms.ValidationError('You can not choose yourself as replacement')
-
-
 
         type_of_leave = self.cleaned_data.get('type_of_leave')
 

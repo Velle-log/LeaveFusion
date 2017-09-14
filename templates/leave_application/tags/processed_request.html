@@ -1,43 +1,44 @@
 {% load leave_tags %}
 {% load static %}
-<div class="icon title" id="leave-request-title-{{ preq.id }}">
-    <i class="dropdown icon"></i>
-    <b>#{{ preq.id }}: </b>{{ preq.applicant.first_name }} {{ preq.applicant.last_name }} - {{ preq.leave.type_of_leave }}&emsp;&emsp;
-    <i class="{% if preq.leave.status == 'accepted' %}green checkmark icon{% elif preq.leave.status == 'rejected' %}red remove icon{% else %}blue refresh icon{% endif %}"></i>&emsp;&emsp;
-      <i class="calendar icon"></i>from:  <strong> {{ preq.leave.start_date }}</strong>&emsp;&emsp;-&emsp;&emsp;<i class="calendar icon"></i>to: <strong> {{ preq.leave.end_date }}</strong>
-</div>
-<div class="content" id ='leave-request-{{ preq.id }}'>
-  <div class="transition visible ui segment" id="leave-request-body-{{ preq.id }}" style="padding:0px;">
-      <!-- /.box-tools -->
-    <!-- /.box-header -->
-        <div class="ui top attached header">
-            <h4> <b><a href="{% url 'profile:profile_view' preq.applicant.id %}">{{preq.applicant.first_name}} {{preq.applicant.last_name}}</a> applied for {{ preq.leave.type_of_leave }} Leave.</b></h4>
-        </div>
-        <div class="ui horizontal attached segment">
-            <p><b>Purpose: </b>{{ preq.leave.purpose }}</p>
-            {% if preq.leave.leave_address %}
-            <p><b>Leave Address: </b>{{ preq.leave.leave_address }}</p>
-            {% endif %}
-            <p><a href="{% url 'profile:profile_view' preq.applicant.id %}">{{preq.applicant.first_name}} {{preq.applicant.last_name}}</a>
-            requested you to
-            {% if preq.permission == 'academic' %} Academically replace his/her duties
-            {% elif preq.permission == 'admin' %} Administratively replace his/her duties
-            {% else %} allow him/her {% endif %} for the given period of absence (leave)</p>
-        </div>
-        <div class="ui bottom attached {% if preq.leave.status == 'accepted' %}positive{% elif preq.leave.status == 'rejected' %}negative{% else %}info{% endif %} icon message">
-          <i class="{% if preq.leave.status == 'accepted' %}checkmark{% elif preq.leave.status == 'rejected' %}remove{% else %}refresh{% endif %} icon"></i>
-          <div class="content">
-            <div class="header">
-              <b> Leave status:</b>&emsp;{{ preq.leave.status }} &emsp;
-            </div>
-            <div class="ui divider"></div>
-            <p><b><a href="{% url 'profile:profile_view' preq.requested_from.id %}">Your</a>&nbsp;Remark: </b> {{ preq.remark }}</p>
-          </div>
-        </div>
-    <!-- /.box-body -->
+<div class="processed-request filtr-item" date-sort="{{ preq.leave.start_date.year }}{{ preq.leave.start_date.month }}{{ preq.leave.start_date.day }}">
+  <div class="icon title" id="leave-request-title-{{ preq.id }}">
+      <i class="dropdown icon"></i>
+      <b>#{{ preq.id }}: </b>{{ preq.applicant.first_name }} {{ preq.applicant.last_name }} - {{ preq.leave.type_of_leave }}&emsp;&emsp;
+      <i class="{% if preq.leave.status == 'accepted' %}green checkmark icon{% elif preq.leave.status == 'rejected' %}red remove icon{% else %}blue refresh icon{% endif %}"></i>&emsp;&emsp;
+        <i class="calendar icon"></i>from:  <strong> {{ preq.leave.start_date }}</strong>&emsp;&emsp;-&emsp;&emsp;<i class="calendar icon"></i>to: <strong> {{ preq.leave.end_date }}</strong>
   </div>
-  <!-- /.box -->
+  <div class="content" id ='leave-request-{{ preq.id }}'>
+    <div class="transition visible ui segment" id="leave-request-body-{{ preq.id }}" style="padding:0px;">
+        <!-- /.box-tools -->
+      <!-- /.box-header -->
+          <div class="ui top attached header">
+              <h4> <b><a href="{% url 'profile:profile_view' preq.applicant.id %}">{{preq.applicant.first_name}} {{preq.applicant.last_name}}</a> applied for {{ preq.leave.type_of_leave }} Leave.</b></h4>
+          </div>
+          <div class="ui horizontal attached segment">
+              <p><b>Purpose: </b>{{ preq.leave.purpose }}</p>
+              {% if preq.leave.leave_address %}
+              <p><b>Leave Address: </b>{{ preq.leave.leave_address }}</p>
+              {% endif %}
+              <p><a href="{% url 'profile:profile_view' preq.applicant.id %}">{{preq.applicant.first_name}} {{preq.applicant.last_name}}</a>
+              requested you to
+              {% if preq.permission == 'academic' %} Academically replace his/her duties
+              {% elif preq.permission == 'admin' %} Administratively replace his/her duties
+              {% else %} allow him/her {% endif %} for the given period of absence (leave)</p>
+          </div>
+          <div class="ui bottom attached {% if preq.leave.status == 'accepted' %}positive{% elif preq.leave.status == 'rejected' %}negative{% else %}info{% endif %} icon message">
+            <i class="{% if preq.leave.status == 'accepted' %}checkmark{% elif preq.leave.status == 'rejected' %}remove{% else %}refresh{% endif %} icon"></i>
+            <div class="content">
+              <div class="header">
+                <b> Leave status:</b>&emsp;{{ preq.leave.status }} &emsp;
+              </div>
+              <div class="ui divider"></div>
+              <p><b><a href="{% url 'profile:profile_view' preq.requested_from.id %}">Your</a>&nbsp;Remark: </b> {{ preq.remark }}</p>
+            </div>
+          </div>
+      <!-- /.box-body -->
+    </div>
+    <!-- /.box -->
+  </div>
 </div>
-
 
 

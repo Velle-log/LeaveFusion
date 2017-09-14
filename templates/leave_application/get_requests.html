@@ -9,8 +9,8 @@
 
   <div class="ui segment sixteen wide column">
     <div class="ui menu top">
-      <a class="active item" data-tab="processed"><i class="icon edit sign"></i>Unprocessed Requests</a>
-      <a class="item" data-tab="unprocessed"><i class="icon edit sign"></i>Processed Requests</a>
+      <a class="active item" data-tab="processed"><i class="icon fire"></i>Unprocessed Requests</a>
+      <a class="item" data-tab="unprocessed"><i class="icon archive"></i>Processed Requests</a>
     </div>
     
     <div class="ui active tab" data-tab="processed">
@@ -25,7 +25,7 @@
         </div>
     </div>
     <div class="ui tab" data-tab="unprocessed">
-        <div class="ui accordion" style="display: block;">
+        <div class="ui accordion filtr-container" style="display: block;">
             {% for preq in prequests %}
                 {% get_processed_request preq request.user %}
             {% endfor %}

@@ -5,7 +5,7 @@ $(document).ready(function(){
         var over = "<div class='ui active inverted dimmer' id = 'overlay-div-"+data+"'><div class='ui text loader'>Loading</div></div>";
         return over
     }
-    
+
 
     function after_event(result, intext){
         if(result == 'success')
