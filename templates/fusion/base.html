@@ -132,11 +132,11 @@
 </div>
 
 {% if request.user.is_authenticated %}
-<div class="ui sidebar vertical left menu overlay visible"  style="-webkit-transition-duration: 0.5s; overflow: visible!important;">
+<div class="ui sidebar vertical left menu overlay visible very thin icon"  style="-webkit-transition-duration: 0.5s; overflow: visible!important;">
   <div class="item logo">
     <!-- <img src="img/logo.png"><img src="img/thumblogo.png" style="display: none"> -->
   </div>
-  <div class="ui accordion sidebar-accordion" id="style-1" style="max-height: 90%; overflow-y: scroll;">
+  <div class="ui accordion sidebar-accordion displaynone" id="style-1" style="max-height: 90%; overflow-y: scroll;">
     <div class="ui centered raised item">
         <center>{% get_user_dp request.user 'medium' %}</center>
 
@@ -163,8 +163,8 @@
                     </a>
     </div>
   </div>
-  <div class="ui dropdown item displaynone" tabindex="0" href="/">
-    <z>Home</z>
+  <div class="ui dropdown item displaynone displayblock" tabindex="0" href="/">
+    <z class="displaynone">Home</z>
     <i class="icon demo-icon home icon-home"></i>
 
     <div class="menu" tabindex="-1">
@@ -175,8 +175,8 @@
       <a class="item" href="/">Home</a>
     </div>
   </div>
-  <div class="ui dropdown item displaynone" tabindex="0">
-    <z>Leave</z>
+  <div class="ui dropdown item displaynone displayblock" tabindex="0">
+    <z class="displaynone">Leave</z>
     <i class="icon demo-icon calendar icon-calendar"></i>
 
     <div class="menu" tabindex="-1">
@@ -237,7 +237,7 @@
   </div> -->
 </div>
 <div class="pusher">
-  <div class="ui inverted menu asd borderless" style="border-radius: 0!important; border: 0; margin-left: 260px; -webkit-transition-duration: 0.5s;">
+  <div class="ui inverted menu asd borderless marginlefting" style="border-radius: 0!important; border: 0; margin-left: 260px; -webkit-transition-duration: 0.5s;">
     <a class="inverted item openbtn" id="openbtn">
       <i class="icon content"></i>
     </a>
@@ -276,7 +276,7 @@
   </div>
   <!-- Page content starts here -->
   
-  <div class="ui stackable asd grid" style="border-radius: 0!important; border: 0; margin-left: 260px; -webkit-transition-duration: 0.5s;">
+  <div class="ui stackable asd grid marginlefting" style="border-radius: 0!important; border: 0; margin-left: 260px; -webkit-transition-duration: 0.5s;">
     <div class="four wide column">
       <div class="ui card">
         <div class="content">
@@ -302,17 +302,46 @@
       </div>
     </div>
     <div class="eleven wide column">
+    {% else %}
+    
+
+    <style type="text/css">
+      label{
+        font-weight: 700;
+      }
+    </style>
+    <div class="ui raised stackable doubling centered card right floated" style="margin: auto;margin-top: 7.5%;min-width: 360px;">
+
+            
+
+
     {% endif %}
+
+
+
+
       {% block content %}
       {% endblock %}
       {% block bass %}
       {% endblock %}
+
+
+
+
 {% if request.user.is_authenticated %}
     </div>
   </div>
   <!-- page content ends here -->
 </div>
+{% else %}
+      <a class="ui bottom attached button centered" href="/accounts/login/">Employee Login</a>
+  </div>
+  <div class="ui row">
+      <br>
 
+      <br>
+      <br>
+  </div>
 {% endif %}
 
 
@@ -321,12 +350,6 @@
   $(document).ready(function(){
    setTimeout(function(){
     $(".notification").trigger('click');
-    $(".ui.sidebar").toggleClass("very thin icon");
-   $(".asd").toggleClass("marginlefting");
-   $(".sidebar z").toggleClass("displaynone");
-   $(".sidebar-accordion").toggleClass("displaynone");
-   $(".ui.dropdown.item").toggleClass("displayblock");
-   $(".logo").find('img').toggle();
   }, 60);
   });
 </script>

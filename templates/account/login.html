@@ -3,30 +3,20 @@
 {% load i18n %}
 {% load account socialaccount %}
 {% load static %}
-<style type="text/css">
-  label{
-    font-weight: 700;
-  }
-</style>
-<div class="ui raised stackable doubling centered card right floated"
-         style="margin: auto;
-                margin-top: 7.5%;
-                min-width: 360px;">
-
         <div class="content">
-            <img class="ui rounded centered small image"
-                 src="{% static 'fusion/img/user.png' %}"
-                 style="margin-top: -27.5%;
-                        margin-left: 27.5%;"
-                 alt="User Image" >
+                <img class="ui rounded centered small image"
+                     src="{% static 'fusion/img/user.png' %}"
+                     style="margin-top: -27.5%;
+                            margin-left: 27.5%;"
+                     alt="User Image" >
 
-            <div class="ui huge centered header">
-                Employee Login
+                <div class="ui huge centered header">
+                    Employee Login
+                </div>
+
             </div>
 
-        </div>
-
-        <div class="content">
+            <div class="content">
             <form method="post" class="ui form" style="margin-top: 2.5%;margin-bottom: 2.5%;">
                 <div class="box-header with-border">
                         {% get_providers as socialaccount_providers %}</h3>
@@ -60,29 +50,7 @@
                 </div>
             </form>
         </div>
-    </div>
-    <div class="ui row">
-        <br>
-        <br>
-        <br>
-    </div>
 
-<div class="box box-primary" style="padding: 1em;">
-    
-    <br>
-    <div class="row">
-      
-      
 
-        <div class="col-md-5 col-md-offset-1" style="border-left:1px solid #ccc;">
-          <form class="ui large form login" method="POST" action="{% url 'account_login' %}">
-            
-          </form>
-        </div>
-        
-    </div>
-</div>
-
-<script type="text/javascript"></script>
 {% endblock %}
 
