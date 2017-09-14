@@ -112,7 +112,6 @@ class ApplyLeave(View):
 class ProcessRequest(View):
 
     def get(self, request, id):
-        print("reached")
         leave_request = get_object_or_404(CurrentLeaveRequest, id=id)
 
         do = request.GET.get('do')
@@ -123,6 +122,7 @@ class ProcessRequest(View):
                                                    replacement_type='administrative')
         if rep_user:
             rep_user = rep_user.replacer
+
         if request.user in [leave_request.requested_from, rep_user] \
            and do in ['accept', 'reject', 'forward']:
 
@@ -175,10 +175,16 @@ class ProcessRequest(View):
 
     def reject(self, request, leave_request):
         remark = request.GET.get('remark', '')
+
         type_of_leave = leave_request.leave.type_of_leave
         response = JsonResponse({'message': 'Successfully Rejected', 'type': 'success'}, status=200)
+        sanc_auth = leave_request.applicant.extrainfo.sanctioning_authority
+        sanc_officer = leave_request.applicant.extrainfo.sanctioning_officer
 
-        if not leave_request.leave.replacement_confirm or leave_request.permission == 'sanc_officer':
+        condition = sanc_officer == sanc_auth
+
+        if not leave_request.leave.replacement_confirm or leave_request.permission == 'sanc_officer' \
+            or condition:
             leave_request = self.create_leave_request(leave_request, True, accept=False, remark=remark)
             list(map(lambda x: x.delete(), leave_request.leave.cur_requests.all()))
 
