@@ -1,6 +1,6 @@
 {% load leave_tags %}
 {% load static %}
-<div class="processed-request filtr-item" date-sort="{{ preq.leave.start_date.year }}{{ preq.leave.start_date.month }}{{ preq.leave.start_date.day }}">
+<div class="processed-request filtr-item" data-category="1"  data-sort="{{ preq.leave.start_date.year }}{{ preq.leave.start_date.month }}{{ preq.leave.start_date.month }}">
   <div class="icon title" id="leave-request-title-{{ preq.id }}">
       <i class="dropdown icon"></i>
       <b>#{{ preq.id }}: </b>{{ preq.applicant.first_name }} {{ preq.applicant.last_name }} - {{ preq.leave.type_of_leave }}&emsp;&emsp;
