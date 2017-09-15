@@ -148,7 +148,7 @@ class ProcessRequest(View):
             leave_request.leave.save()
             leave_request = self.create_leave_request(leave_request, False, accept=True, remark=remark)
 
-            if leave_request.leave.replacement_confirm:
+            if leave_request.leave.replacement_confirm and leave_request.leave.status == 'processing':
                 position = leave_request.applicant.extrainfo.sanctioning_authority
                 next_user = ExtraInfo.objects.filter(designation=position).first().user
                 CurrentLeaveRequest.objects.create(
@@ -206,20 +206,22 @@ class ProcessRequest(View):
 
         if leave_request.permission == 'sanc_auth' and \
             type_of_leave not in ['casual', 'restricted']:
+
             leave_request = self.create_leave_request(leave_request, False, accept=False, remark=remark)
 
-            position = leave_request.applicant.extrainfo.sanctioning_officer
+            if leave_request.leave.status == 'processing':
+                position = leave_request.applicant.extrainfo.sanctioning_officer
 
-            next_user = ExtraInfo.objects.filter(designation=position).first().user
+                next_user = ExtraInfo.objects.filter(designation=position).first().user
 
-            CurrentLeaveRequest.objects.create(
-                applicant = leave_request.applicant,
-                requested_from = next_user,
-                position = position,
-                station = leave_request.station,
-                leave = leave_request.leave,
-                permission = 'sanc_officer',
-            )
+                CurrentLeaveRequest.objects.create(
+                    applicant = leave_request.applicant,
+                    requested_from = next_user,
+                    position = position,
+                    station = leave_request.station,
+                    leave = leave_request.leave,
+                    permission = 'sanc_officer',
+                )
         else:
             response = None
 
