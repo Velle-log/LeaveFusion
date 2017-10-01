@@ -1,0 +1,139 @@
+{% block leaveapprove %}
+    <div class="ui row">
+        <span class="ui header">
+            Approve Leaves:
+        </span>
+    </div>
+
+    <br>
+
+    <div class="header">
+        Review Leave Applications
+    </div>
+
+    <div class="ui divider"></div>
+
+    <table class="ui compact celled definition table">
+        <thead>
+        <tr>
+            <th></th>
+            <th>Name</th>
+            <th>E-mail address</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Leave Type</th>
+            <th>Station Leave</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% if request_list %}
+            {% for req in request_list %}
+                <tr id="application-{{ req.leave_request.id }}">
+                    <td class="collapsing">
+                        {% if not req.forward %}
+                            <span class="app_process" data="{{ req.leave_request.id }} accept">
+                                <i class="large green checkmark icon"></i>
+                            </span>
+                            <span class="app_process" data="{{ req.leave_request.id }} reject">
+                                <i class="large red remove icon"></i>
+                            </span>
+                        {% else %}
+                            <span class="app_process" data="{{ req.leave_request.id }} forward">
+                                <i class="large mail forward icon"></i>
+                            </span>
+                        {% endif %}
+                    </td>
+                    <td>{{ req.leave_request.applicant.first_name }}</td>
+                    <td>{{ req.leave_request.applicant.email }}</td>
+                    <td>{{ req.leave_request.leave.start_date }}</td>
+                    <td>{{ req.leave_request.leave.end_date }}</td>
+                    <td>{{ req.leave_request.leave.type_of_leave }}</td>
+                    <td>{% if req.leave_request.leave.station %} Yes {% else %} No {% endif %}</td>
+                    <input type="hidden" id="inp-application-{{req.leave_request.id}}" data="{{ req.leave_request.leave.purpose }}"/>
+                </tr>
+            {% endfor %}
+        {% else %}
+            No Leave Applications
+        {% endif %}
+        </tbody>
+        <!-- <tfoot class="full-width">
+        <tr>
+            <th></th>
+            <th colspan="6">
+                <div class="ui right floated small primary labeled icon button">
+                    <i class="large save icon"></i> Save
+                </div>
+            </th>
+        </tr>
+        </tfoot> -->
+    </table>
+
+    <br><br><br>
+    {% comment %} Processed Leave Applications {% endcomment %}
+
+    <div class="ui row">
+        <span class="ui header">
+            Processed Applications
+        </span>
+    </div>
+
+    <br>
+
+    <div class="header">
+        History of Leave Applications Processed by you
+    </div>
+
+    <div class="ui divider"></div>
+
+    <table class="ui compact celled definition table">
+        <thead>
+        <tr>
+            <th></th>
+            <th>Name</th>
+            <th>E-mail address</th>
+            <th>From</th>
+            <th>To</th>
+            <th>Leave Type</th>
+            <th>Station Leave</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% if processed_request_list %}
+            {% for req in processed_request_list %}
+                <tr id="application-{{ req.leave_request.id }}">
+                    <td class="collapsing">
+                        {% if req.leave.status == 'accepted' %}
+                            <i class="large green checkmark icon"></i>
+                        {% elif req.leave.status == 'rejected' %}
+                            <i class="large red remove icon"></i>
+                        {% endif %}
+                    </td>
+                    <td>{{ req.applicant.first_name }}</td>
+                    <td>{{ req.applicant.email }}</td>
+                    <td>{{ req.leave.start_date }}</td>
+                    <td>{{ req.leave.end_date }}</td>
+                    <td>{{ req.leave.type_of_leave }}</td>
+                    <td>{% if req.leave.station %} Yes {% else %} No {% endif %}</td>
+                    <input type="hidden" id="inp-application-{{req.leave_request.id}}" data="{{ req.leave_request.leave.purpose }}"/>
+                </tr>
+            {% endfor %}
+        {% else %}
+            No Leave Applications
+        {% endif %}
+        </tbody>
+        <!-- <tfoot class="full-width">
+        <tr>
+            <th></th>
+            <th colspan="6">
+                <div class="ui right floated small primary labeled icon button">
+                    <i class="large save icon"></i> Save
+                </div>
+            </th>
+        </tr>
+        </tfoot> -->
+    </table>
+
+
+{% endblock %}

@@ -246,7 +246,7 @@
     </a>
 
     <div class="inverted right menu">
-        <a class="item" href="{% url 'profile:profile_view' request.user.id %}">
+        <a class="item" href="{% url 'profile:profile' request.user.id %}">
             {% get_user_dp request.user 'small' %}
             {{request.user.username}}
         </a>
@@ -275,7 +275,7 @@
     </div>
   </div>
   <!-- Page content starts here -->
-  
+
   <div class="ui stackable asd grid marginlefting" style="border-radius: 0!important; border: 0; margin-left: 260px; -webkit-transition-duration: 0.5s;">
 
     <div class="four wide column">
@@ -291,7 +291,7 @@
         </div>
         <div class="extra content">
           <div class="ui two buttons">
-            <a class="ui basic blue button" href="{% url 'profile:profile_view' request.user.id %}">View profile</a>
+            <a class="ui basic blue button" href="{% url 'profile:profile' request.user.id %}">View profile</a>
             <a class="ui basic purple button" href="{% url 'profile:edit_info' %}">Edit profile</a>
           </div>
           <div class="ui vertical menu" style="width: 100%;">
@@ -304,7 +304,7 @@
     </div>
     <div class="eleven wide column">
     {% else %}
-    
+
 
     <style type="text/css">
       label{
@@ -313,7 +313,7 @@
     </style>
     <div class="ui raised stackable doubling centered card right floated" style="margin: auto;margin-top: 7.5%;min-width: 360px;">
 
-            
+
 
 
     {% endif %}

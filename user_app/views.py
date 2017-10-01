@@ -47,11 +47,12 @@ def edit_info(request):
     	return redirect(reverse('profile:profile_view', args=[request.user.id]))
     return render(request, 'user_app/user_form.html', { 'user':request.user, 'title': 'Profile', 'action':'Edit-Profile' })
 
-@login_required(login_url='/accounts/login/')
+# @login_required(login_url='/accounts/login/')
 def index(request):
-    make_migrations()
-    return render(request, 'index/home.html', {'title':'Home'})
-
+    if request.user.is_authenticated():
+        make_migrations()
+        return render(request, 'fusion/dashboard/dashboard.html', {'title':'Home'})
+    return render(request, 'fusion/general/index1.html')
 
 @login_required(login_url='/accounts/login/')
 def profile_view(request, id):

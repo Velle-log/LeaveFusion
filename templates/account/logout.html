@@ -1,11 +1,13 @@
-{% extends "account/base.html" %}
+{% extends "fusion/general/base.html" %}
 
 {% load i18n %}
 
 {% block head_title %}{% trans "Sign Out" %}{% endblock %}
-
+{% block navBar %}
+    {% include 'fusion/dashboard/navbar.html' %}
+{% endblock %}
 {% block bass %}
-<div class="ui stackable grid" > 
+<div class="ui stackable grid" >
   <div class="sixteen wide column">
     <div class="ui top attached segment">
         <h3 class="header"><center><h1>{% trans "Sign Out" %}</h1></center></h3>

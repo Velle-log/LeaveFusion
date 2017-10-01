@@ -11,7 +11,7 @@ from leave_application.models import (Leave, CurrentLeaveRequest,
                                       LeaveMigration,)
 from django.contrib.auth.models import User
 from leave_application.helpers import FormData, get_object_or_none
-
+from django.db.models import Q
 
 class ApplyLeave(View):
     """
@@ -36,7 +36,18 @@ class ApplyLeave(View):
         #         form = StudentLeaveForm(leave)
         #     return render(request, 'leave_application/apply_for_leave.html', {'form': form, 'title': 'Leave', 'action':'Edit'})
         form = self.get_form(request)
-        return render(request, 'leave_application/apply_for_leave.html', {'form': form, 'title': 'Leave', 'action':'Apply'})
+        user_leaves = Leave.objects.filter(applicant=request.user)
+        leaves_count = LeavesCount.objects.get(user=request.user)
+        context ={
+            'form': form,
+            'user_leaves': user_leaves,
+            'leaves_count': leaves_count,
+        }
+
+        applications = GetApplications.get(request)
+        context.update(applications)
+        # return render(request, 'leave_application/apply_for_leave.html', {'form': form, 'title': 'Leave', 'action':'Apply'})
+        return render(request, 'fusion/leaveModule0/leave.html', context)
 
     def post(self, request):
         """
@@ -69,10 +80,10 @@ class ApplyLeave(View):
                 return render(request,
                               'leave_application/apply_for_leave.html',
                               {'form': form, 'message': 'Failed'})
-            return render(request, 'leave_application/apply_for_leave.html', {'message': 'success', 'title': 'Leave', 'action':'Apply'})
-
+            # return render(request, 'leave_application/apply_for_leave.html', {'message': 'success', 'title': 'Leave', 'action':'Apply'})
+            return render(request, 'fusion/leaveModule0/leave.html', {'message': 'success', 'title': 'Leave', 'action':'Apply'})
         else:
-            return render(request, 'leave_application/apply_for_leave.html', {'form': form, 'title': 'Leave', 'action':'Apply'})
+            return render(request, 'fusion/leaveModule0/leave.html', {'form': form, 'title': 'Leave', 'action':'Apply'})
 
     # def delete(self, request):
     #     id = request.DELETE.get('id', None)
@@ -111,12 +122,16 @@ class ApplyLeave(View):
 
 class ProcessRequest(View):
 
-    def get(self, request, id):
+    # def post(self, request, id):
+    #     print(request.POST)
+    #     return JsonResponse({'response': 'ok'}, status=200)
+
+    def post(self, request, id):
         leave_request = get_object_or_404(CurrentLeaveRequest, id=id)
+        #print(request.POST)
+        do = request.POST.get('do')
 
-        do = request.GET.get('do')
-
-        response = JsonResponse({'message': 'Failed', 'type': 'Error'}, status=400)
+        response = JsonResponse({'response': 'Failed'}, status=400)
 
         rep_user = get_object_or_none(Replacement, replacee=leave_request.requested_from,
                                                    replacement_type='administrative')
@@ -136,7 +151,7 @@ class ProcessRequest(View):
         sanc_auth = leave_request.applicant.extrainfo.sanctioning_authority
         sanc_officer = leave_request.applicant.extrainfo.sanctioning_officer
         remark = request.GET.get('remark', '')
-        response = JsonResponse({'message': 'Successful', 'type': 'success'}, status=200)
+        response = JsonResponse({'response': 'ok'}, status=200)
 
         if leave_request.permission in ['academic', 'admin']:
 
@@ -177,7 +192,7 @@ class ProcessRequest(View):
         remark = request.GET.get('remark', '')
 
         type_of_leave = leave_request.leave.type_of_leave
-        response = JsonResponse({'message': 'Successfully Rejected', 'type': 'success'}, status=200)
+        response = JsonResponse({'response': 'ok',}, status=200)
         sanc_auth = leave_request.applicant.extrainfo.sanctioning_authority
         sanc_officer = leave_request.applicant.extrainfo.sanctioning_officer
 
@@ -202,7 +217,7 @@ class ProcessRequest(View):
         remark = request.GET.get('remark', '')
         type_of_leave = leave_request.leave.type_of_leave
 
-        response = JsonResponse({'message': 'Successfully Forwarded', 'type': 'success'}, status=200)
+        response = JsonResponse({'response': 'ok',}, status=200)
 
         if leave_request.permission == 'sanc_auth' and \
             type_of_leave not in ['casual', 'restricted']:
@@ -272,7 +287,7 @@ class ProcessRequest(View):
         new_leave_request.leave.status = outcome
         new_leave_request.leave.save()
         leave_request.delete()
-        return JsonResponse({'message': 'Successful', 'type': 'success'}, status=200)
+        return JsonResponse({'response': 'ok'}, status=200)
 
     def create_migration(self, leave):
         import datetime
@@ -315,28 +330,39 @@ class ProcessRequest(View):
         #TODO: Add automatic hadling of outdated or problematic leave requests
         pass
 
-class GetApplications(View):
+class GetApplications():
 
-    def get(self, request):
+    @classmethod
+    def get(cls, request):
+        processed_request_list = LeaveRequest.objects.filter(requested_from=request.user).order_by('-id')
 
-        prequest_list = LeaveRequest.objects.filter(requested_from=request.user).order_by('-id')
-        request_list = list(map(lambda x: self.should_forward(request, x),
-                           CurrentLeaveRequest.objects.filter(requested_from=request.user).order_by('-id')))
+        replacement = Replacement.objects.filter(Q(replacer=request.user)
+                                                 & Q(replacement_type='administrative'))
+        replacee = replacement.first().replacee if replacement else None
+        request_list = CurrentLeaveRequest.objects.filter(Q(requested_from=request.user)
+                                                          | Q(requested_from=replacee)
+                                                          & (~Q(permission='academic')
+                                                          & ~Q(permission='admin')))
+        request_list = [cls.should_forward(request, q_obj) for q_obj in request_list]
+        rep_requests = CurrentLeaveRequest.objects.filter(Q(requested_from=request.user) &
+                                                          (Q(permission='academic') | Q(permission='admin')))
+        print(rep_requests)
+        context = {
+            'processed_request_list': processed_request_list,
+            'request_list': request_list,
+            'rep_requests': rep_requests,
+        }
+        return context
 
-        for reps in Replacement.objects.filter(replacer=request.user, replacement_type='administrative'):
+        #count = len(request_list)
+        # return render(request, 'leave_application/get_requests.html', {'requests': request_list,
+        #                                                               'title':'Leave',
+        #                                                               'action':'ViewRequests',
+        #                                                               'count':count,
+        #                                                               'prequests':prequest_list})
 
-            request_list += list(map(lambda x: self.should_forward(request, x),
-                               CurrentLeaveRequest.objects.filter(requested_from=reps.replacee)))
-
-
-        count = len(request_list)
-        return render(request, 'leave_application/get_requests.html', {'requests': request_list,
-                                                                       'title':'Leave',
-                                                                       'action':'ViewRequests',
-                                                                       'count':count,
-                                                                       'prequests':prequest_list})
-
-    def should_forward(self, request, query_obj):
+    @classmethod
+    def should_forward(cls, request, query_obj):
 
         obj = FormData(request, query_obj)
         sanc_auth = query_obj.applicant.extrainfo.sanctioning_authority

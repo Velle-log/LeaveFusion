@@ -9,10 +9,10 @@ import datetime
 
 class LeaveForm(forms.Form):
 
-    def __init__(self, *args, **kwargs):
-        super(LeaveForm, self).__init__(*args, **kwargs)
-    start_date = forms.DateField(widget=forms.SelectDateWidget(), label='From')
-    end_date = forms.DateField(widget=forms.SelectDateWidget(), label='Upto')
+    # def __init__(self, *args, **kwargs):
+    #     super(LeaveForm, self).__init__(*args, **kwargs)
+    start_date = forms.DateField(label='From', widget=forms.widgets.DateInput())
+    end_date = forms.DateField(label='Upto', widget=forms.widgets.DateInput())
     leave_address = forms.CharField(label='Leave Address',
                                     widget=forms.TextInput(attrs={
                                                                     'placeholder': 'Address of leave'
@@ -39,9 +39,12 @@ class LeaveForm(forms.Form):
         return False
 
     def clean(self):
+        # print(self.cleaned_data)
+        start_date = self.cleaned_data.get('start_date')
+        end_date = self.cleaned_data.get('end_date')
 
-        start_date = self.cleaned_data['start_date']
-        end_date = self.cleaned_data['start_date']
+        if not (start_date or end_date):
+            raise forms.ValidationError('Fill Date carefully')
 
         today = datetime.date.today()
 
@@ -86,8 +89,9 @@ class FacultyLeaveForm(LeaveForm):
             self.user = kwargs.pop('user')
 
         try:
+            ALL_USERS = User.objects.all()
             USER_CHOICES = list((user.username, '{} {}'.format(user.first_name, user.last_name)) \
-                                 for user in User.objects.all() \
+                                 for user in ALL_USERS \
                                  if user.extrainfo.user_type == 'faculty' \
                                  and user != self.user \
                                  and user.extrainfo.department == self.user.extrainfo.department)
@@ -103,7 +107,7 @@ class FacultyLeaveForm(LeaveForm):
 
 
     def clean(self):
-
+        # print(self.cleaned_data)
         super(FacultyLeaveForm, self).clean()
 
         admin_rep = self.cleaned_data.get('admin_rep', None)
@@ -117,7 +121,8 @@ class FacultyLeaveForm(LeaveForm):
             raise forms.ValidationError('You can not choose yourself as replacement')
 
         type_of_leave = self.cleaned_data.get('type_of_leave')
-
+        if not type_of_leave:
+            raise forms.ValidationError('Please Provide the type of leave.')
         start_date = self.cleaned_data.get('start_date')
         end_date = self.cleaned_data.get('end_date')
 

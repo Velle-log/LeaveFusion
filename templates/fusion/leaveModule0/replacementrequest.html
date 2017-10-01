@@ -1,0 +1,39 @@
+{% load static %}
+
+{% block replacement %}
+
+
+
+    <div class="ui centered cards" style="padding: 2px">
+
+        {% comment %}A single card starts here!{% endcomment %}
+        {% for req in rep_requests %}
+            <div class="ui card" id="request-{{ req.id }}">
+                <div class="content">
+                    <img class="right floated circular ui image" src="{% static 'fusion/img/zlatan.jpg' %}" style="width: 50px; height: auto;">
+                    <div class="header">
+                        {{ req.applicant.first_name }}
+                        {{ req.applicant.last_name }}
+                    </div>
+                    <div class="meta">
+                        {{ req.applicant.designation.name }}
+                    </div>
+
+                    <div class="ui divider"></div>
+
+                    <div class="description">
+                        {{ req.applicant.first_name }}
+                        {{ req.applicant.last_name }} has requested permission to be his {% if req.permission == 'admin' %} administrative {% else %} academic {% endif %} replacement for the duration of <br>
+                        {{req.leave.start_date}} - {{ req.leave.end_date }}
+                    </div>
+                </div>
+                <div class="extra content">
+                    <div class="ui two buttons">
+                        <div class="ui basic green button rep_process" data="{{ req.id }} accept">Approve</div>
+                        <div class="ui basic red button rep_process" data="{{ req.id }} reject">Decline</div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

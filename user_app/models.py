@@ -34,6 +34,7 @@ class ExtraInfo(models.Model):
     department = models.ForeignKey(DepartmentInfo, on_delete=models.CASCADE, null=True)
     profile_picture = models.ImageField(null=True, blank=True)
     about_me = models.TextField(default='', max_length=1000, blank=True)
+    # TODO: Remove this and add to another model
     sanctioning_authority = models.ForeignKey(Designation,
                                               related_name='sanctioning_auth',
                                               on_delete=models.CASCADE, null=True, blank=True)
@@ -59,16 +60,16 @@ def add_extra_info(sender, instance, created, **kwargs):
         ExtraInfo.objects.create(user=instance)
         #TODO: Add automatic creation of LeavesCount if user_type is not student
 
-
+# TODO: Remove this.
 class Administration(models.Model):
     administrator = models.OneToOneField(User, related_name='administration_duty',
-                                            on_delete=models.CASCADE)
+                                         on_delete=models.CASCADE)
     position = models.OneToOneField(Designation, on_delete=models.CASCADE)
 
     def __str__(self):
         return '{} at position {}'.format(self.administrator.username, self.position)
 
-
+# TODO: Put it in leave_application app.
 class Replacement(models.Model):
 
     CHOICES = [

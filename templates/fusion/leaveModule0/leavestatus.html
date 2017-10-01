@@ -1,0 +1,100 @@
+{% load static %}
+
+{% block leavestatus %}
+    <div class="ui header">
+        Leave Status:
+    </div>
+
+    <div class="content">
+        <div class="description">
+
+            <table class="ui very basic collapsing celled large table"
+                   style="padding-left: 2.5%;
+                                                          padding-right: 2.5%;
+                                                          padding-top: 1%;
+                                                          padding-bottom: 1.5%;
+                                                          margin: auto;">
+                <thead>
+                <tr>
+                    <th>
+                        Employee
+                    </th>
+
+                    <th>
+                        Type
+                    </th>
+
+                    <th>
+                        From
+                    </th>
+
+                    <th>
+                        To
+                    </th>
+
+                    <!-- <th>
+                        Duration
+                    </th> -->
+
+                    <th>
+                        Status
+                    </th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                {% for leave in user_leaves %}
+
+                    <tr>
+                        <td>
+                            <h4 class="ui image header">
+                                <img src="{% static 'fusion/img/user.png' %}" class="ui mini rounded image">
+                                <div class="content">
+                                    {{ request.user.first_name }}
+                                    {{ request.user.last_name }}
+                                    <div class="sub header">
+                                        {{ request.user.designation.name }}
+                                    </div>
+                                </div>
+                            </h4>
+                        </td>
+
+                        <td>
+                            {{ leave.type_of_leave }}
+                        </td>
+
+                        <td>
+                            {{ leave.start_date }}
+                        </td>
+
+                        <td>
+                            {{ leave.end_date }}
+                        </td>
+
+                        <!-- <td>
+                            1
+                        </td> -->
+
+                        <td>
+
+                            <i class="large {% if leave.status == 'accepted' %}green checkmark
+                            {% elif leave.status == 'processing' %} orange warning {% else %} red x {% endif %} icon"></i>
+                        </td>
+                    </tr>
+
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="extra content">
+        <div class="" style="text-align: center;">
+            <i class="large green checkmark icon"></i> : Approved &ensp;&ensp;&ensp;&ensp;&ensp;
+            <i class="large orange warning icon"></i> : Pending &ensp;&ensp;&ensp;&ensp;&ensp;
+            <i class="large red x icon"></i> : Declined
+        </div>
+    </div>
+
+{%  endblock %}

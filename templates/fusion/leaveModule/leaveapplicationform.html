@@ -1,0 +1,193 @@
+<div class="ui container">
+
+        <div class="ui header">
+            <span>
+                Leave Details:
+            </span>
+        </div>
+        {% if form.errors %}
+            {{ form.errors.as_text }}
+        {% endif %}
+        <div class="ui divider"></div>
+        <br>
+
+        {% comment %}
+        <div class="ui sub dividing header"
+             style="margin-left: 7.5%;
+                 margin-right: 7.5%;
+                 margin-bottom: 2.5%;">
+
+            Apply for Leave:
+
+            <button class="ui large icon button circular right floated" style="background-color: #FFF;"
+                    onclick="addLeave()">
+                <i class="plus large green icon right floated"></i>
+            </button>
+
+        </div>
+        {% endcomment %}
+        <form class="ui large form"
+              style="margin-left: 7.5%;
+                 margin-right: 7.5%;
+                 margin-bottom: 5%;">
+
+            {% comment %} The ApplyLeave conatianer starts here! {% endcomment %}
+            <div id="applyLeave">
+                {% comment %}The form row starts here!{% endcomment %}
+                <div class="fields">
+                    <div class="four wide field">
+                        <label>Leave From:</label>
+                        <div class="ui calendar" id="rangestart">
+                            <div class="ui input left icon">
+                                <i class="calendar icon"></i>
+                                <!-- <input type="text" placeholder="From"> -->
+                                {{ form.start_date }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="four wide field">
+                        <label>Leave To:</label>
+                        <div class="ui calendar" id="rangeend">
+                            <div class="ui input left icon">
+                                <i class="calendar icon"></i>
+                                <!-- <input type="text" placeholder="To"> -->
+                                {{ form.end_date }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="six wide field">
+                        {% comment %}The Dropdown field starts here!{% endcomment %}
+                        <label>Leave Type</label>
+
+                        <div class="ui fluid search selection dropdown">
+                            <!-- <input name="Leave Type" type="hidden"> -->
+                            <input name="type_of_leave" id="type_of_leave" type="hidden" />
+                            <i class="dropdown icon"></i>
+
+                            <div class="default text">Select Leave</div>
+
+                            <div class="menu">
+                                {% for value,name in form.fields.type_of_leave.widget.choices %}
+                                    <div class="item" data-value="{{ value }}">
+                                        {{ name }}
+                                    </div>
+
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% comment %}The Dropdown field ends here!{% endcomment %}
+                    </div>
+
+                    <div class="field">
+                        <label>Station Leave:</label>
+                        <div class="ui toggle checkbox"
+                             style="margin-top: 8px;">
+                            <label>Required</label>
+                            <input tabindex="0" class="hidden" name="station_leave" type="checkbox" id="id_station_leave" onchange="ShowHideDiv()">
+                        </div>
+                    </div>
+
+                </div>
+                {% comment %}The form row ends here!{% endcomment %}
+
+                <div id="leaveAddress" style="display: none;">
+                    <label>Leave Address:</label>
+                    <!-- <textarea class="ui textarea" rows="2"></textarea> -->
+                    {{ form.leave_address }}
+                </div>
+
+                {% comment %}The Resposibilities start here!{% endcomment %}
+{% comment %}
+                <div class="ui sub dividing header">
+                    Assign Responsibilities:
+                </div>
+{% endcomment %}
+                <br>
+
+                <div>
+                    <div class="fields">
+                        {% if form.acad_rep %}
+                            {% comment %}Academic Responsibilities start here!{% endcomment %}
+                            <div class="eight wide field">
+                                <label>Academic Responsibilities:</label>
+                                <div class="ui fluid search selection dropdown">
+                                    <!-- <input name="Select" type="hidden"> -->
+                                    <input type="hidden" name="acad_rep" id="id_acad_rep" />
+                                    <i class="dropdown icon"></i>
+
+                                    <div class="default text">Select</div>
+
+                                    <div class="menu">
+                                            {% for value,name in form.fields.acad_rep.widget.choices %}
+                                                <div class="item" data-value="{{ value }}">
+                                                    {{ name }}
+                                                </div>
+
+                                            {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% comment %}Academic Responsibilities end here!{% endcomment %}
+
+                        {% if form.admin_rep %}
+                            {% comment %}Administrative Responsibilities start here!{% endcomment %}
+                            <div class="eight wide field">
+                                <label>Administrative Responsibilities:</label>
+                                <div class="ui fluid search selection dropdown">
+                                    <!-- <input name="Select" type="hidden"> -->
+                                    <!-- <select id="id_admin_rep" name="admin_rep">  -->
+                                    <input type="hidden" name="admin_rep" id="id_admin_rep" />
+                                    <i class="dropdown icon"></i>
+
+                                    <div class="default text">Select</div>
+
+                                    <div class="menu">
+                                        {% for value,name in form.fields.admin_rep.widget.choices %}
+                                            <div class="item" data-value="{{ value }}">
+                                                {{ name }}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% comment %} Administrative Responsibilities end here! {% endcomment %}
+                    </div>
+                </div>
+                {% comment %} The Resposibilities end here! {% endcomment %}
+
+                <br>
+
+                {% comment %} Leave Purpose starts here! {% endcomment %}
+                <div class="fields">
+                    <div class="twelve wide field">
+                        <label>Leave Purpose:</label>
+                        <div class="ui fluid input">
+                            <!-- <input name="leavePurpose"> -->
+                            {{ form.purpose }}
+                        </div>
+                    </div>
+
+                    <div class="four wide field">
+                        <label><br></label>
+                        <div class="ui large fluid primary button">
+                            Submit
+                        </div>
+                    </div>
+                </div>
+                {% comment %}Leave Purpose ends here!{% endcomment %}
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function ShowHideDiv() {
+        var chkAddress = document.getElementById("id_station_leave");
+        var leaveAddress = document.getElementById("leaveAddress");
+        leaveAddress.style.display = chkAddress.checked ? "block" : "none";
+    }
+</script>
