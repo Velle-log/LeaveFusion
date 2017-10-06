@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, render_to_response, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout as auth_logout
 from django.template import RequestContext
 from django.http import Http404
 from .models import ExtraInfo
@@ -49,10 +50,15 @@ def edit_info(request):
 
 # @login_required(login_url='/accounts/login/')
 def index(request):
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         make_migrations()
         return render(request, 'fusion/dashboard/dashboard.html', {'title':'Home'})
     return render(request, 'fusion/general/index1.html')
+
+def logout(request):
+    #if request.user.is_authenticated():
+    auth_logout(request)
+    return redirect('/')
 
 @login_required(login_url='/accounts/login/')
 def profile_view(request, id):

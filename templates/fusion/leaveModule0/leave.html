@@ -279,10 +279,10 @@
 {% endblock %}
 
 {% block javascript %}
-
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.js"></script>
-    <script type="text/javascript" src="{% static 'fusion/js/chartjs/src/chart.js' %}"></script>
-
+    {% comment %}
+    <!-- < type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.js"></script> -->
+    <!-- <script type="text/javascript" src="{% static 'fusion/js/chartjs/src/chart.js' %}"></script> -->
+    {% endcomment %}
     <script type="text/javascript" src="{% static 'fusion/js/checkbox.js' %}"></script>
     <script type="text/javascript" src="{% static 'fusion/js/addLeave.js' %}"></script>
 
@@ -301,7 +301,7 @@
         }
     </script>
 
-    <script>
+    <!-- <script>
         var ctx = document.getElementById("myChart").getContext('2d');
         var myChart = new Chart(ctx, {
             type: 'bar',
@@ -342,7 +342,7 @@
                 }
             }
         });
-    </script>
+    </script> -->
 
     <script src="https://cdn.rawgit.com/mdehoog/Semantic-UI/6e6d051d47b598ebab05857545f242caf2b4b48c/dist/semantic.min.js"></script>
 
