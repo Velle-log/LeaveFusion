@@ -16,6 +16,16 @@ sys.path.append(workspace)
 sys.path.append(project)
 
 
+proxyDict = {
+              "http"  : '172.27.16.250:3128',
+              "https" : '172.27.16.250:3128',
+              "ftp"   : '172.27.16.250:3128'
+            }
+
+os.environ["http_proxy"] = proxyDict['http']
+os.environ["https_proxy"] = proxyDict['https']
+os.environ["ftp_proxy"] = proxyDict['ftp']
+
 import logging
 logging.basicConfig(stream=sys.stderr)
 

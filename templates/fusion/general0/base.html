@@ -10,7 +10,6 @@
     <link rel="stylesheet" type="text/css" href="{% static 'fusion/semantic-ui/components/reset.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'fusion/semantic-ui/components/icon.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'fusion/css/semantic.min.css' %}">
-
     {% block css %}
     {% endblock %}
 
@@ -18,7 +17,6 @@
 
 {% comment %}style="background-color: rgba(189, 189, 189, 0.1);"{% endcomment %}
 <body>
-
 {% block body %}
     {% block navBar %}
     {% endblock %}
@@ -41,7 +39,7 @@
                 .sidebar('setting', 'transition', 'overlay')
             ;
         });
-    </script>
+
 
 {% block javascript %}
 {% endblock %}

@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'v0o)kux-3d_nigwc=bnq!josh)0ctcgxvjoao^jbquc8nulbg2'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['fusion.iiitdmj.ac.in']
 
 #Google authentication
 SOCIALACCOUNT_PROVIDERS = {
@@ -44,7 +44,7 @@ SOCIALACCOUNT_PROVIDERS = {
 #allauth settings
 
 LOGIN_URL = '/accounts/login/'
-LOGOUT_URL = '/accounts/logout/'
+LOGOUT_URL = '/profile/logout/'
 LOGIN_REDIRECT_URL = '/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -115,7 +115,7 @@ ROOT_URLCONF = 'LeaveFusion.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['/', 'templates'],
+        'DIRS': ['/', os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

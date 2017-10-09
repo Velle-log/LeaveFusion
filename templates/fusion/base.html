@@ -123,7 +123,7 @@
 
 {% if messages %}
     {% for message in messages %}
-          <button class="ui button blue not notification" id="notification" data-animation="" data-type="info" data-size="normal" data-message="{{ message }}" style="display: none;"></button>
+          <button class="ui button blue not notification" id="notification" data-animation="" data-type="info" data-size="normal" data-message="{{ message }}"></button>
     {% endfor %}
 {% endif %}
 <div style="display: none;">
@@ -331,7 +331,7 @@
   <!-- page content ends here -->
 </div>
 {% endcomment %}
-      <a class="ui bottom attached button centered" href="/accounts/login/">Employee Login</a>
+      <a class="ui bottom attached button centered" href="/accounts/login/">{% if request.user.is_authenticated %}Go to home{% else %}Employee Login{% endif %}</a>
   </div>
   <div class="ui row">
       <br>
@@ -377,6 +377,8 @@
 
 
 </script>
+
+
 
 <script type="text/javascript" src="{% static 'fusion/js/jquery.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'fusion/js/semantic.min.js' %}"></script>

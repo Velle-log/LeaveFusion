@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 from django.http import HttpResponse, Http404, JsonResponse
 from leave_application.forms import (FacultyLeaveForm,
@@ -21,6 +21,9 @@ class ApplyLeave(View):
         """
             view to handle get request to /leave/apply
         """
+
+        message = request.GET.get('message')
+        print(message)
         # TODO: Check if leave not rejected or accepted and leave instance belongs to user
         # TODO: Take another value as action so that action can specify edit or delete with same constraint
 
@@ -42,6 +45,7 @@ class ApplyLeave(View):
             'form': form,
             'user_leaves': user_leaves,
             'leaves_count': leaves_count,
+            'message': message,
         }
 
         applications = GetApplications.get(request)
@@ -81,9 +85,13 @@ class ApplyLeave(View):
                               'leave_application/apply_for_leave.html',
                               {'form': form, 'message': 'Failed'})
             # return render(request, 'leave_application/apply_for_leave.html', {'message': 'success', 'title': 'Leave', 'action':'Apply'})
-            return render(request, 'fusion/leaveModule0/leave.html', {'message': 'success', 'title': 'Leave', 'action':'Apply'})
+            return redirect('/leave/apply/?message=success')
         else:
-            return render(request, 'fusion/leaveModule0/leave.html', {'form': form, 'title': 'Leave', 'action':'Apply'})
+            leaves_count = LeavesCount.objects.get(user=request.user)
+            return render(request, 'fusion/leaveModule0/leave.html', {'form': form,
+                                                                      'title': 'Leave',
+                                                                      'action':'Apply',
+                                                                      'leaves_count': leaves_count})
 
     # def delete(self, request):
     #     id = request.DELETE.get('id', None)
@@ -293,22 +301,35 @@ class ProcessRequest(View):
         import datetime
 
         if leave.start_date <= datetime.date.today():
-            Replacement.objects.create(
+            r1 = Replacement.objects.create(
                 replacee = leave.applicant,
                 replacer = leave.academic_replacement,
                 replacement_type = 'academic',
             )
-            Replacement.objects.create(
+            r2 = Replacement.objects.create(
                 replacee = leave.applicant,
                 replacer = leave.administrative_replacement,
                 replacement_type = 'administrative',
             )
-
+            LeaveMigration.objects.create(
+                replacee = leave.applicant,
+                replacer = leave.academic_replacement,
+                replacement = r1,
+                start_date = leave.end_date + datetime.timedelta(days=1),
+                type = 'del',
+            )
+            LeaveMigration.objects.create(
+                replacee = leave.applicant,
+                replacer = leave.administrative_replacement,
+                replacement = r2,
+                start_date = leave.end_date + datetime.timedelta(days=1),
+                type = 'del',
+            )
         else:
             # if leave.start_date not in to_be.migrations.keys():
                 # to_be.migrations[leave.start_date] = []
 
-            LeaveMigration.objects.create(
+            l1 = LeaveMigration.objects.create(
                 type = 'add',
                 replacee = leave.applicant,
                 replacer = leave.academic_replacement,
@@ -317,7 +338,7 @@ class ProcessRequest(View):
                 replacement_type = 'academic',
             )
 
-            LeaveMigration.objects.create(
+            l2 = LeaveMigration.objects.create(
                 type = 'add',
                 replacee = leave.applicant,
                 replacer = leave.administrative_replacement,

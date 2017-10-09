@@ -1,4 +1,22 @@
 <div class="ui container">
+    {% if message %}
+        <div class="ui success message">
+            <i class="close icon"></i>
+            <div class="header">
+                Your application was successful.
+            </div>
+            <p> :) </p>
+        </div>
+        <script>
+        $('.message .close')
+            .on('click', function() {
+                $(this)
+                .closest('.message')
+                .transition('fade')
+                ;
+            })
+            ;</script>
+    {% endif %}
     <div class="ui vertical stripe team segment"
          style="padding-left: 3.5%;
                 padding-right: 3.5%;">
