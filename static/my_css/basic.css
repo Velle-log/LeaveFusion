@@ -1,0 +1,30 @@
+body{
+    font:300 16px/18px 'Open Sans',sans-serif;
+}
+
+
+
+.box-outline-soft{
+  border: 1px solid #ccc;
+  border-radius: 1em;
+  padding: 1em;
+}
+
+.message{
+  position: fixed;
+  bottom: 1%;
+  left: 1%;
+  z-index: 999;
+}
+
+.half {
+  float: left;
+  width: 48%;
+  margin-bottom: 1em;
+}
+
+.right { width: 50%; }
+
+.left {
+     margin-right: 2%; 
+}

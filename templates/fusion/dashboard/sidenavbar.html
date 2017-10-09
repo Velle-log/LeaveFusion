@@ -13,8 +13,8 @@
                 <br>
 
                 <div class="ui bottom attached inverted" style="text-align: center;">
-                    <h2 class="ui inverted header">Dr. Atul Gupta</h2>
-                    <span class="ui inverted meta">Associate Professor</span>
+                    <h2 class="ui inverted header">{{ request.user.first_name }} {{ request.user.last_name }}</h2>
+                    <span class="ui inverted meta">{{ requset.user.extrainfo.designation.name }}</span>
                 </div>
 
             </div>

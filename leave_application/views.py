@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 from django.http import HttpResponse, Http404, JsonResponse
 from leave_application.forms import (FacultyLeaveForm,
@@ -81,7 +81,7 @@ class ApplyLeave(View):
                               'leave_application/apply_for_leave.html',
                               {'form': form, 'message': 'Failed'})
             # return render(request, 'leave_application/apply_for_leave.html', {'message': 'success', 'title': 'Leave', 'action':'Apply'})
-            return render(request, 'fusion/leaveModule0/leave.html', {'message': 'success', 'title': 'Leave', 'action':'Apply'})
+            return redirect('/leave/apply/?message=success')
         else:
             return render(request, 'fusion/leaveModule0/leave.html', {'form': form, 'title': 'Leave', 'action':'Apply'})
 
@@ -308,7 +308,7 @@ class ProcessRequest(View):
             # if leave.start_date not in to_be.migrations.keys():
                 # to_be.migrations[leave.start_date] = []
 
-            LeaveMigration.objects.create(
+            l1 = LeaveMigration.objects.create(
                 type = 'add',
                 replacee = leave.applicant,
                 replacer = leave.academic_replacement,
@@ -317,7 +317,7 @@ class ProcessRequest(View):
                 replacement_type = 'academic',
             )
 
-            LeaveMigration.objects.create(
+            l2 = LeaveMigration.objects.create(
                 type = 'add',
                 replacee = leave.applicant,
                 replacer = leave.administrative_replacement,

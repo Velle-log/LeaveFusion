@@ -176,6 +176,13 @@ class StaffLeaveForm(LeaveForm):
 
         self.fields['admin_rep'] = forms.CharField(label='Administrative Responsibility Assigned To',
                                         widget=forms.Select(choices=USER_CHOICES))
+        if type_of_leave == 'vacation':
+
+            vac_start_date = datetime.date(today.year, 5, 1)
+            vac_end_date = datetime.date(today.year, 7, 30)
+
+            if not (start_date >= vac_start_date and end_date <= vac_end_date):
+                raise forms.ValidationError('Vacation Leave can only be taken in vacation time')
 
 
     def clean(self):
