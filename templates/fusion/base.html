@@ -131,7 +131,7 @@
   <button class="ui button green not" id="notification-success" data-animation="" data-type="success" data-size="normal" data-message="This is default notification">Success Notification</button>
 </div>
 
-{% if request.user.is_authenticated %}
+{% comment %}
 <div class="ui sidebar vertical left menu overlay visible very thin icon"  style="-webkit-transition-duration: 0.5s; overflow: visible!important;">
   <div class="item logo">
     <!-- <img src="img/logo.png"><img src="img/thumblogo.png" style="display: none"> -->
@@ -303,7 +303,7 @@
       </div>
     </div>
     <div class="eleven wide column">
-    {% else %}
+        {% endcomment %}
 
 
     <style type="text/css">
@@ -316,10 +316,6 @@
 
 
 
-    {% endif %}
-
-
-
 
       {% block content %}
       {% endblock %}
@@ -329,12 +325,12 @@
 
 
 
-{% if request.user.is_authenticated %}
+{% comment %}
     </div>
   </div>
   <!-- page content ends here -->
 </div>
-{% else %}
+{% endcomment %}
       <a class="ui bottom attached button centered" href="/accounts/login/">Employee Login</a>
   </div>
   <div class="ui row">
@@ -343,7 +339,6 @@
       <br>
       <br>
   </div>
-{% endif %}
 
 
 
